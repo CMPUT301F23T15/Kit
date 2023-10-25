@@ -18,9 +18,6 @@ public class ItemSet {
     }
 
 
-    // this is maybe not good? exposes internal function of the data within the class, but it would
-    // be useful so idk
-    // -Jesse
     public Item getItem(int position) {
         return items.get(position);
     }
@@ -31,8 +28,11 @@ public class ItemSet {
      *  Returns a BigDecimal value of the items within the ItemSet.
      */
     public BigDecimal getItemSetValue() {
-
-        return null;
+        BigDecimal totalValue = new BigDecimal(0);
+        for (Item item : items) {
+            totalValue = totalValue.add(item.getValue());
+        }
+        return totalValue;
     }
 
 }

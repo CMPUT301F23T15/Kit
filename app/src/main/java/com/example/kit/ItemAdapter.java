@@ -8,23 +8,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Item;
-import com.example.kit.data.ItemSet;
+
+import java.util.ArrayList;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
-    private ItemSet itemSet;
+    private ArrayList<Item> itemList;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list_content, parent, false);
+                .inflate(R.layout.item_list_row, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.displayItem(itemSet.getItem(position));
+        holder.displayItem(itemList.get(position));
     }
 
     @Override
