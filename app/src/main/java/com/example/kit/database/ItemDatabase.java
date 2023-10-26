@@ -1,26 +1,22 @@
 package com.example.kit.database;
 
-import android.nfc.Tag;
-
 import com.example.kit.data.Item;
 import com.google.firebase.firestore.CollectionReference;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
-public class ItemDatabase {
+public class ItemDatabase extends Database {
     private CollectionReference db;
 
-    public ItemDatabase(CollectionReference db, <Item> itemList) {
-        this.db = db;
+    public ItemDatabase(CollectionReference db) {
+        super();
+        this.db = fetchCollection("Items");
     }
 
-    public void addItem(){
-        // HashMap<String, String> data = new HashMap<>();
+    public void addItem(Item item) {
+        HashMap<String, String> data = new HashMap<>();
+        // TODO: Add to hash map, we want a random index that firestore will generate
+
 
     }
-
-
 }
