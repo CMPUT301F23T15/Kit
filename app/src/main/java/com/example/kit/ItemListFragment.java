@@ -17,24 +17,20 @@ import com.example.kit.databinding.ItemListBinding;
 
 public class ItemListFragment extends Fragment {
 
-    private NavController navController;
     private ItemListBinding itemListBinding;
     private ItemSet itemSet;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        NavHostFragment navHostFragment = (NavHostFragment) getParentFragmentManager().findFragmentById(R.id.nav_host_fragment);
-//        if (navHostFragment == null) throw new NullPointerException();
-//        navController = navHostFragment.getNavController();
-
-        return super.onCreateView(inflater, container, savedInstanceState);
+        itemListBinding = ItemListBinding.inflate(inflater, container, false);
+        View view = itemListBinding.getRoot();
+        return view;
     }
 
-
     public void initAddItemButton() {
-        itemListBinding.addItemButton.setOnClickListener(click -> {
-//            navController.navigate(R.id.action_itemListFragment_to_itemDisplayFragment);
-        });
+//        itemListBinding.addItemButton.setOnClickListener(onClick -> {
+
+//        });
     }
 }

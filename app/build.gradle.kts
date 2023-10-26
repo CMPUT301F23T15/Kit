@@ -37,7 +37,7 @@ android {
 dependencies {
 
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     // Fix from https://stackoverflow.com/questions/75263047/duplicate-class-in-kotlin-android
     constraints {
@@ -48,6 +48,7 @@ dependencies {
             because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
         }
     }
+//    implementation("androidx.fragment:fragment:1.6.1")
     implementation("androidx.navigation:navigation-fragment:2.7.4")
     implementation("androidx.navigation:navigation-ui:2.7.4")
 

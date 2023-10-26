@@ -1,15 +1,14 @@
 package com.example.kit;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
-
-    private NavController navController;
+public class MainActivity extends FragmentActivity {
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -18,9 +17,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        navController = navHostFragment.getNavController();
+        setContentView(R.layout.activity_main);
     }
-
 
 }
