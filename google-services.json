@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "876769459294",
+    "project_id": "kitdb-63073",
+    "storage_bucket": "kitdb-63073.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:876769459294:android:8844418fade173caab08cf",
+        "android_client_info": {
+          "package_name": "com.company.kit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDt1O1ntYUJTPWrV7WM_JLtScd3jWKfVVk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

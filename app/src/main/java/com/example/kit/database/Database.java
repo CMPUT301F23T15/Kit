@@ -13,9 +13,6 @@ public abstract class Database {
     public static FirebaseFirestore getDB() {
         return db;
     }
-    public CollectionReference fetchCollection(String collectionName){
-        return db.collection(collectionName);
-    };
-
+    abstract public CollectionReference fetchCollection();
 
 }
