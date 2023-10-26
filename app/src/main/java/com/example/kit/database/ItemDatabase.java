@@ -1,6 +1,12 @@
 package com.example.kit.database;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.example.kit.data.Item;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 
 import java.util.HashMap;
@@ -15,6 +21,27 @@ public class ItemDatabase extends Database {
 
     public void addItem(Item item) {
         HashMap<String, String> data = new HashMap<>();
+        data.put("Name", item.getName());
+        data.put("Date", item.getAquisitionDate().toString());
+        data.put("Value", item.getValue().toString());
+        data.put("Make", item.getMake());
+        data.put("Model", item.getModel());
+        data.put("SerialNumber", item.getSerialNumber());
+        data.put("Descrption", item.getDescription());
+        data.put("Comment", item.getComments());
+        db.document().set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Firestore", "Added item to collection!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Firestore", "Adding item failure!");
+                    }
+                });
+
 
         // TODO: Add to hash map, we want a random index that firestore will generate
     }

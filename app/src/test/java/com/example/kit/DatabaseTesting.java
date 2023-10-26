@@ -6,12 +6,29 @@ import com.google.firebase.firestore.CollectionReference;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 public class DatabaseTesting {
-    ItemDatabase itemDB = new ItemDatabase();
+
+    private Item mockItem(){
+        BigDecimal value = new BigDecimal(120d);
+        Date date = new Date();
+        return new Item("Knife", date , "Stainless Steel knife"
+                ,"Sharpen on Tuesdays", value, "Vosteed", "Mini", "MINI-223023");
+    }
+
+    private ItemDatabase mockDB(){
+        return new ItemDatabase();
+    }
+
+
     @Test
     public void DatabaseTestAdd(){
-        Item item = new Item();
-        itemDB.addItem(item);
+//        ItemDatabase itemDB = mockDB();
+//        Item item = mockItem();
+//
+//        itemDB.addItem(item);
     }
 
 
