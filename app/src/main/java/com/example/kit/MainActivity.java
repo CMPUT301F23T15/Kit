@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.example.kit.database.ItemDatabase;
 
+// TODO: Create test case for ItemDatabase
 public class MainActivity extends AppCompatActivity {
 
     @Override
