@@ -3,11 +3,15 @@ package com.example.kit.database;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.kit.data.Item;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 
@@ -17,6 +21,14 @@ public class ItemDatabase extends Database {
     public ItemDatabase() {
         super();
         this.db = fetchCollection();
+
+        db.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+            }
+        });
+
     }
 
     public void addItem(Item item) {
@@ -27,7 +39,7 @@ public class ItemDatabase extends Database {
         data.put("Make", item.getMake());
         data.put("Model", item.getModel());
         data.put("SerialNumber", item.getSerialNumber());
-        data.put("Descrption", item.getDescription());
+        data.put("Description", item.getDescription());
         data.put("Comment", item.getComments());
         db.document().set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -44,6 +56,21 @@ public class ItemDatabase extends Database {
 
 
         // TODO: Add to hash map, we want a random index that firestore will generate
+    }
+
+    public void deleteItem(String uid){
+        db.document(uid).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Firestore", "Removed item from collection!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Firestore", "Removing item failure!");
+                    }
+                });
     }
     @Override
     public CollectionReference fetchCollection() {
