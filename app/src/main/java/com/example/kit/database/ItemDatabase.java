@@ -22,12 +22,6 @@ public class ItemDatabase extends Database {
         super();
         this.db = fetchCollection();
 
-        db.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-
-            }
-        });
 
     }
 
@@ -77,12 +71,8 @@ public class ItemDatabase extends Database {
         return getDB().collection("Items");
     }
 
-    private void setListener(){
-        db.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+    private void setListener(EventListener<QuerySnapshot> listener){
+        db.addSnapshotListener(listener);
 
-            }
-        });
     }
 }
