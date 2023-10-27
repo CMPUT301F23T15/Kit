@@ -76,4 +76,13 @@ public class ItemDatabase extends Database {
     public CollectionReference fetchCollection() {
         return getDB().collection("Items");
     }
+
+    private void setListener(){
+        db.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+            }
+        });
+    }
 }
