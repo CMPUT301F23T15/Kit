@@ -1,7 +1,5 @@
 package com.example.kit.data;
 
-import android.nfc.Tag;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,9 +7,9 @@ import java.util.NoSuchElementException;
 
 public class Item {
     private String name;
-    private Date aquisitionDate;
+    private Date acquisitionDate;
     private String description;
-    private String comments;
+    private String comment;
     private BigDecimal value;
     private String make;
     private String model;
@@ -20,26 +18,27 @@ public class Item {
 
     // TODO: Images
 
-    public Item(String name, Date aquisitionDate, String description, String comments, BigDecimal value, String make, String model, String serialNumber, ArrayList<Tag> tags) {
+    public Item (String name) {
         this.name = name;
-        this.aquisitionDate = aquisitionDate;
+        this.acquisitionDate = null;
+        this.description = "";
+        this.comment = "";
+        this.make = "";
+        this.model = "";
+        this.serialNumber = "";
+        this.tags = new ArrayList<>();
+    }
+
+    public Item(String name, Date acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<Tag> tags) {
+        this.name = name;
+        this.acquisitionDate = acquisitionDate;
         this.description = description;
-        this.comments = comments;
+        this.comment = comment;
         this.value = value;
         this.make = make;
         this.model = model;
         this.serialNumber = serialNumber;
         this.tags = tags;
-    }
-    public Item(String name, Date aquisitionDate, String description, String comments, BigDecimal value, String make, String model, String serialNumber) {
-        this.name = name;
-        this.aquisitionDate = aquisitionDate;
-        this.description = description;
-        this.comments = comments;
-        this.value = value;
-        this.make = make;
-        this.model = model;
-        this.serialNumber = serialNumber;
     }
 
     public String getName() {
@@ -50,12 +49,12 @@ public class Item {
         this.name = name;
     }
 
-    public Date getAquisitionDate() {
-        return aquisitionDate;
+    public Date getAcquisitionDate() {
+        return acquisitionDate;
     }
 
-    public void setAquisitionDate(Date aquisitionDate) {
-        this.aquisitionDate = aquisitionDate;
+    public void setAcquisitionDate(Date acquisitionDate) {
+        this.acquisitionDate = acquisitionDate;
     }
 
     public String getDescription() {
@@ -66,12 +65,12 @@ public class Item {
         this.description = description;
     }
 
-    public String getComments() {
-        return comments;
+    public String getComment() {
+        return comment;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public BigDecimal getValue() {
