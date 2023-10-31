@@ -21,8 +21,6 @@ public class ItemDatabase extends Database {
     public ItemDatabase() {
         super();
         this.db = fetchCollection();
-
-
     }
 
     public void addItem(Item item) {
