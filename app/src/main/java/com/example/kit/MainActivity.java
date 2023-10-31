@@ -8,16 +8,19 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
 
-public class MainActivity extends FragmentActivity {
+import com.example.kit.data.Item;
+import com.example.kit.database.ItemDatabase;
 
-    public MainActivity() {
-        super(R.layout.activity_main);
-    }
+import java.math.BigDecimal;
+import java.util.Date;
+
+public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
+    }
 }
