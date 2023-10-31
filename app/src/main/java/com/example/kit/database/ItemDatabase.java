@@ -26,6 +26,7 @@ public class ItemDatabase extends Database {
     }
 
     public void addItem(Item item) {
+        // Todo: Implement tag data here, I don't have the data type on this branch
         HashMap<String, String> data = new HashMap<>();
         data.put("Name", item.getName());
         data.put("Date", item.getAquisitionDate().toString());
@@ -47,9 +48,6 @@ public class ItemDatabase extends Database {
                         Log.d("Firestore", "Adding item failure!");
                     }
                 });
-
-
-        // TODO: Add to hash map, we want a random index that firestore will generate
     }
 
     public void deleteItem(String uid){

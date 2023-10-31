@@ -1,4 +1,4 @@
 package com.example.kit.database;
 
-public class FilterDatabase {
+public class TagDatabase {
 }
