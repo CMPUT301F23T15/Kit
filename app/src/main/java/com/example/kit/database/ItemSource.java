@@ -1,7 +1,8 @@
 package com.example.kit.database;
 
-public interface dataSource {
-    public void addInstance();
-    public void removeInstance();
-    public void getAllInstances();
+import com.example.kit.data.Item;
+
+public interface ItemSource {
+    public void addInstance(Item item);
+    public void removeInstance(String uid);
 }

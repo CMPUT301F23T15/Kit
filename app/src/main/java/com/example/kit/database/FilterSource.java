@@ -1,2 +1,5 @@
-package com.example.kit.database;public interface filterSource {
+package com.example.kit.database;
+
+public interface FilterSource {
+
 }

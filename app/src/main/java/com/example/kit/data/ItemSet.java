@@ -35,4 +35,9 @@ public class ItemSet {
         return totalValue;
     }
 
+    public void addItem(Item item){items.add(item);}
+
+    public void clear() {
+        items.clear();
+    }
 }
