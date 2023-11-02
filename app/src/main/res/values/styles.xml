@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="tag_chip" parent="Widget.Material3.Chip.Assist">
+        <item name="chipMinHeight">@dimen/tag_height</item>
+        <item name="chipEndPadding">@dimen/tag_padding</item>
+        <item name="chipStartPadding">@dimen/tag_padding</item>
+
+        <item name="closeIconEnabled">true</item>
+        <item name="closeIconVisible">true</item>
+
+    </style>
+</resources>

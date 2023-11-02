@@ -8,4 +8,8 @@
     <dimen name="item_list_row_space">8</dimen>
     <dimen name="item_list_content_vertical_space">16</dimen>
     <dimen name="corner_radius">16dp</dimen>
+    <dimen name="item_display_image_size">256dp</dimen>
+    <dimen name="item_thumbnail_size">96dp</dimen>
+    <dimen name="tag_height">20dp</dimen>
+    <dimen name="tag_padding">4dp</dimen>
 </resources>

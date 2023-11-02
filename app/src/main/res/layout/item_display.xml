@@ -16,33 +16,28 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_top_margin"
-            android:layout_marginBottom="16dp"
+            android:maxWidth="@dimen/item_display_image_size"
+            android:maxHeight="@dimen/item_display_image_size"
+            android:minWidth="@dimen/item_display_image_size"
+            android:minHeight="@dimen/item_display_image_size"
             android:src="@tools:sample/avatars"
-            app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.33333" />
 
         <EditText
             android:id="@+id/itemNameDisplay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:ems="10"
             android:hint="Item Name"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
         <EditText
             android:id="@+id/itemDateDisplay"
@@ -83,6 +78,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/itemDateDisplay">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip9"
