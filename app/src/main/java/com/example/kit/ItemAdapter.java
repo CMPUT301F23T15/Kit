@@ -4,12 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -47,7 +50,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-
+            TextView itemName = itemView.findViewById(R.id.item_name);
+            TextView itemDate = itemView.findViewById(R.id.item_date);
         }
 
         public void displayItem(Item item) {
