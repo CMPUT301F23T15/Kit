@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,12 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Item;
+import com.example.kit.data.ItemSet;
 
 import java.util.ArrayList;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
-    private ArrayList<Item> itemList;
+    private ItemSet itemSet;
+    private Context context;
+
+    public ItemAdapter(Context context, ItemSet itemSet) {
+        this.context = context;
+        this.itemSet = itemSet;
+    }
 
     @NonNull
     @Override
@@ -25,7 +33,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.displayItem(itemList.get(position));
+        holder.displayItem(itemSet.getItem(position));
     }
 
     @Override
@@ -35,8 +43,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+
         }
 
         public void displayItem(Item item) {
