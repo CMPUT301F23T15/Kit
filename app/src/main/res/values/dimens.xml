@@ -7,4 +7,5 @@
     <dimen name="content_horizontal_space">16</dimen>
     <dimen name="item_list_row_space">8</dimen>
     <dimen name="item_list_content_vertical_space">16</dimen>
+    <dimen name="corner_radius">16dp</dimen>
 </resources>
