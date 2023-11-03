@@ -38,11 +38,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/item_list_content_horizontal_space"
                 android:layout_marginTop="@dimen/item_list_content_vertical_space"
-                android:text="Item Name"
                 app:layout_constraintBottom_toTopOf="@+id/itemDate_row"
                 app:layout_constraintStart_toEndOf="@+id/itemThumbnail_row"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread_inside" />
+                app:layout_constraintVertical_chainStyle="spread_inside"
+                tools:text="ItemName" />
 
             <TextView
                 android:id="@+id/itemDate_row"
@@ -68,7 +68,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/itemDate_row">
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip"
+                    android:id="@+id/chip15"
+                    style="@style/tag_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="testset"
@@ -81,40 +82,19 @@
                     app:closeIconVisible="true" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip2"
+                    android:id="@+id/chip"
+                    style="@style/tag_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="testset"
                     app:checkedIconVisible="false"
                     app:chipEndPadding="4dp"
+                    app:chipIcon="@drawable/baseline_add_24"
                     app:chipMinHeight="20dp"
                     app:chipMinTouchTargetSize="20dp"
                     app:chipStartPadding="4dp"
-                    app:closeIconVisible="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="testset"
-                    app:checkedIconVisible="false"
-                    app:chipEndPadding="4dp"
-                    app:chipMinHeight="20dp"
-                    app:chipMinTouchTargetSize="20dp"
-                    app:chipStartPadding="4dp"
-                    app:closeIconVisible="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="testset"
-                    app:checkedIconVisible="false"
-                    app:chipEndPadding="4dp"
-                    app:chipMinHeight="20dp"
-                    app:chipMinTouchTargetSize="20dp"
-                    app:chipStartPadding="4dp"
-                    app:closeIconVisible="true" />
+                    app:closeIconVisible="false"
+                    app:textEndPadding="0dp"
+                    app:textStartPadding="0dp" />
 
             </com.google.android.material.chip.ChipGroup>
 
