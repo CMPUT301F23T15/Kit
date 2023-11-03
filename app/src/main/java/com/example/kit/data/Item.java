@@ -18,6 +18,10 @@ public class Item {
 
     // TODO: Images
 
+    public Item() {
+
+    }
+
     public Item (String name) {
         this.name = name;
         this.acquisitionDate = null;
