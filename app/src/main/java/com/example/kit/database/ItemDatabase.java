@@ -27,13 +27,15 @@ public class ItemDatabase extends Database {
         // Todo: Implement tag data here, I don't have the data type on this branch
         HashMap<String, String> data = new HashMap<>();
         data.put("Name", item.getName());
-        data.put("Date", item.getAquisitionDate().toString());
+        // Errors commenting out for now
+        //data.put("Date", item.getAquisitionDate().toString());
         data.put("Value", item.getValue().toString());
         data.put("Make", item.getMake());
         data.put("Model", item.getModel());
         data.put("SerialNumber", item.getSerialNumber());
         data.put("Description", item.getDescription());
-        data.put("Comment", item.getComments());
+        // Errors commenting out for now
+        //data.put("Comment", item.getComments());
         db.document().set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
