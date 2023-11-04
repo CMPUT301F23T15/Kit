@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 public class Item {
-    // Todo: May use Tag data type for tags, for now use just strings
+    // Todo: May use Tag data type for tags, for now, use just strings
     private String name;
     private Timestamp acquisitionDate;
     private String description;
@@ -34,18 +34,18 @@ public class Item {
         this.serialNumber = "";
         this.tags = new ArrayList<>();
     }
-
-//    public Item(String name, Timestamp acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<Tag> tags) {
-//        this.name = name;
-//        this.acquisitionDate = acquisitionDate;
-//        this.description = description;
-//        this.comment = comment;
-//        this.value = value;
-//        this.make = make;
-//        this.model = model;
-//        this.serialNumber = serialNumber;
-//        this.tags = tags;
-//    }
+    // May delete when cleaning up code
+    public Item(String name, Timestamp acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<String> tags) {
+       this.name = name;
+       this.acquisitionDate = acquisitionDate;
+       this.description = description;
+       this.comment = comment;
+       this.value = value;
+       this.make = make;
+       this.model = model;
+       this.serialNumber = serialNumber;
+       this.tags = tags;
+   }
 
     public String getName() {
         return name;
