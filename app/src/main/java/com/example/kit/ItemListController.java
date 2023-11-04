@@ -6,7 +6,6 @@ import com.example.kit.database.FirestoreManager;
 import com.example.kit.database.ItemFirestoreAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 
@@ -15,10 +14,11 @@ public class ItemListController {
     private static final ItemListController controller = new ItemListController();
     private final CollectionReference itemCollection;
     private final ItemFirestoreAdapter adapter;
-    private ItemSet itemSet;
+    private final ItemSet itemSet;
 
     private ItemListController() {
         itemCollection = FirestoreManager.getInstance().getItemCollection();
+        itemSet = new ItemSet();
 
         // Default to getting the entire Items collection.
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
@@ -33,7 +33,7 @@ public class ItemListController {
                 }
             }
             else {
-                // do stuff
+                // TODO: Throw error
             }
         });
 
@@ -44,10 +44,26 @@ public class ItemListController {
         return controller;
     }
 
+    public void onStart() {
+        adapter.startListening();
+    }
+
+    public void onStop() {
+        adapter.stopListening();
+    }
+
     public ItemFirestoreAdapter getAdapter() {
         return adapter;
     }
 
-    public void updateFilter(
+    public void updateFilter(/* Filter filter */) {
+        // Build query
+
+        FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
+        //        .setQuery()
+                .build();
+
+        adapter.updateOptions(options);
+    }
 
 }

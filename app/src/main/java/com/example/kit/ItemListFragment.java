@@ -33,6 +33,18 @@ public class ItemListFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        controller.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        controller.onStop();
+    }
+
     private void initializeItemList() {
         binding.itemList.setAdapter(controller.getAdapter());
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));

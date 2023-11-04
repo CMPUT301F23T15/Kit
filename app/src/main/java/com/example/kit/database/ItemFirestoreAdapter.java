@@ -6,14 +6,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.example.kit.data.Item;
-import com.example.kit.data.ItemSet;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemViewHolder> {
-    private ItemListRowBinding binding;
-    private ItemSet itemSet;
+
     public ItemFirestoreAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
         super(options);
     }
@@ -26,8 +24,9 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemListRowBinding binding =
-                ItemListRowBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemListRowBinding binding = ItemListRowBinding
+                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+
         return new ItemViewHolder(binding);
     }
 }
