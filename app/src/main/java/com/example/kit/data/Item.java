@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 public class Item {
+    // Todo: May use Tag data type for tags, for now use just strings
     private String name;
     private Timestamp acquisitionDate;
     private String description;
