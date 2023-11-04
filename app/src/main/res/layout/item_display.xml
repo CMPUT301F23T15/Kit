@@ -33,8 +33,9 @@
             android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:ems="10"
-            android:hint="Item Name"
+            android:hint="@string/item_display_name_hint"
             android:inputType="text"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -47,8 +48,9 @@
             android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/content_horizontal_space"
             android:ems="10"
-            android:hint="Acquisition Date"
+            android:hint="@string/item_display_date_hint"
             android:inputType="date"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toStartOf="@+id/itemValueDisplay"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,8 +63,9 @@
             android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:ems="10"
-            android:hint="Value"
+            android:hint="@string/item_display_value_hint"
             android:inputType="numberDecimal"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/itemDateDisplay"
@@ -77,45 +80,7 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemDateDisplay">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="visible" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.chip.ChipGroup>
+            app:layout_constraintTop_toBottomOf="@+id/itemDateDisplay"/>
 
         <EditText
             android:id="@+id/itemMakeDisplay"
@@ -125,8 +90,9 @@
             android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/content_horizontal_space"
             android:ems="10"
-            android:hint="Make"
+            android:hint="@string/item_display_make_hint"
             android:inputType="text"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toStartOf="@+id/itemModelDisplay"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,8 +105,9 @@
             android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:ems="10"
-            android:hint="Model"
+            android:hint="@string/item_display_model_hint"
             android:inputType="text"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/itemMakeDisplay"
@@ -154,8 +121,9 @@
             android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:ems="10"
-            android:hint="Description"
+            android:hint="@string/item_display_description_hint"
             android:inputType="text"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/itemMakeDisplay" />
@@ -168,8 +136,9 @@
             android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:ems="10"
-            android:hint="Comment"
+            android:hint="@string/item_display_comment_hint"
             android:inputType="text"
+            android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/itemDescriptionDisplay" />
