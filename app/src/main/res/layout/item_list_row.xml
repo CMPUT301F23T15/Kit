@@ -81,71 +81,15 @@
                     app:singleLine="true">
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/chip2"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="testset"
-                        app:checkedIconVisible="false"
-                        app:chipEndPadding="4dp"
-                        app:chipMinHeight="20dp"
-                        app:chipMinTouchTargetSize="20dp"
-                        app:chipStartPadding="4dp"
-                        app:closeIconEnabled="true"
-                        app:closeIconVisible="true" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip3"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="testset"
-                        app:checkedIconVisible="false"
-                        app:chipEndPadding="4dp"
-                        app:chipMinHeight="20dp"
-                        app:chipMinTouchTargetSize="20dp"
-                        app:chipStartPadding="4dp"
-                        app:closeIconEnabled="true"
-                        app:closeIconVisible="true" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip4"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="testset"
-                        app:checkedIconVisible="false"
-                        app:chipEndPadding="4dp"
-                        app:chipMinHeight="20dp"
-                        app:chipMinTouchTargetSize="20dp"
-                        app:chipStartPadding="4dp"
-                        app:closeIconEnabled="true"
-                        app:closeIconVisible="true" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip15"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="testset"
-                        app:checkedIconVisible="false"
-                        app:chipEndPadding="4dp"
-                        app:chipMinHeight="20dp"
-                        app:chipMinTouchTargetSize="20dp"
-                        app:chipStartPadding="4dp"
-                        app:closeIconEnabled="true"
-                        app:closeIconVisible="true" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip"
-                        style="@style/tag_chip"
+                        android:id="@+id/addTagChip"
+                        style="@style/tag_add_chip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:checkedIconVisible="false"
                         app:chipEndPadding="4dp"
                         app:chipIcon="@drawable/baseline_add_24"
                         app:chipMinHeight="20dp"
-                        app:chipMinTouchTargetSize="20dp"
+                        app:chipMinTouchTargetSize="30dp"
                         app:chipStartPadding="4dp"
                         app:closeIconVisible="false"
                         app:textEndPadding="0dp"
