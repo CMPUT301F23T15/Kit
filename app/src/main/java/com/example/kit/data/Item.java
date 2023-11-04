@@ -1,22 +1,28 @@
 package com.example.kit.data;
 
+import com.google.firebase.Timestamp;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.NoSuchElementException;
 
 public class Item {
+    // Todo: May use Tag data type for tags, for now, use just strings
     private String name;
-    private Date acquisitionDate;
+    private Timestamp acquisitionDate;
     private String description;
     private String comment;
     private BigDecimal value;
     private String make;
     private String model;
     private String serialNumber;
-    private ArrayList<Tag> tags;
+    private ArrayList<String> tags;
 
     // TODO: Images
+
+    public Item() {
+
+    }
 
     public Item (String name) {
         this.name = name;
@@ -28,18 +34,18 @@ public class Item {
         this.serialNumber = "";
         this.tags = new ArrayList<>();
     }
-
-    public Item(String name, Date acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<Tag> tags) {
-        this.name = name;
-        this.acquisitionDate = acquisitionDate;
-        this.description = description;
-        this.comment = comment;
-        this.value = value;
-        this.make = make;
-        this.model = model;
-        this.serialNumber = serialNumber;
-        this.tags = tags;
-    }
+    // May delete when cleaning up code
+    public Item(String name, Timestamp acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<String> tags) {
+       this.name = name;
+       this.acquisitionDate = acquisitionDate;
+       this.description = description;
+       this.comment = comment;
+       this.value = value;
+       this.make = make;
+       this.model = model;
+       this.serialNumber = serialNumber;
+       this.tags = tags;
+   }
 
     public String getName() {
         return name;
@@ -49,11 +55,11 @@ public class Item {
         this.name = name;
     }
 
-    public Date getAcquisitionDate() {
+    public Timestamp getAcquisitionDate() {
         return acquisitionDate;
     }
 
-    public void setAcquisitionDate(Date acquisitionDate) {
+    public void setAcquisitionDate(Timestamp acquisitionDate) {
         this.acquisitionDate = acquisitionDate;
     }
 
@@ -73,12 +79,20 @@ public class Item {
         this.comment = comment;
     }
 
-    public BigDecimal getValue() {
+    public BigDecimal getValueBigDecimal() {
         return value;
     }
 
-    public void setValue(BigDecimal value) {
+    public void setValueBigDecimal(BigDecimal value) {
         this.value = value;
+    }
+
+    public String getValue() {
+        return value.toString();
+    }
+
+    public void setValue(String value) {
+        this.value = new BigDecimal(value);
     }
 
     public String getMake() {
@@ -105,15 +119,15 @@ public class Item {
         this.serialNumber = serialNumber;
     }
 
-    public ArrayList<Tag> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
-    public void addTag(Tag tag) {
-        if (!tags.contains(tag)) {
-            tags.add(tag);
-        }
-    }
+//    public void addTag(Tag tag) {
+//        if (!tags.contains(tag)) {
+//            tags.add(tag);
+//        }
+//    }
 
     /**
      * Removes the provided tag from the Item.

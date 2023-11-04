@@ -8,6 +8,10 @@ import java.util.ArrayList;
 public class ItemSet {
     private ArrayList<Item> items;
 
+    public ItemSet() {
+        items = new ArrayList<Item>();
+    }
+
     /**
      * Returns the {@link Item}s within the ItemSet.
      * @return
@@ -34,9 +38,14 @@ public class ItemSet {
     public BigDecimal getItemSetValue() {
         BigDecimal totalValue = new BigDecimal(0);
         for (Item item : items) {
-            totalValue = totalValue.add(item.getValue());
+            totalValue = totalValue.add(item.getValueBigDecimal());
         }
         return totalValue;
     }
 
+    public void addItem(Item item){items.add(item);}
+
+    public void clear() {
+        items.clear();
+    }
 }
