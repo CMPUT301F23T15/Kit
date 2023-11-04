@@ -21,6 +21,10 @@ public class ItemSet {
         return items;
     }
 
+    public int getItemsCount() {
+        return items.size();
+    }
+
 
     public Item getItem(int position) {
         return items.get(position);
