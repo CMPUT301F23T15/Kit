@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Kit</string>
+
+    <!-- Item Display Fragment -->
+    <string name="item_display_make_hint">Make</string>
+    <string name="item_display_value_hint">Value</string>
+    <string name="item_display_date_hint">Acquisition Date</string>
+    <string name="item_display_name_hint">Item Name</string>
+    <string name="item_display_model_hint">Model</string>
+    <string name="item_display_description_hint">Description</string>
+    <string name="item_display_comment_hint">Comment</string>
 </resources>
