@@ -57,13 +57,19 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         };
 
         // Populate chips with tags
-        for(int i = 0; i < tags.size(); i++) {
-            // Check for more than chips than
-            if(i >= chips.length) {
-                break;
+        int num_chips = binding.itemTagGroupRow.getChildCount();
+        for(int i = 0; i < num_chips; i++) {
+            Chip chip = (Chip) binding.itemTagGroupRow.getChildAt(i);
+
+            // Hide the unused chips
+            if(i >= tags.size()) {
+                chip.setText("");
+                chip.setVisibility(View.GONE);
+                continue;
             }
-            chips[i].setText(tags.get(i));
-            chips[i].setVisibility(View.VISIBLE);
+
+            chip.setText(tags.get(i));
+            chip.setVisibility(View.VISIBLE);
         }
     }
 }
