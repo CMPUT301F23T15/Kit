@@ -15,6 +15,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     // TODO: Expand
     public void displayItem(Item item){
-        binding.itemName.setText(item.getName());
+        binding.itemNameRow.setText(item.getName());
     }
 }
