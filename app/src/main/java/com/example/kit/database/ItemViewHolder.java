@@ -25,36 +25,12 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     // TODO: Expand
     public void displayItem(Item item){
         // Fill in item row values
-
         DateFormat df = DateFormat.getDateTimeInstance();
         binding.itemNameRow.setText(item.getName());
         binding.itemDateRow.setText(df.format(item.getAcquisitionDate().toDate()));
         binding.itemValueRow.setText(item.getValue());
 
         ArrayList<String> tags = item.getTags();
-
-        Chip[] chips = {
-                binding.tagChip1,
-                binding.tagChip2,
-                binding.tagChip3,
-                binding.tagChip4,
-                binding.tagChip5,
-                binding.tagChip6,
-                binding.tagChip7,
-                binding.tagChip8,
-                binding.tagChip9,
-                binding.tagChip10,
-                binding.tagChip11,
-                binding.tagChip12,
-                binding.tagChip13,
-                binding.tagChip14,
-                binding.tagChip15,
-                binding.tagChip16,
-                binding.tagChip17,
-                binding.tagChip18,
-                binding.tagChip19,
-                binding.tagChip20
-        };
 
         // Populate chips with tags
         int num_chips = binding.itemTagGroupRow.getChildCount();
