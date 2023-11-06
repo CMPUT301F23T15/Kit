@@ -29,7 +29,7 @@ public class ItemListController {
             if (task.isSuccessful()) {
                 itemSet.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    itemSet.addItem(document.toObject(Item.class));
+                    itemSet.addItem(document.toObject(Item.class), document.getId());
                 }
             }
             else {
