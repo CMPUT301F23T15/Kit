@@ -2,7 +2,7 @@ package com.example.kit.data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-
+import java.util.NoSuchElementException;
 
 
 public class ItemSet {
@@ -43,7 +43,10 @@ public class ItemSet {
         return totalValue;
     }
 
-    public void addItem(Item item){items.add(item);}
+    public void addItem(Item item, String id){
+        item.setId(id);
+        items.add(item);
+    }
 
     public void clear() {
         items.clear();
