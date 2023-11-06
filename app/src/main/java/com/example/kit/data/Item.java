@@ -1,5 +1,7 @@
 package com.example.kit.data;
 
+import android.media.Image;
+
 import com.google.firebase.Timestamp;
 
 import java.math.BigDecimal;
@@ -18,6 +20,9 @@ public class Item {
     private String model;
     private String serialNumber;
     private ArrayList<String> tags;
+    private ArrayList<Image> images; // Placeholder, may store locally with something like a path to the directory?
+                                    // Looking into FireStore and images, we can use a cloud solution and then have
+                                    // FireStore manage it (kinda)
 
     // TODO: Images
 
