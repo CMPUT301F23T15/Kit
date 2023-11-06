@@ -32,6 +32,7 @@ public class Item {
 
     public Item (String name) {
         this.name = name;
+        this.id = "";
         this.acquisitionDate = null;
         this.description = "";
         this.comment = "";
