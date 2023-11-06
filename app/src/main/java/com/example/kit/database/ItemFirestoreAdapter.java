@@ -10,6 +10,9 @@ import com.example.kit.databinding.ItemListRowBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+/**
+ * RecyclerView Adapter
+ */
 public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemViewHolder> {
 
     public ItemFirestoreAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
