@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "876769459294",
-    "project_id": "kitdb-63073",
-    "storage_bucket": "kitdb-63073.appspot.com"
+    "project_number": "1056389037660",
+    "project_id": "kitdb-9600c",
+    "storage_bucket": "kitdb-9600c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:876769459294:android:b528d67ca1f05312ab08cf",
+        "mobilesdk_app_id": "1:1056389037660:android:3bf6b8471821819b59b099",
         "android_client_info": {
           "package_name": "com.example.kit"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDt1O1ntYUJTPWrV7WM_JLtScd3jWKfVVk"
+          "current_key": "AIzaSyDi66ZCBmtrMmBeroGlokKn5KewysKf6m4"
         }
       ],
       "services": {
