@@ -20,10 +20,10 @@
             android:maxHeight="@dimen/item_display_image_size"
             android:minWidth="@dimen/item_display_image_size"
             android:minHeight="@dimen/item_display_image_size"
-            android:src="@tools:sample/avatars"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <EditText
             android:id="@+id/itemNameDisplay"

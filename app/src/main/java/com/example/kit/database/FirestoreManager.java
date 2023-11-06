@@ -7,17 +7,16 @@ public class FirestoreManager {
 
     private static final FirestoreManager firestoreManager = new FirestoreManager();
 
-    private FirebaseFirestore db;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private FirestoreManager() {
-        db = FirebaseFirestore.getInstance();
     }
 
     public static FirestoreManager getInstance() {
         return firestoreManager;
     }
 
-    public CollectionReference getItemCollection() {
-        return db.collection("Items");
+    public CollectionReference getCollection(String collection) {
+        return db.collection(collection);
     }
 }
