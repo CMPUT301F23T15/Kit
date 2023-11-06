@@ -17,7 +17,7 @@ public class ItemListController {
     private final ItemSet itemSet;
 
     private ItemListController() {
-        itemCollection = FirestoreManager.getInstance().getItemCollection();
+        itemCollection = FirestoreManager.getInstance().getCollection("Items");
         itemSet = new ItemSet();
 
         // Default to getting the entire Items collection.
