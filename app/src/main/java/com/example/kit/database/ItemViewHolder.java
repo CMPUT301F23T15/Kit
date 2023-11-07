@@ -3,8 +3,6 @@ package com.example.kit.database;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 
