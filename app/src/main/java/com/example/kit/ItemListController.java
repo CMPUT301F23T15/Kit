@@ -20,7 +20,6 @@ public class ItemListController implements SelectListener{
     private final ItemFirestoreAdapter adapter;
     private final ItemSet itemSet;
     private NavController navController;
-    private boolean selection = false;
 
     private ItemListController() {
         itemCollection = FirestoreManager.getInstance().getCollection("Items");
@@ -83,22 +82,12 @@ public class ItemListController implements SelectListener{
     @Override
     public void onItemClick(Item item) {
         Log.v("On Item Click", "Item Clicked Success | Item: " + item.getName());
-        if(selection){
-            // Select Checkbox
-        } else {
-            // navController.navigate(R.id.action_display_item_from_list);
-        }
-
-
+             navController.navigate(R.id.action_display_item_from_list);
     }
 
     @Override
     public void onItemLongClick(Item item) {
         Log.v("On Item Long Click", "Start selection");
-        if(selection){
-            selection = false;
-        } else {
-            selection = true;
-        }
     }
+
 }
