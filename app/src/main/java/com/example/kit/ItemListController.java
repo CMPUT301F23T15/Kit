@@ -5,6 +5,8 @@ import android.util.Log;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
@@ -13,7 +15,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
 public class ItemListController{
@@ -91,7 +97,7 @@ public class ItemListController{
                        Log.d("Firestore", "Document deletion failed: " + item.getId());
                    }
                });
-        itemSet.remItem(item);
+        // itemSet.removeItem(item);
    }
    public void deleteItems(ArrayList<Item> items){
         for(int i = 0; i < items.size(); i++) {

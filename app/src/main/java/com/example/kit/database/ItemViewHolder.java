@@ -71,7 +71,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
-
     public ItemListRowBinding getBinding() {
         return binding;
     }

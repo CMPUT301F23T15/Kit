@@ -14,8 +14,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemViewHolder> {
-
-
     private SelectListener listener;
 
     public ItemFirestoreAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {

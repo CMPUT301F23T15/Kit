@@ -2,7 +2,6 @@ package com.example.kit.data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 
 public class ItemSet {
@@ -50,7 +49,7 @@ public class ItemSet {
         items.clear();
     }
 
-    public void remItem(Item item){
+    public void removeItem(Item item){
         items.remove(item);
     }
 
