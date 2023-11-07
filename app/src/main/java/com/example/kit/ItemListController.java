@@ -69,11 +69,11 @@ public class ItemListController implements SelectListener{
 
     @Override
     public void onItemClick(Item item) {
-        Log.v("On Item Click", "Item Clicked Success");
+        Log.v("On Item Click", "Item Clicked Success | Item: " + item.getName());
     }
 
     @Override
     public void onItemLongClick(Item item) {
-        Log.v("On Item Long Click", "Item Long Clicked Success");
+        Log.v("On Item Long Click", "Item Long Clicked Success | Item: " + item.getName());
     }
 }
