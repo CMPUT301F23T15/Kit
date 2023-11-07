@@ -2,24 +2,26 @@ package com.example.kit;
 
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.navigation.NavController;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
 import com.example.kit.database.ItemFirestoreAdapter;
+import com.example.kit.database.ItemViewHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-public class ItemListController implements SelectListener{
+public class ItemListController{
 
     private static final ItemListController controller = new ItemListController();
     private final CollectionReference itemCollection;
     private final ItemFirestoreAdapter adapter;
     private final ItemSet itemSet;
-    private NavController navController;
 
     private ItemListController() {
         itemCollection = FirestoreManager.getInstance().getCollection("Items");
@@ -42,9 +44,8 @@ public class ItemListController implements SelectListener{
             }
         });
 
-        adapter = new ItemFirestoreAdapter(options, this);
+        adapter = new ItemFirestoreAdapter(options);
     }
-
     public static ItemListController getInstance() {
         return controller;
     }
@@ -61,14 +62,6 @@ public class ItemListController implements SelectListener{
         return adapter;
     }
 
-    public void setNavController(NavController navController) {
-        this.navController = navController;
-    }
-
-    public NavController getNavController () {
-        return navController;
-    }
-
     public void updateFilter(/* Filter filter */) {
         // Build query
 
@@ -79,15 +72,7 @@ public class ItemListController implements SelectListener{
         adapter.updateOptions(options);
     }
 
-    @Override
-    public void onItemClick(Item item) {
-        Log.v("On Item Click", "Item Clicked Success | Item: " + item.getName());
-             navController.navigate(R.id.action_display_item_from_list);
-    }
-
-    @Override
-    public void onItemLongClick(Item item) {
-        Log.v("On Item Long Click", "Start selection");
-    }
-
+   public void setListener(SelectListener listener){
+        adapter.setListener(listener);
+   }
 }

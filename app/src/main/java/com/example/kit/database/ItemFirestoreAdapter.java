@@ -1,6 +1,7 @@
 package com.example.kit.database;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,17 +14,17 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemViewHolder> {
 
+
     private SelectListener listener;
 
-    public ItemFirestoreAdapter(@NonNull FirestoreRecyclerOptions<Item> options, SelectListener listener) {
+    public ItemFirestoreAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
         super(options);
-        this.listener = listener;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull ItemViewHolder holder, int position, @NonNull Item model) {
         holder.displayItem(model);
-        holder.setupListeners(listener, model);
+        holder.setupListeners(listener, holder, model);
     }
 
     @NonNull
@@ -34,4 +35,14 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
 
         return new ItemViewHolder(binding);
     }
+    public void adapterSetChecked(View view){
+        view.setVisibility(View.INVISIBLE);
+    }
+    public void adapterSetupChecking(ItemViewHolder holder){
+        holder.getBinding().itemNameRow.setVisibility(View.GONE);
+    }
+    public void setListener(SelectListener listener) {
+        this.listener = listener;
+    }
+
 }

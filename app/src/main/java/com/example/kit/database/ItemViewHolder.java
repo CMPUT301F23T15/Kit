@@ -50,7 +50,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             chip.setVisibility(View.VISIBLE);
         }
     }
-    public void setupListeners(SelectListener listener, Item model){
+    public void setupListeners(SelectListener listener, ItemViewHolder holder, Item model){
         binding.itemCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,9 +60,20 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         binding.itemCardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                listener.onItemLongClick(model);
+                listener.onItemLongClick();
                 return true;
             }
         });
+        binding.itemNameRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.setItemChecked(v);
+            }
+        });
+
+    }
+
+    public ItemListRowBinding getBinding() {
+        return binding;
     }
 }
