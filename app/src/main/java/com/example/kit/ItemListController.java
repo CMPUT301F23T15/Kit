@@ -1,6 +1,10 @@
 package com.example.kit;
 
+
 import android.util.Log;
+
+import androidx.navigation.NavController;
+
 
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
@@ -15,6 +19,7 @@ public class ItemListController implements SelectListener{
     private final CollectionReference itemCollection;
     private final ItemFirestoreAdapter adapter;
     private final ItemSet itemSet;
+    private NavController navController;
 
     private ItemListController() {
         itemCollection = FirestoreManager.getInstance().getCollection("Items");
@@ -54,6 +59,14 @@ public class ItemListController implements SelectListener{
 
     public ItemFirestoreAdapter getAdapter() {
         return adapter;
+    }
+
+    public void setNavController(NavController navController) {
+        this.navController = navController;
+    }
+
+    public NavController getNavController () {
+        return navController;
     }
 
     public void updateFilter(/* Filter filter */) {
