@@ -3,9 +3,11 @@ package com.example.kit.database;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.R;
+import com.example.kit.SelectListener;
 import com.example.kit.data.Item;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.google.android.material.chip.Chip;
@@ -49,5 +51,20 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             chip.setText(tags.get(i));
             chip.setVisibility(View.VISIBLE);
         }
+    }
+    public void setupListeners(SelectListener listener, Item model){
+        binding.itemCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(model);
+            }
+        });
+        binding.itemCardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onItemLongClick(model);
+                return true;
+            }
+        });
     }
 }

@@ -1,5 +1,8 @@
 package com.example.kit;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
@@ -7,9 +10,7 @@ import com.example.kit.database.ItemFirestoreAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-
-public class ItemListController {
+public class ItemListController implements SelectListener{
 
     private static final ItemListController controller = new ItemListController();
     private final CollectionReference itemCollection;
@@ -37,7 +38,7 @@ public class ItemListController {
             }
         });
 
-        adapter = new ItemFirestoreAdapter(options);
+        adapter = new ItemFirestoreAdapter(options, this);
     }
 
     public static ItemListController getInstance() {
@@ -66,4 +67,13 @@ public class ItemListController {
         adapter.updateOptions(options);
     }
 
+    @Override
+    public void onItemClick(Item item) {
+        Log.v("On Item Click", "Item Clicked Success");
+    }
+
+    @Override
+    public void onItemLongClick(Item item) {
+        Log.v("On Item Long Click", "Item Long Clicked Success");
+    }
 }
