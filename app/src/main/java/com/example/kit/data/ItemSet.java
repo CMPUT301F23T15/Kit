@@ -51,4 +51,14 @@ public class ItemSet {
     public void clear() {
         items.clear();
     }
+
+
+    // TODO: Implement removal by item object not by position, I think we can use an interface implemented by the item
+    public void remItem(Item item){
+//        for(int i = 0; i < getItemsCount(); i++){
+//            if(item.getId() == items.get(i).getId())
+//                items.remove(i);
+//        }
+        items.remove(item);
+    }
 }

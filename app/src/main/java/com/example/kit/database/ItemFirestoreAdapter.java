@@ -1,5 +1,6 @@
 package com.example.kit.database;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +35,6 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
                 .inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
         return new ItemViewHolder(binding);
-    }
-    public void adapterSetChecked(View view){
-        if(view.getVisibility() == View.VISIBLE){
-            view.setVisibility(View.INVISIBLE);
-        } else {
-            view.setVisibility(View.VISIBLE);
-        }
     }
     public void setListener(SelectListener listener) {
         this.listener = listener;

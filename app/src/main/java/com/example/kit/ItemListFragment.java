@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.fragment.app.Fragment;
 
 import androidx.navigation.NavController;
@@ -21,6 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kit.data.Item;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 
 public class ItemListFragment extends Fragment implements SelectListener{
@@ -45,6 +51,7 @@ public class ItemListFragment extends Fragment implements SelectListener{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemListBinding.inflate(inflater, container, false);
         initializeItemList();
+        initializeUIInteractions();
         return binding.getRoot();
     }
 
@@ -65,10 +72,14 @@ public class ItemListFragment extends Fragment implements SelectListener{
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 
-    public void initializeAddItemButton() {
-//        itemListBinding.addItemButton.setOnClickListener(onClick -> {
-
-//        });
+    //TODO: Implement add and profile buttons here
+    public void initializeUIInteractions(){
+        binding.deleteItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDelete();
+            }
+        });
     }
     @Override
     public void onItemClick(Item item) {
@@ -80,25 +91,39 @@ public class ItemListFragment extends Fragment implements SelectListener{
     public void onItemLongClick() {
         int numItems = binding.itemList.getAdapter().getItemCount();
         if(selectionMode){
+            binding.addItemButton.setVisibility(View.GONE);
+            binding.deleteItemButton.setVisibility(View.VISIBLE);
             for (int i = 0; i < numItems; i++) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-                itemViewHolder.getBinding().itemNameRow.setVisibility(View.VISIBLE);
+                itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
             }
         } else {
+            binding.addItemButton.setVisibility(View.VISIBLE);
+            binding.deleteItemButton.setVisibility(View.GONE);
             for (int i = 0; i < numItems; i++) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-                itemViewHolder.getBinding().itemNameRow.setVisibility(View.GONE);
+                itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
             }
         }
         selectionMode = !selectionMode;
-    }
-    @Override
-    public void setItemChecked(View view){
-        controller.getAdapter().adapterSetChecked(view);
     }
 
     @Override
     public void onAddTagClick() {
 
     }
+    public void onDelete(){
+        int numItems = binding.itemList.getAdapter().getItemCount();
+        ArrayList<Item> deleteItems = new ArrayList<>();
+        for (int i = 0; i < numItems; i++) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+            if (itemViewHolder.getBinding().checkBox.isChecked()){
+                Log.v("Delete Button", "Deleting item");
+                deleteItems.add(controller.getItem(i));
+            }
+        }
+        controller.deleteItems(deleteItems);
+        controller.getAdapter().notifyDataSetChanged();
+    }
+
 }

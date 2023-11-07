@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class Item {
+public class Item{
     // Todo: May use Tag data type for tags, for now, use just strings
     private String id;
     private String name;
@@ -152,5 +152,18 @@ public class Item {
         if (!tags.remove(tag)) {
             throw new NoSuchElementException();
         }
+    }
+
+    @Override
+    public boolean equals(Object item){
+        if(this.getId() == item.toString()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @Override
+    public String toString(){
+        return this.getId();
     }
 }

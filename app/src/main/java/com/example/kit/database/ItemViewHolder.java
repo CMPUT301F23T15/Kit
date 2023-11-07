@@ -64,12 +64,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 return true;
             }
         });
-        binding.itemNameRow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.setItemChecked(v);
-            }
-        });
         binding.addTagChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

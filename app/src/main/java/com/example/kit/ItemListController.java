@@ -4,6 +4,7 @@ package com.example.kit;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,8 +14,15 @@ import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
 import com.example.kit.database.ItemFirestoreAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+
 public class ItemListController{
 
     private static final ItemListController controller = new ItemListController();
@@ -73,5 +81,31 @@ public class ItemListController{
 
    public void setListener(SelectListener listener){
         adapter.setListener(listener);
+   }
+
+   public void deleteItem(@NonNull Item item){
+       itemCollection.document(item.getId())
+               .delete()
+               .addOnSuccessListener(new OnSuccessListener<Void>() {
+                   @Override
+                   public void onSuccess(Void unused) {
+                       Log.d("Firestore", "Document deleted successfully: " + item.getId());
+                   }
+               })
+               .addOnFailureListener(new OnFailureListener() {
+                   @Override
+                   public void onFailure(@NonNull Exception e) {
+                       Log.d("Firestore", "Document deletion failed: " + item.getId());
+                   }
+               });
+        itemSet.remItem(item);
+   }
+   public void deleteItems(ArrayList<Item> items){
+        for(int i = 0; i < items.size(); i++) {
+            deleteItem(items.get(i));
+        }
+   }
+   public Item getItem(int position){
+        return itemSet.getItem(position);
    }
 }
