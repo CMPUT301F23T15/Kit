@@ -14,5 +14,9 @@
     <fragment
         android:id="@+id/itemDisplayFragment"
         android:name="com.example.kit.ItemDisplayFragment"
-        android:label="ItemDisplayFragment" />
+        android:label="ItemDisplayFragment" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
 </navigation>
