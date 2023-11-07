@@ -2,25 +2,18 @@ package com.example.kit;
 
 
 import android.util.Log;
-import android.view.View;
+
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
 import com.example.kit.database.ItemFirestoreAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
 import java.util.ArrayList;
 
 public class ItemListController{

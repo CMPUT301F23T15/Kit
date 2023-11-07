@@ -26,9 +26,7 @@ public class ItemSet {
     }
 
 
-    public Item getItem(int position) {
-        return items.get(position);
-    }
+    public Item getItem(int position) {return items.get(position); }
 
     /**
      * Calculate the total value of the {@link Item}s within this ItemSet.
@@ -52,13 +50,12 @@ public class ItemSet {
         items.clear();
     }
 
-
-    // TODO: Implement removal by item object not by position, I think we can use an interface implemented by the item
     public void remItem(Item item){
-//        for(int i = 0; i < getItemsCount(); i++){
-//            if(item.getId() == items.get(i).getId())
-//                items.remove(i);
-//        }
         items.remove(item);
     }
+
+
+    // TODO: Could implement get item by item, this requries a loop but would allow a change in the itemListFragment deletion where we wouldn't need to loop and store in the array
+    // ^Discuss this tomorrow
+
 }

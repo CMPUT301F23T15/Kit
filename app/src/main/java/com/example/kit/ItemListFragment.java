@@ -118,7 +118,6 @@ public class ItemListFragment extends Fragment implements SelectListener{
         for (int i = 0; i < numItems; i++) {
             ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
             if (itemViewHolder.getBinding().checkBox.isChecked()){
-                Log.v("Delete Button", "Deleting item");
                 deleteItems.add(controller.getItem(i));
             }
         }
