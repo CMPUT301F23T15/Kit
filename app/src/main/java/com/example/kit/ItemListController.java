@@ -97,7 +97,6 @@ public class ItemListController{
                        Log.d("Firestore", "Document deletion failed: " + item.getId());
                    }
                });
-        // itemSet.removeItem(item);
    }
    public void deleteItems(ArrayList<Item> items){
         for(int i = 0; i < items.size(); i++) {
