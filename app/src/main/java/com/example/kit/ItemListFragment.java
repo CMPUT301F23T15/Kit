@@ -1,28 +1,20 @@
 package com.example.kit;
-
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.example.kit.data.Item;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
 
 import java.util.ArrayList;
-
-
 public class ItemListFragment extends Fragment implements SelectListener{
 
     private ItemListBinding binding;
@@ -108,7 +100,7 @@ public class ItemListFragment extends Fragment implements SelectListener{
 
     @Override
     public void onAddTagClick() {
-
+        Log.v("Tag Adding", "Tag add click!");
     }
     public void onDelete(){
         int numItems = binding.itemList.getAdapter().getItemCount();
@@ -122,7 +114,6 @@ public class ItemListFragment extends Fragment implements SelectListener{
         }
         controller.deleteItems(deleteItems);
         // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
-        //setSelectionModeState(false);
+        // setSelectionModeState(false);
     }
-
 }
