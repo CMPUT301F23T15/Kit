@@ -1,5 +1,8 @@
 package com.example.kit;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
@@ -15,6 +18,7 @@ public class ItemListController {
     private final CollectionReference itemCollection;
     private final ItemFirestoreAdapter adapter;
     private final ItemSet itemSet;
+    private NavController navController;
 
     private ItemListController() {
         itemCollection = FirestoreManager.getInstance().getCollection("Items");
@@ -54,6 +58,14 @@ public class ItemListController {
 
     public ItemFirestoreAdapter getAdapter() {
         return adapter;
+    }
+
+    public void setNavController(NavController navController) {
+        this.navController = navController;
+    }
+
+    public NavController getNavController () {
+        return navController;
     }
 
     public void updateFilter(/* Filter filter */) {
