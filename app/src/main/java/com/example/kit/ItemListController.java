@@ -12,7 +12,6 @@ import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
 import com.example.kit.database.ItemFirestoreAdapter;
-import com.example.kit.database.ItemViewHolder;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

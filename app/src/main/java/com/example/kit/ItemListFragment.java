@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import androidx.navigation.NavController;
+import androidx.navigation.NavHost;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,13 +29,15 @@ public class ItemListFragment extends Fragment implements SelectListener{
     private ItemListController controller;
     private NavController navController;
 
+    private boolean selectionMode = false;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        navController = NavHostFragment.findNavController(this);
         controller = ItemListController.getInstance();
         controller.setListener(this);
-
     }
 
     @Nullable
@@ -76,13 +79,26 @@ public class ItemListFragment extends Fragment implements SelectListener{
     @Override
     public void onItemLongClick() {
         int numItems = binding.itemList.getAdapter().getItemCount();
-        for (int i = 0; i < numItems; i++) {
-            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-            itemViewHolder.getBinding().itemNameRow.setVisibility(View.GONE);
+        if(selectionMode){
+            for (int i = 0; i < numItems; i++) {
+                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+                itemViewHolder.getBinding().itemNameRow.setVisibility(View.VISIBLE);
+            }
+        } else {
+            for (int i = 0; i < numItems; i++) {
+                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+                itemViewHolder.getBinding().itemNameRow.setVisibility(View.GONE);
+            }
         }
+        selectionMode = !selectionMode;
     }
-
+    @Override
     public void setItemChecked(View view){
         controller.getAdapter().adapterSetChecked(view);
+    }
+
+    @Override
+    public void onAddTagClick() {
+
     }
 }

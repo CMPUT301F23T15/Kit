@@ -36,10 +36,11 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
         return new ItemViewHolder(binding);
     }
     public void adapterSetChecked(View view){
-        view.setVisibility(View.INVISIBLE);
-    }
-    public void adapterSetupChecking(ItemViewHolder holder){
-        holder.getBinding().itemNameRow.setVisibility(View.GONE);
+        if(view.getVisibility() == View.VISIBLE){
+            view.setVisibility(View.INVISIBLE);
+        } else {
+            view.setVisibility(View.VISIBLE);
+        }
     }
     public void setListener(SelectListener listener) {
         this.listener = listener;
