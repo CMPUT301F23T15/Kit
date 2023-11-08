@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.kit.data.Item;
@@ -26,7 +25,7 @@ public class ItemListFragment extends Fragment implements SelectListener{
     private ItemListBinding binding;
     private ItemListController controller;
     private NavController navController;
-    private boolean selectionModeState = false;
+    private boolean modeFlag = false;
 
     /**
      * Standard lifecycle method for a fragment
@@ -105,37 +104,45 @@ public class ItemListFragment extends Fragment implements SelectListener{
     }
     @Override
     public void onItemClick(Item item) {
-        if(!selectionModeState) {
+        if(!modeFlag) {
             navController.navigate(R.id.displayListItemAction);
         }
     }
 
     @Override
-    public void onItemLongClick() {
-        setSelectionModeState(selectionModeState);
+    public void onItemLongClick() {changeMode();
     }
 
-    private void setSelectionModeState(boolean state) {
-        int numItems = controller.getAdapter().getItemCount();
-        if(state){
-            binding.addItemButton.setVisibility(View.VISIBLE);
-            binding.deleteItemButton.setVisibility(View.GONE);
-            for (int i = 0; i < numItems; i++) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-                itemViewHolder.getBinding().checkBox.setChecked(false);
-                itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
-            }
+    private void changeMode() {
+        modeFlag = !modeFlag;
+        if(modeFlag){
+            setSelect();
         } else {
-            binding.addItemButton.setVisibility(View.GONE);
-            binding.deleteItemButton.setVisibility(View.VISIBLE);
-            for (int i = 0; i < numItems; i++) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-                itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
-            }
+            setList();
         }
-        selectionModeState = !state;
+
     }
 
+    private void setSelect() {
+        int numItems = controller.getAdapter().getItemCount();
+        binding.addItemButton.setVisibility(View.GONE);
+        binding.deleteItemButton.setVisibility(View.VISIBLE);
+        for (int i = 0; i < numItems; i++) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+            itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setList(){
+        int numItems = controller.getAdapter().getItemCount();
+        binding.addItemButton.setVisibility(View.VISIBLE);
+        binding.deleteItemButton.setVisibility(View.GONE);
+        for (int i = 0; i < numItems; i++) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+            itemViewHolder.getBinding().checkBox.setChecked(false);
+            itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
+        }
+    }
     @Override
     public void onAddTagClick() {
         Log.v("Tag Adding", "Tag add click!");
@@ -152,6 +159,6 @@ public class ItemListFragment extends Fragment implements SelectListener{
         }
         controller.deleteItems(deleteItems);
         // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
-        setSelectionModeState(true);
+        changeMode();
     }
 }
