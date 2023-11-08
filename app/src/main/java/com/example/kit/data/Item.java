@@ -15,7 +15,7 @@ public class Item {
     private Timestamp acquisitionDate;
     private String description;
     private String comment;
-    private BigDecimal value;
+    private String value;
     private String make;
     private String model;
     private String serialNumber;
@@ -27,7 +27,7 @@ public class Item {
     // TODO: Images
 
     public Item() {
-
+        tags = new ArrayList<>();
     }
 
     public Item (String name) {
@@ -41,19 +41,6 @@ public class Item {
         this.serialNumber = "";
         this.tags = new ArrayList<>();
     }
-    // May delete when cleaning up code
-    public Item(String id, String name, Timestamp acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<String> tags) {
-        this.id = id;
-        this.name = name;
-        this.acquisitionDate = acquisitionDate;
-        this.description = description;
-        this.comment = comment;
-        this.value = value;
-        this.make = make;
-        this.model = model;
-        this.serialNumber = serialNumber;
-        this.tags = tags;
-   }
 
     public String getName() {
         return name;
@@ -87,20 +74,16 @@ public class Item {
         this.comment = comment;
     }
 
-    public BigDecimal getValueBigDecimal() {
-        return value;
-    }
-
-    public void setValueBigDecimal(BigDecimal value) {
-        this.value = value;
+    public BigDecimal valueToBigDecimal() {
+        return new BigDecimal(value);
     }
 
     public String getValue() {
-        return value.toString();
+        return value;
     }
 
     public void setValue(String value) {
-        this.value = new BigDecimal(value);
+        this.value = value;
     }
 
     public String getMake() {
@@ -131,11 +114,15 @@ public class Item {
         return tags;
     }
 
-//    public void addTag(Tag tag) {
-//        if (!tags.contains(tag)) {
-//            tags.add(tag);
-//        }
-//    }
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
+
+    public void addTag(String tag) {
+        if (!tags.contains(tag)) {
+            tags.add(tag);
+        }
+    }
 
     public String getId() {return id; }
 
