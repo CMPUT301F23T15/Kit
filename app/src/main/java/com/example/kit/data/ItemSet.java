@@ -3,7 +3,10 @@ package com.example.kit.data;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-
+/**
+ * Data Collection representing a collection of {@link Item}, that can calculate the total value
+ * of the items in the set.
+ */
 public class ItemSet {
     private ArrayList<Item> items;
 
@@ -20,6 +23,11 @@ public class ItemSet {
         return items;
     }
 
+    /**
+     * Returns the number of {@link Item}s in the ItemSet
+     * @return
+     *  The number of items in the set
+     */
     public int getItemsCount() {
         return items.size();
     }
@@ -42,11 +50,19 @@ public class ItemSet {
         return totalValue;
     }
 
+    /**
+     * Add a {@link Item} to the ItemSet
+     * @param item
+     *  The Item to be added
+     */
     public void addItem(Item item, String id){
         item.setId(id);
         items.add(item);
     }
 
+    /**
+     * Clear the ItemSet
+     */
     public void clear() {
         items.clear();
     }

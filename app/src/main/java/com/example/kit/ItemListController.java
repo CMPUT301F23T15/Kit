@@ -11,7 +11,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-
+/**
+ * A controller class for the {@link ItemListFragment}, managing the {@link ItemFirestoreAdapter}
+ * with queries and filtering.
+ */
 public class ItemListController {
 
     private static final ItemListController controller = new ItemListController();
@@ -20,6 +23,9 @@ public class ItemListController {
     private final ItemSet itemSet;
     private NavController navController;
 
+    /**
+     * Private Singleton constructor
+     */
     private ItemListController() {
         itemCollection = FirestoreManager.getInstance().getCollection("Items");
         itemSet = new ItemSet();
@@ -44,18 +50,34 @@ public class ItemListController {
         adapter = new ItemFirestoreAdapter(options);
     }
 
+    /**
+     * Provides the instance of the ItemListController Singleton
+     * @return
+     *  Instance of ItemListController
+     */
     public static ItemListController getInstance() {
         return controller;
     }
 
+    /**
+     * Life Cycle method for the {@link ItemListFragment#onStart() onStart}
+     */
     public void onStart() {
         adapter.startListening();
     }
 
+    /**
+     * Life Cycle method for the {@link ItemListFragment#onStop() onStop}
+     */
     public void onStop() {
         adapter.stopListening();
     }
 
+    /**
+     * Provides a reference to the adapter
+     * @return
+     *  Instance of the adapter
+     */
     public ItemFirestoreAdapter getAdapter() {
         return adapter;
     }
@@ -68,6 +90,9 @@ public class ItemListController {
         return navController;
     }
 
+    /**
+     * Update the query on the Adapter according to the filter parameter
+     */
     public void updateFilter(/* Filter filter */) {
         // Build query
 
