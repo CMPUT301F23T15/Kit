@@ -2,7 +2,7 @@ package com.example.kit.data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-
+import java.util.NoSuchElementException;
 
 /**
  * Data Collection representing a collection of {@link Item}, that can calculate the total value
@@ -56,7 +56,10 @@ public class ItemSet {
      * @param item
      *  The Item to be added
      */
-    public void addItem(Item item){items.add(item);}
+    public void addItem(Item item, String id){
+        item.setId(id);
+        items.add(item);
+    }
 
     /**
      * Clear the ItemSet
