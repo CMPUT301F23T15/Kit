@@ -1,58 +1,47 @@
 package com.example.kit;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 public class AddTagFragment extends DialogFragment {
-    private EditText tag_name;
-    private EditText tag_color;
-    private OnFragmentInteractionListener listener;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context + "OnFragmentInteractionListener is not implemented");
-        }
-    }
-
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_tag, null);
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        // Inflate a custom layout for the dialog
+        View dialogView = getLayoutInflater().inflate(R.layout.add_tag, null);
+        builder.setView(dialogView);
 
-        tag_name = view.findViewById(R.id.TagName);
-        tag_color = view.findViewById(R.id.TagColor);
+        // Set positive and negative buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle tag input and store in strings
+                // Retrieve tag name and color from the dialog's views
+                EditText tagName = dialogView.findViewById(R.id.TagName);
+                String Name = tagName.getText().toString();
+                Spinner tagColor = dialogView.findViewById(R.id.TagColor);
+                String Color = tagColor.getSelectedItem().toString();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                // Store tagName and selectedColor in your data or preferences
+            }
+        });
 
-        return builder
-                .setView(view)
-                .setTitle("Add Tag to Item")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("OK", (dialog, which) -> {
-                    String name = tag_name.getText().toString();
-                    String color = tag_color.getText().toString();
-                    if (name.isEmpty() || color.isEmpty()) {
-                        return;
-                    }
-                    //listener.onOKPressed(new Tag(name, color));
-                }).create();
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        return builder.create();
     }
-
-    public interface OnFragmentInteractionListener {
-        //void onOKPressed(Tag tag);
-    }
-
 }
