@@ -26,12 +26,12 @@ public class AddTagFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 // Handle tag input and store in strings
                 // Retrieve tag name and color from the dialog's views
-                EditText tagName = dialogView.findViewById(R.id.TagName);
-                String Name = tagName.getText().toString();
-                Spinner tagColor = dialogView.findViewById(R.id.TagColor);
-                String Color = tagColor.getSelectedItem().toString();
+                EditText searchTag = dialogView.findViewById(R.id.TagSearch);
+                String search = searchTag.getText().toString();
+                Spinner addtag = dialogView.findViewById(R.id.TagName);
+                String add = addtag.getSelectedItem().toString();
 
-                // Store tagName and selectedColor in your data or preferences
+
             }
         });
 
