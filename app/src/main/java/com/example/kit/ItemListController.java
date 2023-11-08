@@ -49,22 +49,21 @@ public class ItemListController {
                 .setQuery(itemCollection, Item.class)
                 .build();
 
-        itemCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Database", "Item Collection Errored", error);
-                    return;
-                }
-                Log.i("Database", "Snapshot Listener called");
+        itemCollection.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 itemSet.clear();
-                for (QueryDocumentSnapshot document : value) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Log.v("Firebase Startup", "New item added: " +document.getId());
                     itemSet.addItem(document.toObject(Item.class), document.getId());
                 }
-                fragment.updateTotalItemValue(itemSet.getItemSetValue());
+            }
+            else {
+                // TODO: Throw error
             }
         });
-
+        
+        // Add following line when the adapter-fix branch is merged to dev
+//        fragment.updateTotalItemValue(itemSet.getItemSetValue());
         adapter = new ItemFirestoreAdapter(options);
     }
 
