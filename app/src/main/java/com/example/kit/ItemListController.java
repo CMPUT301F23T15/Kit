@@ -51,6 +51,7 @@ public class ItemListController {
             if (task.isSuccessful()) {
                 itemSet.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
+                    Log.v("Firebase Startup", "New item added: " +document.getId());
                     itemSet.addItem(document.toObject(Item.class), document.getId());
                 }
             }
@@ -139,7 +140,12 @@ public class ItemListController {
             deleteItem(items.get(i));
         }
    }
-   public Item getItem(int position){
+
+    public ItemSet getItemSet() {
+        return itemSet;
+    }
+
+    public Item getItem(int position){
         return itemSet.getItem(position);
    }
 }

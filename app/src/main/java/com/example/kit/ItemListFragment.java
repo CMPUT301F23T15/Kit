@@ -115,32 +115,24 @@ public class ItemListFragment extends Fragment implements SelectListener{
 
     private void changeMode() {
         modeFlag = !modeFlag;
+        int numItems = controller.getAdapter().getItemCount();
         if(modeFlag){
-            setSelect();
+            binding.addItemButton.setVisibility(View.GONE);
+            binding.deleteItemButton.setVisibility(View.VISIBLE);
         } else {
-            setList();
+            binding.addItemButton.setVisibility(View.VISIBLE);
+            binding.deleteItemButton.setVisibility(View.GONE);
         }
 
-    }
-
-    private void setSelect() {
-        int numItems = controller.getAdapter().getItemCount();
-        binding.addItemButton.setVisibility(View.GONE);
-        binding.deleteItemButton.setVisibility(View.VISIBLE);
         for (int i = 0; i < numItems; i++) {
-            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-            itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void setList(){
-        int numItems = controller.getAdapter().getItemCount();
-        binding.addItemButton.setVisibility(View.VISIBLE);
-        binding.deleteItemButton.setVisibility(View.GONE);
-        for (int i = 0; i < numItems; i++) {
-            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-            itemViewHolder.getBinding().checkBox.setChecked(false);
-            itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
+            if(modeFlag) {
+                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+                itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
+            } else {
+                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+                itemViewHolder.getBinding().checkBox.setChecked(false);
+                itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
+            }
         }
     }
     @Override
