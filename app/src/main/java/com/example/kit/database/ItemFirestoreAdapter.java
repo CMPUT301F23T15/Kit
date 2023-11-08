@@ -12,12 +12,17 @@ import com.example.kit.data.Item;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 
 public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemViewHolder> {
     private SelectListener listener;
+    private FirestoreManager firestoreManager;
 
     public ItemFirestoreAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
+
         super(options);
+        firestoreManager = FirestoreManager.getInstance();
     }
 
     @Override
@@ -36,6 +41,19 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
     }
     public void setListener(SelectListener listener) {
         this.listener = listener;
+    }
+
+    public void addTagToItem(String itemId, String newTag) {
+        DocumentReference itemRef = firestoreManager.getCollection("items").document(itemId);
+
+        // Update the Firestore document with the new tag
+        itemRef.update("new_tag", FieldValue.arrayUnion(newTag))
+                .addOnSuccessListener(aVoid -> {
+                    Log.v("Tag Adding", "Tag added!!");
+                })
+                .addOnFailureListener(e -> {
+                    // Handle the error
+                });
     }
 
 }
