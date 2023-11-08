@@ -25,6 +25,8 @@ public class ItemDisplayFragment extends Fragment {
 
     private ItemDisplayBinding binding;
     private NavController navController;
+
+    private ItemListController itemListController;
     private boolean newItem;
 
     @Override
