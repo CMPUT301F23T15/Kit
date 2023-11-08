@@ -11,17 +11,20 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.kit.data.Item;
+import com.example.kit.database.ItemFirestoreAdapter;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
 
 import java.util.ArrayList;
-public class ItemListFragment extends Fragment implements SelectListener{
+public class ItemListFragment extends Fragment implements SelectListener , AddTagFragment.OnTagAddedListener{
 
     private ItemListBinding binding;
     private ItemListController controller;
     private NavController navController;
 
     private boolean selectionModeState = false;
+    private ItemFirestoreAdapter firestoreAdapter;
+    private Item selectedItem;
 
 
     @Override
@@ -70,6 +73,7 @@ public class ItemListFragment extends Fragment implements SelectListener{
     @Override
     public void onItemClick(Item item) {
         Log.v("On Item Click", "Item Clicked Success | Item: " + item.getName());
+        selectedItem = item;
         navController.navigate(R.id.action_display_item_from_list);
     }
 
@@ -102,8 +106,23 @@ public class ItemListFragment extends Fragment implements SelectListener{
     public void onAddTagClick() {
         Log.v("Tag Adding", "Tag add click!");
         AddTagFragment dialogFragment = new AddTagFragment();
+        dialogFragment.setItem(selectedItem);
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
     }
+
+    @Override
+    public void onTagAdded(Item item, String tagName) {
+        // Replace "your_item_id_here" with the actual item ID that you want to update
+        String itemId = item.getId();
+
+        // Call the method to update Firestore with the new tag
+        if (itemId != null && !itemId.isEmpty()) {
+            firestoreAdapter.addTagToItem(itemId, tagName);
+        } else {
+            // to handle the case where the item ID is not available
+        }
+    }
+
     public void onDelete(){
         int numItems = binding.itemList.getAdapter().getItemCount();
         ArrayList<Item> deleteItems = new ArrayList<>();
