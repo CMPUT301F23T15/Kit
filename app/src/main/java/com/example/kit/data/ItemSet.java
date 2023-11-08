@@ -33,9 +33,7 @@ public class ItemSet {
     }
 
 
-    public Item getItem(int position) {
-        return items.get(position);
-    }
+    public Item getItem(int position) {return items.get(position); }
 
     /**
      * Calculate the total value of the {@link Item}s within this ItemSet.
@@ -66,4 +64,13 @@ public class ItemSet {
     public void clear() {
         items.clear();
     }
+
+    public void removeItem(Item item){
+        items.remove(item);
+    }
+
+
+    // TODO: Could implement get item by item, this requries a loop but would allow a change in the itemListFragment deletion where we wouldn't need to loop and store in the array
+    // ^Discuss this tomorrow
+
 }

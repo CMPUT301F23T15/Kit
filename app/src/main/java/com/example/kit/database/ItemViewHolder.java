@@ -3,20 +3,17 @@ package com.example.kit.database;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.kit.ItemListController;
-import com.example.kit.R;
+
+import com.example.kit.SelectListener;
+
 import com.example.kit.data.Item;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ViewHolder for {@link Item} that binds the data to a view for {@link ItemFirestoreAdapter}
@@ -66,5 +63,29 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             chip.setText(tags.get(i-1));
             chip.setVisibility(View.VISIBLE);
         }
+    }
+    public void setupListeners(SelectListener listener, ItemViewHolder holder, Item model){
+        binding.itemCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(model);
+            }
+        });
+        binding.itemCardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onItemLongClick();
+                return true;
+            }
+        });
+        binding.addTagChip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onAddTagClick();
+            }
+        });
+    }
+    public ItemListRowBinding getBinding() {
+        return binding;
     }
 }

@@ -1,29 +1,31 @@
 package com.example.kit;
-
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
+import com.example.kit.data.Item;
+import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
 
+import java.util.ArrayList;
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed.
  */
-public class ItemListFragment extends Fragment {
+public class ItemListFragment extends Fragment implements SelectListener{
+
 
     private ItemListBinding binding;
     private ItemListController controller;
     private NavController navController;
+    private boolean modeFlag = false;
 
     /**
      * Standard lifecycle method for a fragment
@@ -35,6 +37,7 @@ public class ItemListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         navController = NavHostFragment.findNavController(this);
         controller = ItemListController.getInstance();
+        controller.setListener(this);
         controller.setNavController(navController);
     }
 
@@ -56,7 +59,7 @@ public class ItemListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemListBinding.inflate(inflater, container, false);
         initializeItemList();
-        initializeAddItemButton();
+        initializeUIInteractions();
         return binding.getRoot();
     }
 
@@ -84,14 +87,70 @@ public class ItemListFragment extends Fragment {
     private void initializeItemList() {
         binding.itemList.setAdapter(controller.getAdapter());
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
     }
 
-    /**
-     * Initialize the floating action button that navigates to the new item fragment
-     */
-    public void initializeAddItemButton() {
+    //TODO: Implement add and profile buttons here
+    public void initializeUIInteractions(){
+        binding.deleteItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDelete();
+            }
+        });
         binding.addItemButton.setOnClickListener(onClick -> {
             navController.navigate(ItemListFragmentDirections.newItemAction());
         });
+    }
+    @Override
+    public void onItemClick(Item item) {
+        if(!modeFlag) {
+            navController.navigate(R.id.displayListItemAction);
+        }
+    }
+
+    @Override
+    public void onItemLongClick() {changeMode();
+    }
+
+    private void changeMode() {
+        modeFlag = !modeFlag;
+        int numItems = controller.getAdapter().getItemCount();
+        if(modeFlag){
+            binding.addItemButton.setVisibility(View.GONE);
+            binding.deleteItemButton.setVisibility(View.VISIBLE);
+        } else {
+            binding.addItemButton.setVisibility(View.VISIBLE);
+            binding.deleteItemButton.setVisibility(View.GONE);
+        }
+
+        for (int i = 0; i < numItems; i++) {
+            if(modeFlag) {
+                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+                itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
+            } else {
+                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+                itemViewHolder.getBinding().checkBox.setChecked(false);
+                itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
+            }
+        }
+    }
+    @Override
+    public void onAddTagClick() {
+        Log.v("Tag Adding", "Tag add click!");
+    }
+    public void onDelete(){
+        int numItems = binding.itemList.getAdapter().getItemCount();
+        ArrayList<Item> deleteItems = new ArrayList<>();
+        for (int i = 0; i < numItems; i++) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+            if (itemViewHolder.getBinding().checkBox.isChecked()){
+                deleteItems.add(controller.getItem(i));
+                itemViewHolder.getBinding().checkBox.setChecked(false);
+            }
+        }
+        controller.deleteItems(deleteItems);
+        // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
+        changeMode();
     }
 }
