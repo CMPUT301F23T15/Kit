@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,13 +20,15 @@ public class ItemListFragment extends Fragment {
 
     private ItemListBinding binding;
     private ItemListController controller;
+    private NavController navController;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        navController = NavHostFragment.findNavController(this);
         controller = ItemListController.getInstance();
-        controller.setNavController(NavHostFragment.findNavController(this));
+        controller.setNavController(navController);
     }
 
     @Nullable
@@ -33,6 +36,7 @@ public class ItemListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemListBinding.inflate(inflater, container, false);
         initializeItemList();
+        initializeAddItemButton();
         return binding.getRoot();
     }
 
@@ -54,8 +58,8 @@ public class ItemListFragment extends Fragment {
     }
 
     public void initializeAddItemButton() {
-//        itemListBinding.addItemButton.setOnClickListener(onClick -> {
-
-//        });
+        binding.addItemButton.setOnClickListener(onClick -> {
+            navController.navigate(ItemListFragmentDirections.newItemAction());
+        });
     }
 }
