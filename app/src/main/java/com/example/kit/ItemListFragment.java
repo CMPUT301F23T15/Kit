@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.kit.databinding.ItemListBinding;
 
-
+/**
+ * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
+ * Displays the total value of the items currently displayed.
+ */
 public class ItemListFragment extends Fragment {
 
     private ItemListBinding binding;
@@ -79,6 +82,9 @@ public class ItemListFragment extends Fragment {
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 
+    /**
+     * Initialize the floating action button that navigates to the new item fragment
+     */
     public void initializeAddItemButton() {
 //        itemListBinding.addItemButton.setOnClickListener(onClick -> {
 

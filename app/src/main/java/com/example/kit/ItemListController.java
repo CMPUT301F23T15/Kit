@@ -23,6 +23,9 @@ public class ItemListController {
     private final ItemSet itemSet;
     private NavController navController;
 
+    /**
+     * Private Singleton constructor
+     */
     private ItemListController() {
         itemCollection = FirestoreManager.getInstance().getCollection("Items");
         itemSet = new ItemSet();
