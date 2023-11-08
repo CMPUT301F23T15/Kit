@@ -1,17 +1,34 @@
 package com.example.kit;
 
+import com.example.kit.data.Item;
+import com.example.kit.database.ItemFirestoreAdapter;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 public class AddTagFragment extends DialogFragment {
+    private OnTagAddedListener onTagAddedListener;
+    private Item item;
+
+    public interface OnTagAddedListener {
+        void onTagAdded(Item item, String tagName);
+    }
+
+    public void setOnTagAddedListener(OnTagAddedListener listener) {
+        this.onTagAddedListener = listener;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -25,13 +42,16 @@ public class AddTagFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Handle tag input and store in strings
-                // Retrieve tag name and color from the dialog's views
+                // Retrieve tag name from the dialog's views
                 EditText searchTag = dialogView.findViewById(R.id.TagSearch);
-                String search = searchTag.getText().toString();
-                Spinner addtag = dialogView.findViewById(R.id.TagName);
-                String add = addtag.getSelectedItem().toString();
+                String tagSearch = searchTag.getText().toString();
+                EditText addTag = dialogView.findViewById(R.id.TagName);
+                String tagName = addTag.getText().toString();
 
-
+                if (!tagName.isEmpty() && onTagAddedListener != null)  {
+                    onTagAddedListener.onTagAdded(item, tagName);
+                }
+                dialog.dismiss();
             }
         });
 
