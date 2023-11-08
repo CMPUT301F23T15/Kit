@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -33,6 +34,7 @@ public class ItemListController {
     private final ItemFirestoreAdapter adapter;
     private final ItemSet itemSet;
 
+    private ItemListFragment fragment;
     private NavController navController;
 
     /**
@@ -47,16 +49,19 @@ public class ItemListController {
                 .setQuery(itemCollection, Item.class)
                 .build();
 
-        itemCollection.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+        itemCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Database", "Item Collection Errored", error);
+                    return;
+                }
+                Log.i("Database", "Snapshot Listener called");
                 itemSet.clear();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Log.v("Firebase Startup", "New item added: " +document.getId());
+                for (QueryDocumentSnapshot document : value) {
                     itemSet.addItem(document.toObject(Item.class), document.getId());
                 }
-            }
-            else {
-                // TODO: Throw error
+                fragment.updateTotalItemValue(itemSet.getItemSetValue());
             }
         });
 
@@ -70,6 +75,10 @@ public class ItemListController {
      */
     public static ItemListController getInstance() {
         return controller;
+    }
+
+    public void setFragment(ItemListFragment fragment) {
+        this.fragment = fragment;
     }
 
     /**
