@@ -2,7 +2,6 @@ package com.example.kit.data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 
 public class ItemSet {
@@ -38,7 +37,7 @@ public class ItemSet {
     public BigDecimal getItemSetValue() {
         BigDecimal totalValue = new BigDecimal(0);
         for (Item item : items) {
-            totalValue = totalValue.add(item.getValueBigDecimal());
+            totalValue = totalValue.add(item.valueToBigDecimal());
         }
         return totalValue;
     }

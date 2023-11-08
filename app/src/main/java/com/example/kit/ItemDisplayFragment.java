@@ -12,8 +12,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.kit.data.Item;
+import com.example.kit.database.FirestoreManager;
 import com.example.kit.databinding.ItemDisplayBinding;
 import com.google.android.material.chip.Chip;
+import com.google.firebase.Timestamp;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 
 public class ItemDisplayFragment extends Fragment {
 
@@ -36,7 +42,18 @@ public class ItemDisplayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
+        initializeConfirmButton();
         return binding.getRoot();
+    }
+
+    private void initializeConfirmButton() {
+        binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirestoreManager.getInstance().getCollection("Items").add(buildItem());
+                navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
+            }
+        });
     }
 
     private Item buildItem() {
@@ -44,11 +61,18 @@ public class ItemDisplayFragment extends Fragment {
 
         newItem.setName(binding.itemNameDisplay.getText().toString());
         newItem.setValue(binding.itemValueDisplay.getText().toString());
+        // Absolutely terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
+        try {
+            Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
+            newItem.setAcquisitionDate(new Timestamp(date));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         newItem.setDescription(binding.itemDescriptionDisplay.getText().toString());
         newItem.setComment(binding.itemCommentDisplay.getText().toString());
         newItem.setMake(binding.itemMakeDisplay.getText().toString());
         newItem.setModel(binding.itemModelDisplay.getText().toString());
-//        newItem.setSerialNumber(itemDisplayBinding.); TODO: Add this to XML, Jesse Forgot
+        newItem.setSerialNumber(binding.itemSerialNumberDisplay.getText().toString());
 
         // Tags are sort of 1 indexed because the first tag is the add new tag button
         int numTags = binding.itemDisplayTagGroup.getChildCount();
