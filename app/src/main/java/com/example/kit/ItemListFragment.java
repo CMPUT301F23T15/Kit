@@ -69,8 +69,9 @@ public class ItemListFragment extends Fragment implements SelectListener{
     }
     @Override
     public void onItemClick(Item item) {
-        Log.v("On Item Click", "Item Clicked Success | Item: " + item.getName());
-        navController.navigate(R.id.action_display_item_from_list);
+        if(!selectionModeState) {
+            navController.navigate(R.id.action_display_item_from_list);
+        }
     }
 
     @Override
@@ -81,18 +82,19 @@ public class ItemListFragment extends Fragment implements SelectListener{
     private void setSelectionModeState(boolean state) {
         int numItems = controller.getAdapter().getItemCount();
         if(state){
+            binding.addItemButton.setVisibility(View.VISIBLE);
+            binding.deleteItemButton.setVisibility(View.GONE);
+            for (int i = 0; i < numItems; i++) {
+                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+                itemViewHolder.getBinding().checkBox.setChecked(false);
+                itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
+            }
+        } else {
             binding.addItemButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
             for (int i = 0; i < numItems; i++) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
                 itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
-            }
-        } else {
-            binding.addItemButton.setVisibility(View.VISIBLE);
-            binding.deleteItemButton.setVisibility(View.GONE);
-            for (int i = 0; i < numItems; i++) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-                itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
             }
         }
         selectionModeState = !state;
@@ -114,6 +116,6 @@ public class ItemListFragment extends Fragment implements SelectListener{
         }
         controller.deleteItems(deleteItems);
         // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
-        // setSelectionModeState(false);
+        setSelectionModeState(false);
     }
 }
