@@ -41,6 +41,36 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
         <EditText
+            android:id="@+id/itemDescriptionDisplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/content_vertical_space"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:ems="10"
+            android:hint="@string/item_display_description_hint"
+            android:inputType="text"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemNameDisplay" />
+
+        <EditText
+            android:id="@+id/itemCommentDisplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/content_vertical_space"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:ems="10"
+            android:hint="@string/item_display_comment_hint"
+            android:inputType="text"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemDescriptionDisplay" />
+
+        <EditText
             android:id="@+id/itemDateDisplay"
             android:layout_width="0dp"
             android:layout_height="45dp"
@@ -54,22 +84,22 @@
             app:layout_constraintEnd_toStartOf="@+id/itemValueDisplay"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemNameDisplay" />
+            app:layout_constraintTop_toBottomOf="@+id/itemCommentDisplay" />
 
         <EditText
             android:id="@+id/itemValueDisplay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:ems="10"
             android:hint="@string/item_display_value_hint"
             android:inputType="numberDecimal"
             android:minHeight="48dp"
+            app:layout_constraintBottom_toBottomOf="@+id/itemDateDisplay"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/itemDateDisplay"
-            app:layout_constraintTop_toBottomOf="@+id/itemNameDisplay" />
+            app:layout_constraintTop_toTopOf="@+id/itemDateDisplay" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/itemDisplayTagGroup"
@@ -80,7 +110,14 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemDateDisplay"/>
+            app:layout_constraintTop_toBottomOf="@+id/itemDateDisplay">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/addTagChipDisplay"
+                style="@style/tag_add_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.chip.ChipGroup>
 
         <EditText
             android:id="@+id/itemMakeDisplay"
@@ -114,34 +151,19 @@
             app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup" />
 
         <EditText
-            android:id="@+id/itemDescriptionDisplay"
+            android:id="@+id/itemSerialNumberDisplay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/content_vertical_space"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:ems="10"
-            android:hint="@string/item_display_description_hint"
+            android:hint="@string/item_display_serial_number_hint"
             android:inputType="text"
             android:minHeight="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/itemMakeDisplay" />
-
-        <EditText
-            android:id="@+id/itemCommentDisplay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/content_vertical_space"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:ems="10"
-            android:hint="@string/item_display_comment_hint"
-            android:inputType="text"
-            android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemDescriptionDisplay" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
