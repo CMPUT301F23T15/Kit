@@ -86,6 +86,286 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip1"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip2"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip3"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip4"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip5"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip6"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip7"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip8"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip9"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip10"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip11"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip12"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip13"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip14"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip15"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip16"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip17"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip18"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip19"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tagChip20"
+                        style="@style/tag_add_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"
+                        app:chipEndPadding="4dp"
+                        app:chipMinHeight="20dp"
+                        app:chipMinTouchTargetSize="30dp"
+                        app:chipStartPadding="4dp"
+                        app:textEndPadding="0dp"
+                        app:textStartPadding="0dp" />
+
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 

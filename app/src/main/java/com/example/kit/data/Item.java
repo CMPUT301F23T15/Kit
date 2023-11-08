@@ -1,5 +1,7 @@
 package com.example.kit.data;
 
+import android.media.Image;
+
 import com.google.firebase.Timestamp;
 
 import java.math.BigDecimal;
@@ -8,6 +10,7 @@ import java.util.NoSuchElementException;
 
 public class Item {
     // Todo: May use Tag data type for tags, for now, use just strings
+    private String id;
     private String name;
     private Timestamp acquisitionDate;
     private String description;
@@ -17,6 +20,9 @@ public class Item {
     private String model;
     private String serialNumber;
     private ArrayList<String> tags;
+    private ArrayList<Image> images; // Placeholder, may store locally with something like a path to the directory?
+                                    // Looking into FireStore and images, we can use a cloud solution and then have
+                                    // FireStore manage it (kinda)
 
     // TODO: Images
 
@@ -26,6 +32,7 @@ public class Item {
 
     public Item (String name) {
         this.name = name;
+        this.id = "";
         this.acquisitionDate = null;
         this.description = "";
         this.comment = "";
@@ -35,16 +42,17 @@ public class Item {
         this.tags = new ArrayList<>();
     }
     // May delete when cleaning up code
-    public Item(String name, Timestamp acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<String> tags) {
-       this.name = name;
-       this.acquisitionDate = acquisitionDate;
-       this.description = description;
-       this.comment = comment;
-       this.value = value;
-       this.make = make;
-       this.model = model;
-       this.serialNumber = serialNumber;
-       this.tags = tags;
+    public Item(String id, String name, Timestamp acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<String> tags) {
+        this.id = id;
+        this.name = name;
+        this.acquisitionDate = acquisitionDate;
+        this.description = description;
+        this.comment = comment;
+        this.value = value;
+        this.make = make;
+        this.model = model;
+        this.serialNumber = serialNumber;
+        this.tags = tags;
    }
 
     public String getName() {
@@ -128,6 +136,10 @@ public class Item {
 //            tags.add(tag);
 //        }
 //    }
+
+    public String getId() {return id; }
+
+    public void setId(String id) {this.id = id; }
 
     /**
      * Removes the provided tag from the Item.
