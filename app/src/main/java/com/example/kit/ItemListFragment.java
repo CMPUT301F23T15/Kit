@@ -116,6 +116,6 @@ public class ItemListFragment extends Fragment implements SelectListener{
         }
         controller.deleteItems(deleteItems);
         // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
-        setSelectionModeState(false);
+        setSelectionModeState(true);
     }
 }
