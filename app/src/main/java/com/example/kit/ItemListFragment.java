@@ -101,6 +101,8 @@ public class ItemListFragment extends Fragment implements SelectListener{
     @Override
     public void onAddTagClick() {
         Log.v("Tag Adding", "Tag add click!");
+        AddTagFragment dialogFragment = new AddTagFragment();
+        dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
     }
     public void onDelete(){
         int numItems = binding.itemList.getAdapter().getItemCount();
