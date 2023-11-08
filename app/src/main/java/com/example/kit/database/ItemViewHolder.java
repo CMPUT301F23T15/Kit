@@ -15,15 +15,29 @@ import com.google.android.material.chip.Chip;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
+/**
+ * ViewHolder for {@link Item} that binds the data to a view for {@link ItemFirestoreAdapter}
+ */
 public class ItemViewHolder extends RecyclerView.ViewHolder {
     private final ItemListRowBinding binding;
 
+    /**
+     * Create new ViewHolder from a binding.
+     * @param binding
+     *  The binding with desired layout for the ViewHolder.
+     */
     public ItemViewHolder(@NonNull ItemListRowBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
     }
 
     // TODO: Expand
+
+    /**
+     * Displays an {@link Item} within the ViewHolder, binding the data.
+     * @param item
+     *  The {@link Item} to be displayed
+     */
     public void displayItem(@NonNull Item item){
         // Fill in item row values
         DateFormat df = DateFormat.getDateTimeInstance();
