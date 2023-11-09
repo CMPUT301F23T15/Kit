@@ -54,7 +54,7 @@ public class ItemSet {
      *  The Item to be added
      */
     public void addItem(Item item, String id){
-        item.setId(id);
+        item.attachID(id);
         items.add(item);
     }
 
