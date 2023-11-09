@@ -27,6 +27,7 @@ public class MainActivityTest {
     public ActivityScenarioRule<MainActivity> scenario = new
             ActivityScenarioRule<MainActivity>(MainActivity.class);
 
+    @Test
     public void testCreateItem() {
         // Test if an item is properly created. Check field values
     }
