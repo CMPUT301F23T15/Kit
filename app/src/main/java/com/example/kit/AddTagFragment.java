@@ -6,6 +6,7 @@ import com.example.kit.database.ItemFirestoreAdapter;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -50,8 +51,11 @@ public class AddTagFragment extends DialogFragment {
 
                 if (!tagName.isEmpty() && onTagAddedListener != null)  {
                     onTagAddedListener.onTagAdded(item, tagName);
+                    Log.v("Tag fragment", "Tag reached fragment");
                 }
-                dialog.dismiss();
+                else {
+                    Log.e("Tag Adding", "Error: tagName is empty or onTagAddedListener is null");
+                }
             }
         });
 
