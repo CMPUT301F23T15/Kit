@@ -43,16 +43,15 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
         this.listener = listener;
     }
 
-    public void addTagToItem(String itemId, String newTag) {
-        DocumentReference itemRef = firestoreManager.getCollection("items").document(itemId);
+    public void addTagToItem(String itemName, String newTag) {
+        DocumentReference itemRef = firestoreManager.getCollection("items").document(itemName);
 
         // Update the Firestore document with the new tag
-        itemRef.update("new_tag", FieldValue.arrayUnion(newTag))
+        itemRef.update("tags", FieldValue.arrayUnion(newTag))
                 .addOnSuccessListener(aVoid -> {
                     Log.v("Tag Adding", "Tag added!!");
                 })
                 .addOnFailureListener(e -> {
-                    // Handle the error
                 });
     }
 
