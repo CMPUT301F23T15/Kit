@@ -67,7 +67,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         binding.addTagChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onAddTagClick();
+                listener.onAddTagClick(model);
             }
         });
     }
