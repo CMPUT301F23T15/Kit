@@ -14,6 +14,9 @@ import com.example.kit.data.Item;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
@@ -39,6 +42,7 @@ public class ItemListFragment extends Fragment implements SelectListener{
         controller = ItemListController.getInstance();
         controller.setListener(this);
         controller.setNavController(navController);
+        controller.setFragment(this);
     }
 
     /**
@@ -102,6 +106,7 @@ public class ItemListFragment extends Fragment implements SelectListener{
             navController.navigate(ItemListFragmentDirections.newItemAction());
         });
     }
+
     @Override
     public void onItemClick(Item item) {
         if(!modeFlag) {
@@ -110,7 +115,8 @@ public class ItemListFragment extends Fragment implements SelectListener{
     }
 
     @Override
-    public void onItemLongClick() {changeMode();
+    public void onItemLongClick() {
+        changeMode();
     }
 
     private void changeMode() {
@@ -152,5 +158,10 @@ public class ItemListFragment extends Fragment implements SelectListener{
         controller.deleteItems(deleteItems);
         // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
         changeMode();
+    }
+
+    public void updateTotalItemValue(BigDecimal value) {
+        String formattedValue = NumberFormat.getCurrencyInstance().format(value);
+        binding.itemSetTotalValue.setText(formattedValue);
     }
 }

@@ -5,6 +5,8 @@ import android.util.Log;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import androidx.navigation.NavController;
 
 import com.example.kit.data.Item;
@@ -15,7 +17,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 /**
@@ -29,6 +34,7 @@ public class ItemListController {
     private final ItemFirestoreAdapter adapter;
     private final ItemSet itemSet;
 
+    private ItemListFragment fragment;
     private NavController navController;
 
     /**
@@ -50,12 +56,13 @@ public class ItemListController {
                     Log.e("Database", "Item Collection Errored", error);
                     return;
                 }
+
                 Log.i("Database", "Snapshot Listener called");
                 itemSet.clear();
                 for (QueryDocumentSnapshot document : value) {
                     itemSet.addItem(document.toObject(Item.class), document.getId());
                 }
-
+                fragment.updateTotalItemValue(itemSet.getItemSetValue());
             }
         });
 
@@ -69,6 +76,10 @@ public class ItemListController {
      */
     public static ItemListController getInstance() {
         return controller;
+    }
+
+    public void setFragment(ItemListFragment fragment) {
+        this.fragment = fragment;
     }
 
     /**

@@ -13,6 +13,7 @@ import com.example.kit.databinding.ItemListRowBinding;
 import com.google.android.material.chip.Chip;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -43,8 +44,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         DateFormat df = DateFormat.getDateTimeInstance();
         binding.itemNameRow.setText(item.getName());
         binding.itemDateRow.setText(df.format(item.getAcquisitionDate().toDate()));
-        binding.itemValueRow.setText(item.getValue());
-
+        String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
+        binding.itemValueRow.setText(formattedValue);
         ArrayList<String> tags = item.getTags();
 
         // Populate chips with tags
