@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
+/**
+ * Item is a single item data type, it is a serializable data type
+ */
 
 public class Item implements Serializable {
     // Todo: May use Tag data type for tags, for now, use just strings
@@ -27,6 +30,7 @@ public class Item implements Serializable {
                                     // FireStore manage it (kinda)
 
     // TODO: Images
+
 
     public Item() {
         tags = new ArrayList<>();
