@@ -7,6 +7,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 
 import com.example.kit.data.Item;
@@ -27,15 +31,13 @@ import java.util.ArrayList;
  * A controller class for the {@link ItemListFragment}, managing the {@link ItemFirestoreAdapter}
  * with queries and filtering.
  */
-public class ItemListController {
+public class ItemListController implements LifecycleEventObserver {
 
     private static final ItemListController controller = new ItemListController();
     private final CollectionReference itemCollection;
     private final ItemFirestoreAdapter adapter;
     private final ItemSet itemSet;
-
     private ItemListFragment fragment;
-    private NavController navController;
 
     /**
      * Private Singleton constructor
@@ -58,6 +60,7 @@ public class ItemListController {
                 }
 
                 Log.i("Database", "Snapshot Listener called");
+
                 itemSet.clear();
                 for (QueryDocumentSnapshot document : value) {
                     itemSet.addItem(document.toObject(Item.class), document.getId());
@@ -83,33 +86,12 @@ public class ItemListController {
     }
 
     /**
-     * Life Cycle method for the {@link ItemListFragment#onStart() onStart}
-     */
-    public void onStart() {
-        adapter.startListening();
-    }
-
-    /**
-     * Life Cycle method for the {@link ItemListFragment#onStop() onStop}
-     */
-    public void onStop() {
-        adapter.stopListening();
-    }
-
-    /**
      * Provides a reference to the adapter
      * @return
      *  Instance of the adapter
      */
     public ItemFirestoreAdapter getAdapter() {
         return adapter;
-    }
-    public void setNavController(NavController navController) {
-        this.navController = navController;
-    }
-
-    public NavController getNavController () {
-        return navController;
     }
 
     /**
@@ -145,17 +127,28 @@ public class ItemListController {
                    }
                });
    }
+
    public void deleteItems(ArrayList<Item> items){
         for(int i = 0; i < items.size(); i++) {
             deleteItem(items.get(i));
         }
    }
 
-    public ItemSet getItemSet() {
-        return itemSet;
-    }
-
     public Item getItem(int position){
         return itemSet.getItem(position);
    }
+
+    @Override
+    public void onStateChanged(@NonNull LifecycleOwner lifecycleOwner, @NonNull Lifecycle.Event event) {
+        switch (event) {
+            case ON_CREATE:
+                fragment.updateTotalItemValue(itemSet.getItemSetValue());
+
+            case ON_START:
+                adapter.startListening();
+
+            case ON_STOP:
+                adapter.stopListening();
+        }
+    }
 }

@@ -22,8 +22,7 @@ import java.util.ArrayList;
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed.
  */
-public class ItemListFragment extends Fragment implements SelectListener{
-
+public class ItemListFragment extends Fragment implements SelectListener {
 
     private ItemListBinding binding;
     private ItemListController controller;
@@ -41,7 +40,6 @@ public class ItemListFragment extends Fragment implements SelectListener{
         navController = NavHostFragment.findNavController(this);
         controller = ItemListController.getInstance();
         controller.setListener(this);
-        controller.setNavController(navController);
         controller.setFragment(this);
     }
 
@@ -65,24 +63,6 @@ public class ItemListFragment extends Fragment implements SelectListener{
         initializeItemList();
         initializeUIInteractions();
         return binding.getRoot();
-    }
-
-    /**
-     * Standard lifecycle method for a fragment
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
-        controller.onStart();
-    }
-
-    /** Standard lifecycle method for a fragment
-     *
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-        controller.onStop();
     }
 
     /**
@@ -145,6 +125,7 @@ public class ItemListFragment extends Fragment implements SelectListener{
     public void onAddTagClick() {
         Log.v("Tag Adding", "Tag add click!");
     }
+
     public void onDelete(){
         int numItems = binding.itemList.getAdapter().getItemCount();
         ArrayList<Item> deleteItems = new ArrayList<>();
