@@ -131,11 +131,10 @@ public class ItemListFragment extends Fragment implements SelectListener{
         }
 
         for (int i = 0; i < numItems; i++) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
             if(modeFlag) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
                 itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
             } else {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
                 itemViewHolder.getBinding().checkBox.setChecked(false);
                 itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
             }
