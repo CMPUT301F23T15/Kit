@@ -6,9 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
@@ -22,6 +21,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 /**
  * A controller class for the {@link ItemListFragment}, managing the {@link ItemFirestoreAdapter}
@@ -49,21 +49,23 @@ public class ItemListController {
                 .setQuery(itemCollection, Item.class)
                 .build();
 
-        itemCollection.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+        itemCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Database", "Item Collection Errored", error);
+                    return;
+                }
+
+                Log.i("Database", "Snapshot Listener called");
                 itemSet.clear();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Log.v("Firebase Startup", "New item added: " +document.getId());
+                for (QueryDocumentSnapshot document : value) {
                     itemSet.addItem(document.toObject(Item.class), document.getId());
                 }
-            }
-            else {
-                // TODO: Throw error
+                fragment.updateTotalItemValue(itemSet.getItemSetValue());
             }
         });
-        
-        // Add following line when the adapter-fix branch is merged to dev
-//        fragment.updateTotalItemValue(itemSet.getItemSetValue());
+
         adapter = new ItemFirestoreAdapter(options);
     }
 
@@ -128,18 +130,18 @@ public class ItemListController {
    }
 
    public void deleteItem(@NonNull Item item){
-       itemCollection.document(item.getId())
+       itemCollection.document(item.findId())
                .delete()
                .addOnSuccessListener(new OnSuccessListener<Void>() {
                    @Override
                    public void onSuccess(Void unused) {
-                       Log.d("Firestore", "Document deleted successfully: " + item.getId());
+                       Log.d("Firestore", "Document deleted successfully: " + item.findId());
                    }
                })
                .addOnFailureListener(new OnFailureListener() {
                    @Override
                    public void onFailure(@NonNull Exception e) {
-                       Log.d("Firestore", "Document deletion failed: " + item.getId());
+                       Log.d("Firestore", "Document deletion failed: " + item.findId());
                    }
                });
    }
