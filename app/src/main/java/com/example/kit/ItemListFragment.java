@@ -161,10 +161,10 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
     @Override
     public void onTagAdded(Item item, String tagName) {
         // Replace "your_item_id_here" with the actual item ID that you want to update
-        String itemName = item.getName();
+        String itemID = item.findId();
         // Call the method to update Firestore with the new tag
-        if (itemName != null && !itemName.isEmpty()) {
-            firestoreAdapter.addTagToItem(itemName, tagName);
+        if (itemID != null && !itemID.isEmpty()) {
+            firestoreAdapter.addTagToItem(itemID, tagName);
             Log.v("Tag adding", "Tag going to adapter");
         } else {
             // to handle the case where the item ID is not available
