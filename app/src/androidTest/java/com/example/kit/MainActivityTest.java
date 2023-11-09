@@ -3,6 +3,7 @@ package com.example.kit;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotSelected;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -18,10 +19,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
@@ -35,7 +34,14 @@ public class MainActivityTest {
         // Create item to test
         onView(withId(R.id.add_item_button)).perform(click());
         onView(withId(R.id.itemNameDisplay)).perform(ViewActions.typeText("JUnit Test Item"));
+        onView(withId(R.id.itemNameDisplay)).perform(closeSoftKeyboard());
+
+        onView(withId(R.id.itemDateDisplay)).perform(ViewActions.typeText("10/10/1010"));
+        onView(withId(R.id.itemDateDisplay)).perform(closeSoftKeyboard());
+
         onView(withId(R.id.itemValueDisplay)).perform(ViewActions.typeText("500"));
+        onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
+
         onView(withId(R.id.floatingActionButton)).perform(click());
     }
 
@@ -49,6 +55,7 @@ public class MainActivityTest {
     public void testChangeName() {
         // Test if changing the 'name' field is properly reflected
         createItem();
+
     }
 
 
