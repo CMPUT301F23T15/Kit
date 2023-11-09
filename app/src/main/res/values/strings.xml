@@ -9,4 +9,6 @@
     <string name="item_display_model_hint">Model</string>
     <string name="item_display_description_hint">Description</string>
     <string name="item_display_comment_hint">Comment</string>
+    <string name="item_display_serial_number_hint">Serial Number</string>
+    <string name="total_valuation">Total Valuation:</string>
 </resources>

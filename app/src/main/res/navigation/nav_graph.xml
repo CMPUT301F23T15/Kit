@@ -8,15 +8,18 @@
         android:name="com.example.kit.ItemListFragment"
         android:label="ItemListFragment" >
         <action
-            android:id="@+id/action_display_item_from_list"
+            android:id="@+id/displayListItemAction"
+            app:destination="@id/itemDisplayFragment" />
+        <action
+            android:id="@+id/newItemAction"
             app:destination="@id/itemDisplayFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemDisplayFragment"
         android:name="com.example.kit.ItemDisplayFragment"
         android:label="ItemDisplayFragment" >
-        <argument
-            android:name="id"
-            app:argType="string" />
+        <action
+            android:id="@+id/itemCreatedAction"
+            app:destination="@id/itemListFragment" />
     </fragment>
 </navigation>

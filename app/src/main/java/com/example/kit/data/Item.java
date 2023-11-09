@@ -4,19 +4,20 @@ import android.media.Image;
 
 import com.google.firebase.Timestamp;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 
-public class Item{
+public class Item implements Serializable {
     // Todo: May use Tag data type for tags, for now, use just strings
     private String id;
     private String name;
     private Timestamp acquisitionDate;
     private String description;
     private String comment;
-    private BigDecimal value;
+    private String value;
     private String make;
     private String model;
     private String serialNumber;
@@ -28,7 +29,7 @@ public class Item{
     // TODO: Images
 
     public Item() {
-
+        tags = new ArrayList<>();
     }
 
     public Item (String name) {
@@ -42,19 +43,6 @@ public class Item{
         this.serialNumber = "";
         this.tags = new ArrayList<>();
     }
-    // May delete when cleaning up code
-    public Item(String id, String name, Timestamp acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<String> tags) {
-        this.id = id;
-        this.name = name;
-        this.acquisitionDate = acquisitionDate;
-        this.description = description;
-        this.comment = comment;
-        this.value = value;
-        this.make = make;
-        this.model = model;
-        this.serialNumber = serialNumber;
-        this.tags = tags;
-   }
 
     public String getName() {
         return name;
@@ -88,20 +76,16 @@ public class Item{
         this.comment = comment;
     }
 
-    public BigDecimal getValueBigDecimal() {
-        return value;
-    }
-
-    public void setValueBigDecimal(BigDecimal value) {
-        this.value = value;
+    public BigDecimal valueToBigDecimal() {
+        return new BigDecimal(value);
     }
 
     public String getValue() {
-        return value.toString();
+        return value;
     }
 
     public void setValue(String value) {
-        this.value = new BigDecimal(value);
+        this.value = value;
     }
 
     public String getMake() {
@@ -138,9 +122,15 @@ public class Item{
         }
     }
 
-    public String getId() {return id; }
+    public void addTag(String tag) {
+        if (!tags.contains(tag)) {
+            tags.add(tag);
+        }
+    }
 
-    public void setId(String id) {this.id = id; }
+    public String findId() {return id; }
+
+    public void attachID(String id) {this.id = id; }
 
     /**
      * Removes the provided tag from the Item.
@@ -157,7 +147,7 @@ public class Item{
 
     @Override
     public boolean equals(Object item){
-        if(this.getId() == item.toString()){
+        if(this.findId() == item.toString()){
             return true;
         } else {
             return false;
@@ -165,6 +155,6 @@ public class Item{
     }
     @Override
     public String toString(){
-        return this.getId();
+        return this.findId();
     }
 }

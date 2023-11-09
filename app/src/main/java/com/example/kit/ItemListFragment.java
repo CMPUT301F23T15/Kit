@@ -19,12 +19,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 public class ItemListFragment extends Fragment implements SelectListener , AddTagFragment.OnTagAddedListener{
+
 
     private ItemListBinding binding;
     private ItemListController controller;
     private NavController navController;
+    private boolean modeFlag = false;
 
     private boolean selectionModeState = false;
     private ItemFirestoreAdapter firestoreAdapter;
@@ -47,6 +52,19 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         firestoreAdapter = new ItemFirestoreAdapter(options);
     }
 
+    /**
+     * Standard lifecycle method for a fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     *  Root of the viewbinding
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,21 +74,31 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         return binding.getRoot();
     }
 
+    /**
+     * Standard lifecycle method for a fragment
+     */
     @Override
     public void onStart() {
         super.onStart();
         controller.onStart();
     }
 
+    /** Standard lifecycle method for a fragment
+     *
+     */
     @Override
     public void onStop() {
         super.onStop();
         controller.onStop();
     }
 
+    /**
+     * Initialize the RecyclerView of the fragment
+     */
     private void initializeItemList() {
         binding.itemList.setAdapter(controller.getAdapter());
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
     }
 
     //TODO: Implement add and profile buttons here
@@ -81,38 +109,46 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
                 onDelete();
             }
         });
+        binding.addItemButton.setOnClickListener(onClick -> {
+            navController.navigate(ItemListFragmentDirections.newItemAction());
+        });
     }
+
     @Override
     public void onItemClick(Item item) {
-        Log.v("On Item Click", "Item Clicked Success | Item: " + item.getName());
-        navController.navigate(R.id.action_display_item_from_list);
+        if(!modeFlag) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("item", item);
+            navController.navigate(R.id.displayListItemAction, bundle);
+        }
     }
 
     @Override
     public void onItemLongClick() {
-        setSelectionModeState(selectionModeState);
+        changeMode();
     }
 
-    private void setSelectionModeState(boolean state) {
+    private void changeMode() {
+        modeFlag = !modeFlag;
         int numItems = controller.getAdapter().getItemCount();
-        if(state){
+        if(modeFlag){
             binding.addItemButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
-            for (int i = 0; i < numItems; i++) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-                itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
-            }
         } else {
             binding.addItemButton.setVisibility(View.VISIBLE);
             binding.deleteItemButton.setVisibility(View.GONE);
-            for (int i = 0; i < numItems; i++) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+        }
+
+        for (int i = 0; i < numItems; i++) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+            if(modeFlag) {
+                itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
+            } else {
+                itemViewHolder.getBinding().checkBox.setChecked(false);
                 itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
             }
         }
-        selectionModeState = !state;
     }
-
     @Override
     public void onAddTagClick(Item item) {
         Log.v("Tag Adding", "Tag add click!");
@@ -147,6 +183,11 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         }
         controller.deleteItems(deleteItems);
         // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
-        // setSelectionModeState(false);
+        changeMode();
+    }
+
+    public void updateTotalItemValue(BigDecimal value) {
+        String formattedValue = NumberFormat.getCurrencyInstance().format(value);
+        binding.itemSetTotalValue.setText(formattedValue);
     }
 }
