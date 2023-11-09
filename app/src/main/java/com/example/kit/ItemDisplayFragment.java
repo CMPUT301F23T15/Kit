@@ -1,6 +1,7 @@
 package com.example.kit;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,14 @@ public class ItemDisplayFragment extends Fragment {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
         navController = NavHostFragment.findNavController(this);
         initializeConfirmButton();
-        loadItem();
         return binding.getRoot();
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadItem();
     }
 
     private void initializeConfirmButton() {
@@ -70,7 +76,6 @@ public class ItemDisplayFragment extends Fragment {
     private void loadItem() {
         // Retrieve the item from the bundle
         Item item = (Item) getArguments().getSerializable("item");
-
         if (item != null) {
             this.itemID = item.findId();
             // Use View Binding to populate UI elements with item data
@@ -87,7 +92,7 @@ public class ItemDisplayFragment extends Fragment {
 
             binding.itemDisplayTagGroup.removeAllViews();
             for (String tag : item.getTags()) {
-                Chip chip = new Chip(requireContext());
+                Chip chip = new Chip(getContext());
                 chip.setText(tag);
                 binding.itemDisplayTagGroup.addView(chip);
             }
