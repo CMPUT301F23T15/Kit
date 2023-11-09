@@ -125,9 +125,9 @@ public class Item{
         }
     }
 
-    public String getId() {return id; }
+    public String findId() {return id; }
 
-    public void setId(String id) {this.id = id; }
+    public void attachID(String id) {this.id = id; }
 
     /**
      * Removes the provided tag from the Item.
@@ -144,7 +144,7 @@ public class Item{
 
     @Override
     public boolean equals(Object item){
-        if(this.getId() == item.toString()){
+        if(this.findId() == item.toString()){
             return true;
         } else {
             return false;
@@ -152,6 +152,6 @@ public class Item{
     }
     @Override
     public String toString(){
-        return this.getId();
+        return this.findId();
     }
 }

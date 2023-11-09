@@ -5,9 +5,7 @@ import android.util.Log;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
@@ -17,10 +15,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 /**
  * A controller class for the {@link ItemListFragment}, managing the {@link ItemFirestoreAdapter}
@@ -120,18 +116,18 @@ public class ItemListController {
    }
 
    public void deleteItem(@NonNull Item item){
-       itemCollection.document(item.getId())
+       itemCollection.document(item.findId())
                .delete()
                .addOnSuccessListener(new OnSuccessListener<Void>() {
                    @Override
                    public void onSuccess(Void unused) {
-                       Log.d("Firestore", "Document deleted successfully: " + item.getId());
+                       Log.d("Firestore", "Document deleted successfully: " + item.findId());
                    }
                })
                .addOnFailureListener(new OnFailureListener() {
                    @Override
                    public void onFailure(@NonNull Exception e) {
-                       Log.d("Firestore", "Document deletion failed: " + item.getId());
+                       Log.d("Firestore", "Document deletion failed: " + item.findId());
                    }
                });
    }
