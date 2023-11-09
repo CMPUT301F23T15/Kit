@@ -19,7 +19,9 @@ import com.google.firebase.Timestamp;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class ItemDisplayFragment extends Fragment {
 
@@ -28,6 +30,8 @@ public class ItemDisplayFragment extends Fragment {
 
     private ItemListController itemListController;
     private boolean newItem;
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,9 +48,39 @@ public class ItemDisplayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
+        navController = NavHostFragment.findNavController(this);
+
+        // Retrieve the item from the bundle
+        Item item = (Item) getArguments().getSerializable("item");
+
+        if (item != null) {
+            // Use View Binding to populate UI elements with item data
+            binding.itemNameDisplay.setText(item.getName());
+            binding.itemValueDisplay.setText(item.getValue());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
+            binding.itemDateDisplay.setText(formattedDate);
+            binding.itemDescriptionDisplay.setText(item.getDescription());
+            binding.itemCommentDisplay.setText(item.getComment());
+            binding.itemMakeDisplay.setText(item.getMake());
+            binding.itemModelDisplay.setText(item.getModel());
+            binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
+
+            binding.itemDisplayTagGroup.removeAllViews();
+            for (String tag : item.getTags()) {
+                Chip chip = new Chip(requireContext());
+                chip.setText(tag);
+                binding.itemDisplayTagGroup.addView(chip);
+            }
+        }
+
+
         initializeConfirmButton();
         return binding.getRoot();
+
     }
+
+
 
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
