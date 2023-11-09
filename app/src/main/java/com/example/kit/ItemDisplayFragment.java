@@ -27,11 +27,8 @@ public class ItemDisplayFragment extends Fragment {
 
     private ItemDisplayBinding binding;
     private NavController navController;
-
-    private ItemListController itemListController;
     private boolean newItem;
-
-
+    private String itemID;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,11 +46,33 @@ public class ItemDisplayFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
         navController = NavHostFragment.findNavController(this);
+        initializeConfirmButton();
+        loadItem();
+        return binding.getRoot();
 
+    }
+
+    private void initializeConfirmButton() {
+        binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (newItem) {
+                    FirestoreManager.getInstance().getCollection("Items").add(buildItem());
+                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
+                } else if (!(itemID == null || itemID.isEmpty())) {
+                    FirestoreManager.getInstance().getCollection("Items").document(itemID).set(buildItem());
+                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
+                }
+            }
+        });
+    }
+
+    private void loadItem() {
         // Retrieve the item from the bundle
         Item item = (Item) getArguments().getSerializable("item");
 
         if (item != null) {
+            this.itemID = item.findId();
             // Use View Binding to populate UI elements with item data
             binding.itemNameDisplay.setText(item.getName());
             binding.itemValueDisplay.setText(item.getValue());
@@ -73,23 +92,6 @@ public class ItemDisplayFragment extends Fragment {
                 binding.itemDisplayTagGroup.addView(chip);
             }
         }
-
-
-        initializeConfirmButton();
-        return binding.getRoot();
-
-    }
-
-
-
-    private void initializeConfirmButton() {
-        binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirestoreManager.getInstance().getCollection("Items").add(buildItem());
-                navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
-            }
-        });
     }
 
     private Item buildItem() {
