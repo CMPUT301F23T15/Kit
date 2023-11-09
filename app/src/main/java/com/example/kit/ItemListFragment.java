@@ -110,7 +110,9 @@ public class ItemListFragment extends Fragment implements SelectListener{
     @Override
     public void onItemClick(Item item) {
         if(!modeFlag) {
-            navController.navigate(R.id.displayListItemAction);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("item", item);
+            navController.navigate(R.id.displayListItemAction, bundle);
         }
     }
 

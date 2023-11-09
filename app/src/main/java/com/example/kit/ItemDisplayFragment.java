@@ -1,6 +1,7 @@
 package com.example.kit;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +20,16 @@ import com.google.firebase.Timestamp;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class ItemDisplayFragment extends Fragment {
 
     private ItemDisplayBinding binding;
     private NavController navController;
-
-    private ItemListController itemListController;
     private boolean newItem;
+    private String itemID;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,18 +46,57 @@ public class ItemDisplayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
+        navController = NavHostFragment.findNavController(this);
         initializeConfirmButton();
         return binding.getRoot();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadItem();
     }
 
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirestoreManager.getInstance().getCollection("Items").add(buildItem());
-                navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
+                if (newItem) {
+                    FirestoreManager.getInstance().getCollection("Items").add(buildItem());
+                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
+                } else if (!(itemID == null || itemID.isEmpty())) {
+                    FirestoreManager.getInstance().getCollection("Items").document(itemID).set(buildItem());
+                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
+                }
             }
         });
+    }
+
+    private void loadItem() {
+        // Retrieve the item from the bundle
+        Item item = (Item) getArguments().getSerializable("item");
+        if (item != null) {
+            this.itemID = item.findId();
+            // Use View Binding to populate UI elements with item data
+            binding.itemNameDisplay.setText(item.getName());
+            binding.itemValueDisplay.setText(item.getValue());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
+            binding.itemDateDisplay.setText(formattedDate);
+            binding.itemDescriptionDisplay.setText(item.getDescription());
+            binding.itemCommentDisplay.setText(item.getComment());
+            binding.itemMakeDisplay.setText(item.getMake());
+            binding.itemModelDisplay.setText(item.getModel());
+            binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
+
+            binding.itemDisplayTagGroup.removeAllViews();
+            for (String tag : item.getTags()) {
+                Chip chip = new Chip(getContext());
+                chip.setText(tag);
+                binding.itemDisplayTagGroup.addView(chip);
+            }
+        }
     }
 
     private Item buildItem() {

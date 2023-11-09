@@ -18,7 +18,6 @@
         android:id="@+id/itemDisplayFragment"
         android:name="com.example.kit.ItemDisplayFragment"
         android:label="ItemDisplayFragment" >
-
         <action
             android:id="@+id/itemCreatedAction"
             app:destination="@id/itemListFragment" />

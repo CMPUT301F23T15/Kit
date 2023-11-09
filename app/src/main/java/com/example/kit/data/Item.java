@@ -4,12 +4,13 @@ import android.media.Image;
 
 import com.google.firebase.Timestamp;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 
-public class Item{
+public class Item implements Serializable {
     // Todo: May use Tag data type for tags, for now, use just strings
     private String id;
     private String name;
