@@ -106,6 +106,7 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
     public void onAddTagClick() {
         Log.v("Tag Adding", "Tag add click!");
         AddTagFragment dialogFragment = new AddTagFragment();
+        //dialogFragment.setOnTagAddedListener(this);
         dialogFragment.setItem(selectedItem);
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
     }
@@ -113,11 +114,12 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
     @Override
     public void onTagAdded(Item item, String tagName) {
         // Replace "your_item_id_here" with the actual item ID that you want to update
-        String itemId = item.getId();
+        String itemName = item.getName();
+        Log.v("Tag listner", "Tag reached listner");
 
         // Call the method to update Firestore with the new tag
-        if (itemId != null && !itemId.isEmpty()) {
-            firestoreAdapter.addTagToItem(itemId, tagName);
+        if (itemName != null && !itemName.isEmpty()) {
+            firestoreAdapter.addTagToItem(itemName, tagName);
         } else {
             // to handle the case where the item ID is not available
         }
