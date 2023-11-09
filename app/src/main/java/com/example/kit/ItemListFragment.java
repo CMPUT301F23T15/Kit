@@ -14,6 +14,10 @@ import com.example.kit.data.Item;
 import com.example.kit.database.ItemFirestoreAdapter;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 
 import java.util.ArrayList;
 public class ItemListFragment extends Fragment implements SelectListener , AddTagFragment.OnTagAddedListener{
@@ -24,7 +28,6 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
 
     private boolean selectionModeState = false;
     private ItemFirestoreAdapter firestoreAdapter;
-    private Item selectedItem;
 
 
     @Override
@@ -33,6 +36,15 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         navController = NavHostFragment.findNavController(this);
         controller = ItemListController.getInstance();
         controller.setListener(this);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+
+        Query query = db.collection("items");
+        FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
+                .setQuery(query, Item.class)
+                .build();
+        firestoreAdapter = new ItemFirestoreAdapter(options);
     }
 
     @Nullable
@@ -73,7 +85,6 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
     @Override
     public void onItemClick(Item item) {
         Log.v("On Item Click", "Item Clicked Success | Item: " + item.getName());
-        selectedItem = item;
         navController.navigate(R.id.action_display_item_from_list);
     }
 
@@ -103,11 +114,11 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
     }
 
     @Override
-    public void onAddTagClick() {
+    public void onAddTagClick(Item item) {
         Log.v("Tag Adding", "Tag add click!");
         AddTagFragment dialogFragment = new AddTagFragment();
-        //dialogFragment.setOnTagAddedListener(this);
-        dialogFragment.setItem(selectedItem);
+        dialogFragment.setOnTagAddedListener(this);
+        dialogFragment.setItem(item);
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
     }
 
@@ -115,11 +126,10 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
     public void onTagAdded(Item item, String tagName) {
         // Replace "your_item_id_here" with the actual item ID that you want to update
         String itemName = item.getName();
-        Log.v("Tag listner", "Tag reached listner");
-
         // Call the method to update Firestore with the new tag
         if (itemName != null && !itemName.isEmpty()) {
             firestoreAdapter.addTagToItem(itemName, tagName);
+            Log.v("Tag adding", "Tag going to adapter");
         } else {
             // to handle the case where the item ID is not available
         }
