@@ -59,6 +59,12 @@ public class MainActivityTest {
     }
 
     @Test
+    public void testCreateItem() {
+        createItem();
+        onView(allOf(withText("JUnit Test Item"), hasSibling(withText("Oct 10, 1010 12:00:00 AM")), hasSibling(withText("$500.00")))).check(matches(isDisplayed()));
+        deleteItem("JUnit Test Item");
+    }
+    @Test
     public void testChangeName() {
         // Test if changing the 'name' field is properly reflected
         createItem();
