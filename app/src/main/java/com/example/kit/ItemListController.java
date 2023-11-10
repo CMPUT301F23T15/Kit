@@ -125,11 +125,21 @@ public class ItemListController {
         adapter.updateOptions(options);
     }
 
-   public void setListener(SelectListener listener){
+    /**
+     * Sets a SelectListener to the Firestore adapter for handling item selection.
+     *
+     * @param listener The SelectListener to set on the adapter.
+     */
+    public void setListener(SelectListener listener){
         adapter.setListener(listener);
    }
 
-   public void deleteItem(@NonNull Item item){
+    /**
+     * Deletes an item from the Firestore database.
+     *
+     * @param item The Item object to delete.
+     */
+    public void deleteItem(@NonNull Item item){
        itemCollection.document(item.findId())
                .delete()
                .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -145,16 +155,33 @@ public class ItemListController {
                    }
                });
    }
-   public void deleteItems(ArrayList<Item> items){
+
+    /**
+     * Deletes a list of items from the Firestore database.
+     *
+     * @param items The ArrayList of Item objects to delete.
+     */
+    public void deleteItems(ArrayList<Item> items){
         for(int i = 0; i < items.size(); i++) {
             deleteItem(items.get(i));
         }
    }
 
+    /**
+     * Returns the ItemSet managed by this controller.
+     *
+     * @return The ItemSet instance.
+     */
     public ItemSet getItemSet() {
         return itemSet;
     }
 
+    /**
+     * Retrieves an item by position from the item set.
+     *
+     * @param position The position of the item in the set.
+     * @return The Item at the specified position.
+     */
     public Item getItem(int position){
         return itemSet.getItem(position);
    }

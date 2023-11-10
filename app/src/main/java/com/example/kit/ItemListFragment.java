@@ -93,7 +93,9 @@ public class ItemListFragment extends Fragment implements SelectListener{
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
     }
-
+    /**
+     * Initializes UI interactions, setting up listeners for add and delete buttons.
+     */
     //TODO: Implement add and profile buttons here
     public void initializeUIInteractions(){
         binding.deleteItemButton.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +109,11 @@ public class ItemListFragment extends Fragment implements SelectListener{
         });
     }
 
+    /**
+     * Handles item click events. Opens item details if not in delete mode.
+     *
+     * @param item The item that was clicked.
+     */
     @Override
     public void onItemClick(Item item) {
         if(!modeFlag) {
@@ -116,11 +123,17 @@ public class ItemListFragment extends Fragment implements SelectListener{
         }
     }
 
+    /**
+     * Handles long click events on items to change the UI mode for item deletion.
+     */
     @Override
     public void onItemLongClick() {
         changeMode();
     }
 
+    /**
+     * Toggles the UI mode between normal and deletion mode, showing or hiding checkboxes and buttons accordingly.
+     */
     private void changeMode() {
         modeFlag = !modeFlag;
         int numItems = controller.getAdapter().getItemCount();
@@ -142,10 +155,18 @@ public class ItemListFragment extends Fragment implements SelectListener{
             }
         }
     }
+
+    /**
+     * Handles the event for adding a tag to an item.
+     */
     @Override
     public void onAddTagClick() {
         Log.v("Tag Adding", "Tag add click!");
     }
+
+    /**
+     * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
+     */
     public void onDelete(){
         int numItems = binding.itemList.getAdapter().getItemCount();
         ArrayList<Item> deleteItems = new ArrayList<>();
@@ -161,6 +182,11 @@ public class ItemListFragment extends Fragment implements SelectListener{
         changeMode();
     }
 
+    /**
+     * Updates the displayed total value of all items in the set.
+     *
+     * @param value The total value to display.
+     */
     public void updateTotalItemValue(BigDecimal value) {
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
