@@ -57,7 +57,7 @@ public class MainActivityTest {
 
     @Test
     public void testChangeValue() {
-        // Test if changing the 'name' field is properly reflected
+        // Test if changing the 'value' field is properly reflected
         createItem();
     }
 
