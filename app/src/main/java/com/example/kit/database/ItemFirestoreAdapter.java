@@ -67,7 +67,7 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
     }
 
     public void addTagToItem(String itemID, String newTag) {
-        DocumentReference itemRef = firestoreManager.getCollection("items").document(itemID);
+        DocumentReference itemRef = firestoreManager.getCollection("Items").document(itemID);
 
         // Update the Firestore document with the new tag
         itemRef.update("tags", FieldValue.arrayUnion(newTag))
