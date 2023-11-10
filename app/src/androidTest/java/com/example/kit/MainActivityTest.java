@@ -5,11 +5,14 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotSelected;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -49,6 +52,8 @@ public class MainActivityTest {
 
     public void deleteItem(String name) {
         onView(withText(name)).perform(ViewActions.longClick());
+        // onView(allOf(withId(R.id.itemCardView), hasDescendant(withText(name))));
+        onView(allOf(withId(R.id.checkBox), hasSibling(allOf(withId(R.id.itemCardView), hasDescendant(withText(name)))))).perform(click());
     }
 
     @Test
@@ -60,10 +65,7 @@ public class MainActivityTest {
         onView(withId(R.id.itemNameDisplay)).perform(ViewActions.typeText("Changed JUnit Test Item"));
         onView(withId(R.id.itemNameDisplay)).perform(closeSoftKeyboard());
         onView(withId(R.id.floatingActionButton)).perform(click());
-        //onView(withText("Changed JUnit Test Item")).check(matches(isDisplayed()));
-        deleteItem("Changed JUnit Test Item");
-
-
+        onView(withText("Changed JUnit Test Item")).check(matches(isDisplayed()));
     }
 
 
