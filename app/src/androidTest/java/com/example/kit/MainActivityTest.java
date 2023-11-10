@@ -46,11 +46,6 @@ public class MainActivityTest {
         onView(withId(R.id.floatingActionButton)).perform(click());
     }
 
-    @Test
-    public void testAddTag() {
-        // Test if a tag gets properly added to an item
-        createItem();
-    }
 
     @Test
     public void testChangeName() {
