@@ -7,6 +7,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 
 import com.example.kit.data.Item;
@@ -22,20 +27,19 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 /**
  * A controller class for the {@link ItemListFragment}, managing the {@link ItemFirestoreAdapter}
  * with queries and filtering.
  */
-public class ItemListController {
+public class ItemListController implements DefaultLifecycleObserver {
 
     private static final ItemListController controller = new ItemListController();
     private final CollectionReference itemCollection;
     private final ItemFirestoreAdapter adapter;
     private final ItemSet itemSet;
-
     private ItemListFragment fragment;
-    private NavController navController;
 
     /**
      * Private Singleton constructor
@@ -49,6 +53,14 @@ public class ItemListController {
                 .setQuery(itemCollection, Item.class)
                 .build();
 
+        adapter = new ItemFirestoreAdapter(options) {
+            @Override
+            public void onDataChanged() {
+                super.onDataChanged();
+                fragment.updateTotalItemValue(itemSet.getItemSetValue());
+            }
+        };
+
         itemCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -58,21 +70,19 @@ public class ItemListController {
                 }
 
                 Log.i("Database", "Snapshot Listener called");
+
                 itemSet.clear();
                 for (QueryDocumentSnapshot document : value) {
                     itemSet.addItem(document.toObject(Item.class), document.getId());
                 }
-                fragment.updateTotalItemValue(itemSet.getItemSetValue());
             }
         });
-
-        adapter = new ItemFirestoreAdapter(options);
     }
 
     /**
      * Provides the instance of the ItemListController Singleton
-     * @return
-     *  Instance of ItemListController
+     *
+     * @return Instance of ItemListController
      */
     public static ItemListController getInstance() {
         return controller;
@@ -83,33 +93,12 @@ public class ItemListController {
     }
 
     /**
-     * Life Cycle method for the {@link ItemListFragment#onStart() onStart}
-     */
-    public void onStart() {
-        adapter.startListening();
-    }
-
-    /**
-     * Life Cycle method for the {@link ItemListFragment#onStop() onStop}
-     */
-    public void onStop() {
-        adapter.stopListening();
-    }
-
-    /**
      * Provides a reference to the adapter
-     * @return
-     *  Instance of the adapter
+     *
+     * @return Instance of the adapter
      */
     public ItemFirestoreAdapter getAdapter() {
         return adapter;
-    }
-    public void setNavController(NavController navController) {
-        this.navController = navController;
-    }
-
-    public NavController getNavController () {
-        return navController;
     }
 
     /**
@@ -119,43 +108,51 @@ public class ItemListController {
         // Build query
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
-        //        .setQuery()
+                //        .setQuery()
                 .build();
 
         adapter.updateOptions(options);
     }
 
-   public void setListener(SelectListener listener){
+    public void setListener(SelectListener listener) {
         adapter.setListener(listener);
-   }
-
-   public void deleteItem(@NonNull Item item){
-       itemCollection.document(item.findId())
-               .delete()
-               .addOnSuccessListener(new OnSuccessListener<Void>() {
-                   @Override
-                   public void onSuccess(Void unused) {
-                       Log.d("Firestore", "Document deleted successfully: " + item.findId());
-                   }
-               })
-               .addOnFailureListener(new OnFailureListener() {
-                   @Override
-                   public void onFailure(@NonNull Exception e) {
-                       Log.d("Firestore", "Document deletion failed: " + item.findId());
-                   }
-               });
-   }
-   public void deleteItems(ArrayList<Item> items){
-        for(int i = 0; i < items.size(); i++) {
-            deleteItem(items.get(i));
-        }
-   }
-
-    public ItemSet getItemSet() {
-        return itemSet;
     }
 
-    public Item getItem(int position){
+    public void deleteItem(@NonNull Item item) {
+        itemCollection.document(item.findId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Firestore", "Document deleted successfully: " + item.findId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Firestore", "Document deletion failed: " + item.findId());
+                    }
+                });
+    }
+
+    public void deleteItems(ArrayList<Item> items) {
+        for (int i = 0; i < items.size(); i++) {
+            deleteItem(items.get(i));
+        }
+    }
+
+    public Item getItem(int position) {
         return itemSet.getItem(position);
-   }
+    }
+
+
+    @Override
+    public void onStart(@NonNull LifecycleOwner owner) {
+        adapter.startListening();
+    }
+
+    @Override
+    public void onStop(@NonNull LifecycleOwner owner) {
+        adapter.stopListening();
+    }
 }
