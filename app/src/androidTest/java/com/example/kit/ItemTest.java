@@ -72,7 +72,7 @@ public class ItemTest {
         item.removeTag(tag);
         assertFalse(item.getTags().contains(tag));
     }
-    
+
     @Test
     public void testItemEquals() {
         Item item1 = mockItem1();
