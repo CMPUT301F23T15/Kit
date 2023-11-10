@@ -45,10 +45,7 @@ public class MainActivityTest {
         onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
 
         onView(withId(R.id.floatingActionButton)).perform(click());
-
-
     }
-
 
     @Test
     public void testChangeName() {
@@ -68,6 +65,12 @@ public class MainActivityTest {
     public void testChangeValue() {
         // Test if changing the 'value' field is properly reflected
         createItem();
+        onView(withText("JUnit Test Item")).perform(click());
+        onView(withId(R.id.itemValueDisplay)).perform(ViewActions.clearText());
+        onView(withId(R.id.itemValueDisplay)).perform(ViewActions.typeText("9999"));
+        onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
+        onView(withId(R.id.floatingActionButton)).perform(click());
+        onView(withText("$9,999.00")).check(matches(isDisplayed()));
     }
 
     @Test
