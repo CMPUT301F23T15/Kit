@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/itemListFragment">
+    <fragment
+        android:id="@+id/itemListFragment"
+        android:name="com.example.kit.ItemListFragment"
+        android:label="ItemListFragment" >
+        <action
+            android:id="@+id/displayListItemAction"
+            app:destination="@id/itemDisplayFragment" />
+        <action
+            android:id="@+id/newItemAction"
+            app:destination="@id/itemDisplayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemDisplayFragment"
+        android:name="com.example.kit.ItemDisplayFragment"
+        android:label="ItemDisplayFragment" >
+        <action
+            android:id="@+id/itemCreatedAction"
+            app:destination="@id/itemListFragment" />
+    </fragment>
+</navigation>

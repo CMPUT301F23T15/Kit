@@ -2,6 +2,10 @@ package com.example.kit.data;
 
 import android.provider.ContactsContract;
 
+/**
+ * This data type is for the user, which contains an username and
+ * an email.
+ */
 public class User {
     private String username;
     private ContactsContract.CommonDataKinds.Email email;

@@ -3,10 +3,16 @@ package com.example.kit.data;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-
-
+/**
+ * Data Collection representing a collection of {@link Item}, that can calculate the total value
+ * of the items in the set.
+ */
 public class ItemSet {
     private ArrayList<Item> items;
+
+    public ItemSet() {
+        items = new ArrayList<Item>();
+    }
 
     /**
      * Returns the {@link Item}s within the ItemSet.
@@ -17,10 +23,17 @@ public class ItemSet {
         return items;
     }
 
-
-    public Item getItem(int position) {
-        return items.get(position);
+    /**
+     * Returns the number of {@link Item}s in the ItemSet
+     * @return
+     *  The number of items in the set
+     */
+    public int getItemsCount() {
+        return items.size();
     }
+
+
+    public Item getItem(int position) {return items.get(position); }
 
     /**
      * Calculate the total value of the {@link Item}s within this ItemSet.
@@ -30,9 +43,34 @@ public class ItemSet {
     public BigDecimal getItemSetValue() {
         BigDecimal totalValue = new BigDecimal(0);
         for (Item item : items) {
-            totalValue = totalValue.add(item.getValue());
+            totalValue = totalValue.add(item.valueToBigDecimal());
         }
         return totalValue;
     }
 
+    /**
+     * Add a {@link Item} to the ItemSet via an item and the ID
+     * @param item
+     * @param id
+     *  The Item to be added
+     */
+    public void addItem(Item item, String id){
+        item.attachID(id);
+        items.add(item);
+    }
+
+    /**
+     * Clear the ItemSet
+     */
+    public void clear() {
+        items.clear();
+    }
+
+    /**
+     * Removes item from list
+     * @param item
+     */
+    public void removeItem(Item item){
+        items.remove(item);
+    }
 }

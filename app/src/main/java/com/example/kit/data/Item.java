@@ -1,25 +1,44 @@
 package com.example.kit.data;
 
+import android.media.Image;
+
+import com.google.firebase.Timestamp;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.NoSuchElementException;
 
-public class Item {
+/**
+ * Item is a single item data type, it is a serializable data type
+ */
+
+public class Item implements Serializable {
+    // Todo: May use Tag data type for tags, for now, use just strings
+    private String id;
     private String name;
-    private Date acquisitionDate;
+    private Timestamp acquisitionDate;
     private String description;
     private String comment;
-    private BigDecimal value;
+    private String value;
     private String make;
     private String model;
     private String serialNumber;
-    private ArrayList<Tag> tags;
+    private ArrayList<String> tags;
+    private ArrayList<Image> images; // Placeholder, may store locally with something like a path to the directory?
+                                    // Looking into FireStore and images, we can use a cloud solution and then have
+                                    // FireStore manage it (kinda)
 
     // TODO: Images
 
+
+    public Item() {
+        tags = new ArrayList<>();
+    }
+
     public Item (String name) {
         this.name = name;
+        this.id = "";
         this.acquisitionDate = null;
         this.description = "";
         this.comment = "";
@@ -27,18 +46,6 @@ public class Item {
         this.model = "";
         this.serialNumber = "";
         this.tags = new ArrayList<>();
-    }
-
-    public Item(String name, Date acquisitionDate, String description, String comment, BigDecimal value, String make, String model, String serialNumber, ArrayList<Tag> tags) {
-        this.name = name;
-        this.acquisitionDate = acquisitionDate;
-        this.description = description;
-        this.comment = comment;
-        this.value = value;
-        this.make = make;
-        this.model = model;
-        this.serialNumber = serialNumber;
-        this.tags = tags;
     }
 
     public String getName() {
@@ -49,11 +56,11 @@ public class Item {
         this.name = name;
     }
 
-    public Date getAcquisitionDate() {
+    public Timestamp getAcquisitionDate() {
         return acquisitionDate;
     }
 
-    public void setAcquisitionDate(Date acquisitionDate) {
+    public void setAcquisitionDate(Timestamp acquisitionDate) {
         this.acquisitionDate = acquisitionDate;
     }
 
@@ -73,11 +80,15 @@ public class Item {
         this.comment = comment;
     }
 
-    public BigDecimal getValue() {
+    public BigDecimal valueToBigDecimal() {
+        return new BigDecimal(value);
+    }
+
+    public String getValue() {
         return value;
     }
 
-    public void setValue(BigDecimal value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
@@ -105,15 +116,18 @@ public class Item {
         this.serialNumber = serialNumber;
     }
 
-    public ArrayList<Tag> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
-
-    public void addTag(Tag tag) {
+    public void addTag(String tag) {
         if (!tags.contains(tag)) {
             tags.add(tag);
         }
     }
+
+    public String findId() {return id; }
+
+    public void attachID(String id) {this.id = id; }
 
     /**
      * Removes the provided tag from the Item.
@@ -126,5 +140,23 @@ public class Item {
         if (!tags.remove(tag)) {
             throw new NoSuchElementException();
         }
+    }
+
+    @Override
+    public boolean equals(Object item){
+        if(this.findId() == item.toString()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * String representation of an item is it's ID
+     * @return
+     */
+    @Override
+    public String toString(){
+        return this.findId();
     }
 }
