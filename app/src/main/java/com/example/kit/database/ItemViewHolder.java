@@ -65,6 +65,14 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             chip.setVisibility(View.VISIBLE);
         }
     }
+
+    /**
+     * Sets up click and long-click listeners for the item view .
+     *
+     * @param listener The SelectListener that will handle item click and long-click actions.
+     * @param holder The ItemViewHolder which holds the view that the listeners are being attached to.
+     * @param model The {@link Item} model associated with the current ViewHolder.
+     */
     public void setupListeners(SelectListener listener, ItemViewHolder holder, Item model){
         binding.itemCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +97,12 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
+
+    /**
+     * Returns the ItemListRowBinding associated with this ViewHolder.
+     *
+     * @return The binding instance containing the layout for the item row.
+     */
     public ItemListRowBinding getBinding() {
         return binding;
     }

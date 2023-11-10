@@ -24,12 +24,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
+ * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
+ */
 public class ItemDisplayFragment extends Fragment {
 
     private ItemDisplayBinding binding;
     private NavController navController;
     private boolean newItem;
     private String itemID;
+
+    /**
+     * Called to do initial creation of the fragment. Sets up the navigation controller and determines if a new item is being created.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +52,15 @@ public class ItemDisplayFragment extends Fragment {
         }
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view. Initializes the binding and navController.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +70,9 @@ public class ItemDisplayFragment extends Fragment {
         return binding.getRoot();
 
     }
+    /**
+     * Called when the fragment becomes visible. Handles loading of the item details if editing an existing item.
+     */
 
     @Override
     public void onStart() {
@@ -58,6 +80,9 @@ public class ItemDisplayFragment extends Fragment {
         loadItem();
     }
 
+    /**
+     * Initializes the floating action button to handle the creation or update of an item in the Firestore database.
+     */
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +98,9 @@ public class ItemDisplayFragment extends Fragment {
         });
     }
 
+    /**
+     * Loads an item's details into the UI components if editing an existing item. Retrieves the item from the fragment's arguments.
+     */
     private void loadItem() {
         // Retrieve the item from the bundle
         Item item = (Item) getArguments().getSerializable("item");
@@ -99,6 +127,13 @@ public class ItemDisplayFragment extends Fragment {
         }
     }
 
+    /**
+     * Constructs an {@link Item} object from the data input in the UI fields.
+     * This method includes date parsing and exception handling for invalid date formats.
+     *
+     * @return {@link Item} The newly constructed or updated item.
+     * @throws RuntimeException If there is a problem parsing the acquisition date.
+     */
     private Item buildItem() {
         Item newItem = new Item();
 
