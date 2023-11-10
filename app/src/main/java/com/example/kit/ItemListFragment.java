@@ -11,29 +11,32 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.kit.data.Item;
+import com.example.kit.database.ItemFirestoreAdapter;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed.
  */
-public class ItemListFragment extends Fragment implements SelectListener {
+public class ItemListFragment extends Fragment implements SelectListener, AddTagFragment.OnTagAddedListener {
 
     private ItemListBinding binding;
     private ItemListController controller;
     private NavController navController;
     private boolean modeFlag = false;
 
-    /**
-     * Standard lifecycle method for a fragment
-     * @param savedInstanceState If the fragment is being re-created from
-     * a previous saved state, this is the state.
-     */
+    private boolean selectionModeState = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,9 +77,9 @@ public class ItemListFragment extends Fragment implements SelectListener {
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
     }
-
+  
     /**
-     * Initializes UI elements that require interaction, such as buttons
+     * Initializes UI interactions, setting up listeners for add and delete buttons.
      */
     //TODO: Implement add and profile buttons here
     public void initializeUIInteractions(){
@@ -93,8 +96,9 @@ public class ItemListFragment extends Fragment implements SelectListener {
     }
 
     /**
-     * Implements action based on an item being clicked in the list
-     * @param item
+     * Handles item click events. Opens item details if not in delete mode.
+     *
+     * @param item The item that was clicked.
      */
     @Override
     public void onItemClick(Item item) {
@@ -106,7 +110,7 @@ public class ItemListFragment extends Fragment implements SelectListener {
     }
 
     /**
-     * Implements action on an item being long clicked in the list
+     * Handles long click events on items to change the UI mode for item deletion.
      */
     @Override
     public void onItemLongClick() {
@@ -114,8 +118,7 @@ public class ItemListFragment extends Fragment implements SelectListener {
     }
 
     /**
-     * This changes the mode in the list, from either viewing items to
-     * selecting items for deletion
+     * Toggles the UI mode between normal and deletion mode, showing or hiding checkboxes and buttons accordingly.
      */
     private void changeMode() {
         modeFlag = !modeFlag;
@@ -140,15 +143,32 @@ public class ItemListFragment extends Fragment implements SelectListener {
     }
 
     /**
-     * This implements acitons when the add tag button is clicked on each item
+     * Handles the event for adding a tag to an item.
      */
     @Override
-    public void onAddTagClick() {
+    public void onAddTagClick(Item item) {
         Log.v("Tag Adding", "Tag add click!");
+        AddTagFragment dialogFragment = new AddTagFragment();
+        dialogFragment.setOnTagAddedListener(this);
+        dialogFragment.setItem(item);
+        dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
+    }
+
+    @Override
+    public void onTagAdded(Item item, String tagName) {
+        Log.v("Tag adding", "Tag reached onTag");
+        String itemID = item.findId();
+        // Call the method to update Firestore with the new tag
+        if (!itemID.isEmpty()) {
+            controller.getAdapter().addTagToItem(itemID, tagName);
+            Log.v("Tag adding", "Tag going to adapter");
+        } else {
+            Log.v("Tag adding", "TagID null");
+        }
     }
 
     /**
-     * This implements the action taken when an item is delted
+     * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
      */
     public void onDelete(){
         int numItems = binding.itemList.getAdapter().getItemCount();
@@ -165,8 +185,9 @@ public class ItemListFragment extends Fragment implements SelectListener {
     }
 
     /**
-     * This updates the total value of every item in the lsit
-     * @param value
+     * Updates the displayed total value of all items in the set.
+     *
+     * @param value The total value to display.
      */
     public void updateTotalItemValue(BigDecimal value) {
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);

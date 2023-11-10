@@ -96,15 +96,18 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         binding.addTagChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onAddTagClick();
+                ItemFirestoreAdapter adapter = (ItemFirestoreAdapter) holder.getBindingAdapter();
+                String ID = adapter.getSnapshots().getSnapshot(holder.getBindingAdapterPosition()).getId();
+                model.attachID(ID);
+                listener.onAddTagClick(model);
             }
         });
     }
 
     /**
-     * Gets the binding to allow for manipulation of the UI of an item from
-     * outside the view holder
-     * @return binding
+     * Returns the ItemListRowBinding associated with this ViewHolder.
+     *
+     * @return The binding instance containing the layout for the item row.
      */
     public ItemListRowBinding getBinding() {
         return binding;

@@ -119,11 +119,6 @@ public class Item implements Serializable {
     public ArrayList<String> getTags() {
         return tags;
     }
-
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
-    }
-
     public void addTag(String tag) {
         if (!tags.contains(tag)) {
             tags.add(tag);

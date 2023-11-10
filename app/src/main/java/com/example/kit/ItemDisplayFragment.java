@@ -24,6 +24,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
+ * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
+ */
 public class ItemDisplayFragment extends Fragment {
 
     private ItemDisplayBinding binding;
@@ -69,6 +73,9 @@ public class ItemDisplayFragment extends Fragment {
         return binding.getRoot();
 
     }
+    /**
+     * Called when the fragment becomes visible. Handles loading of the item details if editing an existing item.
+     */
 
     /**
      * Loads the inputted item on start
@@ -80,7 +87,7 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     /**
-     * Initializes the confirmation button and its listener
+     * Initializes the floating action button to handle the creation or update of an item in the Firestore database.
      */
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +105,7 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     /**
-     * Loads the item from arguments
+     * Loads an item's details into the UI components if editing an existing item. Retrieves the item from the fragment's arguments.
      */
     private void loadItem() {
         // Retrieve the item from the bundle
@@ -127,8 +134,11 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     /**
-     * Builds a new item
-     * @return {@link com.example.kit.data.Item}
+     * Constructs an {@link Item} object from the data input in the UI fields.
+     * This method includes date parsing and exception handling for invalid date formats.
+     *
+     * @return {@link Item} The newly constructed or updated item.
+     * @throws RuntimeException If there is a problem parsing the acquisition date.
      */
     private Item buildItem() {
         Item newItem = new Item();

@@ -115,13 +115,19 @@ public class ItemListController implements DefaultLifecycleObserver {
     }
 
     /**
-     * Sets the listener for each individual items UI elements
-     * @param listener
+     * Sets a SelectListener to the Firestore adapter for handling item selection.
+     *
+     * @param listener The SelectListener to set on the adapter.
      */
     public void setListener(SelectListener listener) {
         adapter.setListener(listener);
     }
-
+  
+    /**
+     * Deletes an item from the Firestore database.
+     *
+     * @param item The Item object to delete.
+     */
     public void deleteItem(@NonNull Item item) {
         itemCollection.document(item.findId())
                 .delete()
@@ -139,7 +145,7 @@ public class ItemListController implements DefaultLifecycleObserver {
                 });
     }
 
-    /**
+  /**
      * Deletes list of items from the database, and therefore the item set
      * See {@link #deleteItem(Item) deleteItem}
      * @param items
@@ -151,9 +157,10 @@ public class ItemListController implements DefaultLifecycleObserver {
     }
 
     /**
-     * Return an item based on position
-     * @param position
-     * @return
+     * Retrieves an item by position from the item set.
+     *
+     * @param position The position of the item in the set.
+     * @return The Item at the specified position.
      */
     public Item getItem(int position) {
         return itemSet.getItem(position);
