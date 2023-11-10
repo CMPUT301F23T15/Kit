@@ -85,6 +85,9 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         binding.addTagChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ItemFirestoreAdapter adapter = (ItemFirestoreAdapter) holder.getBindingAdapter();
+                String ID = adapter.getSnapshots().getSnapshot(holder.getBindingAdapterPosition()).getId();
+                model.attachID(ID);
                 listener.onAddTagClick(model);
             }
         });
