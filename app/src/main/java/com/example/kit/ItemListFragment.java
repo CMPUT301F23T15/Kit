@@ -153,6 +153,17 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
     }
 
+    public void onSearchTag(Item item, String tagName) {
+        Log.v("Tag adding", "Tag reached onSearchTag");
+        String itemID = item.findId();
+        // Call the method to update Firestore with the new tag
+        if (!itemID.isEmpty()) {
+            controller.getAdapter().searchTags(itemID, tagName);
+            Log.v("Tag adding", "Tag going to adapter");
+        } else {
+            Log.v("Tag adding", "TagID null");
+        }
+    }
     @Override
     public void onTagAdded(Item item, String tagName) {
         Log.v("Tag adding", "Tag reached onTag");
