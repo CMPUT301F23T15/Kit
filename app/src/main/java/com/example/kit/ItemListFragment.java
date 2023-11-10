@@ -23,8 +23,12 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-public class ItemListFragment extends Fragment implements SelectListener , AddTagFragment.OnTagAddedListener{
 
+/**
+ * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
+ * Displays the total value of the items currently displayed.
+ */
+public class ItemListFragment extends Fragment implements SelectListener, AddTagFragment.OnTagAddedListener {
 
     private ItemListBinding binding;
     private ItemListController controller;
@@ -32,8 +36,6 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
     private boolean modeFlag = false;
 
     private boolean selectionModeState = false;
-    private ItemFirestoreAdapter firestoreAdapter;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,15 +44,7 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         controller = ItemListController.getInstance();
         controller.setListener(this);
         controller.setFragment(this);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-
-        Query query = db.collection("items");
-        FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
-                .setQuery(query, Item.class)
-                .build();
-        firestoreAdapter = new ItemFirestoreAdapter(options);
+        getLifecycle().addObserver(controller);
     }
 
     /**
@@ -76,24 +70,6 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
     }
 
     /**
-     * Standard lifecycle method for a fragment
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
-        controller.onStart();
-    }
-
-    /** Standard lifecycle method for a fragment
-     *
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-        controller.onStop();
-    }
-
-    /**
      * Initialize the RecyclerView of the fragment
      */
     private void initializeItemList() {
@@ -101,7 +77,9 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
     }
-
+    /**
+     * Initializes UI interactions, setting up listeners for add and delete buttons.
+     */
     //TODO: Implement add and profile buttons here
     public void initializeUIInteractions(){
         binding.deleteItemButton.setOnClickListener(new View.OnClickListener() {
@@ -110,11 +88,17 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
                 onDelete();
             }
         });
+
         binding.addItemButton.setOnClickListener(onClick -> {
             navController.navigate(ItemListFragmentDirections.newItemAction());
         });
     }
 
+    /**
+     * Handles item click events. Opens item details if not in delete mode.
+     *
+     * @param item The item that was clicked.
+     */
     @Override
     public void onItemClick(Item item) {
         if(!modeFlag) {
@@ -124,11 +108,17 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         }
     }
 
+    /**
+     * Handles long click events on items to change the UI mode for item deletion.
+     */
     @Override
     public void onItemLongClick() {
         changeMode();
     }
 
+    /**
+     * Toggles the UI mode between normal and deletion mode, showing or hiding checkboxes and buttons accordingly.
+     */
     private void changeMode() {
         modeFlag = !modeFlag;
         int numItems = controller.getAdapter().getItemCount();
@@ -150,6 +140,10 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
             }
         }
     }
+
+    /**
+     * Handles the event for adding a tag to an item.
+     */
     @Override
     public void onAddTagClick(Item item) {
         Log.v("Tag Adding", "Tag add click!");
@@ -164,14 +158,17 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         Log.v("Tag adding", "Tag reached onTag");
         String itemID = item.findId();
         // Call the method to update Firestore with the new tag
-        if (item != null && !itemID.isEmpty()) {
-            firestoreAdapter.addTagToItem(itemID, tagName);
+        if (!itemID.isEmpty()) {
+            controller.getAdapter().addTagToItem(itemID, tagName);
             Log.v("Tag adding", "Tag going to adapter");
         } else {
             Log.v("Tag adding", "TagID null");
         }
     }
 
+    /**
+     * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
+     */
     public void onDelete(){
         int numItems = binding.itemList.getAdapter().getItemCount();
         ArrayList<Item> deleteItems = new ArrayList<>();
@@ -187,6 +184,11 @@ public class ItemListFragment extends Fragment implements SelectListener , AddTa
         changeMode();
     }
 
+    /**
+     * Updates the displayed total value of all items in the set.
+     *
+     * @param value The total value to display.
+     */
     public void updateTotalItemValue(BigDecimal value) {
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);

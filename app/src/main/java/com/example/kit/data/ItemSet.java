@@ -49,8 +49,9 @@ public class ItemSet {
     }
 
     /**
-     * Add a {@link Item} to the ItemSet
+     * Add a {@link Item} to the ItemSet via an item and the ID
      * @param item
+     * @param id
      *  The Item to be added
      */
     public void addItem(Item item, String id){
@@ -65,12 +66,11 @@ public class ItemSet {
         items.clear();
     }
 
+    /**
+     * Removes item from list
+     * @param item
+     */
     public void removeItem(Item item){
         items.remove(item);
     }
-
-
-    // TODO: Could implement get item by item, this requries a loop but would allow a change in the itemListFragment deletion where we wouldn't need to loop and store in the array
-    // ^Discuss this tomorrow
-
 }
