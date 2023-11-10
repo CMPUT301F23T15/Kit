@@ -17,4 +17,5 @@ public interface SelectListener {
     void onItemClick(Item item);
     void onItemLongClick();
     void onAddTagClick();
+
 }
