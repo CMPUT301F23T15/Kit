@@ -86,7 +86,7 @@ public class MainActivityTest {
         onView(withId(R.id.itemValueDisplay)).perform(ViewActions.typeText("9999"));
         onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
         onView(withId(R.id.floatingActionButton)).perform(click());
-        onView(withText("$9,999.00")).check(matches(isDisplayed()));
+        onView(allOf(withText("$9,999.00"), hasSibling(withText("JUnit Test Item")))).check(matches(isDisplayed()));
         deleteItem("JUnit Test Item");
     }
 
