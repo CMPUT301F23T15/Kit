@@ -12,8 +12,10 @@ import com.example.kit.data.Item;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 /**
  * RecyclerView Adapter
@@ -78,5 +80,28 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
                     Log.v("Tag Adding", "Tag failed!!");
                 });
     }
+
+    public void searchTags(String itemID, String searchTag) {
+        CollectionReference tagsCollection = firestoreManager.getCollection("Tags");
+        Log.v("Tag Adding", "Tag reached Adapter!");
+        tagsCollection.whereEqualTo("tagName", searchTag)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.v("Tag Adding", "Tag added!!");
+                            firestoreManager.addTagToItem(itemID, searchTag);
+                        }
+
+                        if (task.getResult().isEmpty()) {
+                            Log.v("Tag Adding", "Tag failed!!");
+                        }
+                    } else {
+                        // Handle errors
+                        Log.e("Firestore", "Error getting tags", task.getException());
+                    }
+                });
+    }
+
 
 }
