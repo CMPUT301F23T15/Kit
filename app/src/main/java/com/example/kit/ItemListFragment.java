@@ -75,6 +75,9 @@ public class ItemListFragment extends Fragment implements SelectListener {
 
     }
 
+    /**
+     * Initializes UI elements that require interaction, such as buttons
+     */
     //TODO: Implement add and profile buttons here
     public void initializeUIInteractions(){
         binding.deleteItemButton.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +92,10 @@ public class ItemListFragment extends Fragment implements SelectListener {
         });
     }
 
+    /**
+     * Implements action based on an item being clicked in the list
+     * @param item
+     */
     @Override
     public void onItemClick(Item item) {
         if(!modeFlag) {
@@ -98,11 +105,18 @@ public class ItemListFragment extends Fragment implements SelectListener {
         }
     }
 
+    /**
+     * Implements action on an item being long clicked in the list
+     */
     @Override
     public void onItemLongClick() {
         changeMode();
     }
 
+    /**
+     * This changes the mode in the list, from either viewing items to
+     * selecting items for deletion
+     */
     private void changeMode() {
         modeFlag = !modeFlag;
         int numItems = controller.getAdapter().getItemCount();
@@ -124,11 +138,18 @@ public class ItemListFragment extends Fragment implements SelectListener {
             }
         }
     }
+
+    /**
+     * This implements acitons when the add tag button is clicked on each item
+     */
     @Override
     public void onAddTagClick() {
         Log.v("Tag Adding", "Tag add click!");
     }
 
+    /**
+     * This implements the action taken when an item is delted
+     */
     public void onDelete(){
         int numItems = binding.itemList.getAdapter().getItemCount();
         ArrayList<Item> deleteItems = new ArrayList<>();
@@ -140,10 +161,13 @@ public class ItemListFragment extends Fragment implements SelectListener {
             }
         }
         controller.deleteItems(deleteItems);
-        // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
         changeMode();
     }
 
+    /**
+     * This updates the total value of every item in the lsit
+     * @param value
+     */
     public void updateTotalItemValue(BigDecimal value) {
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);

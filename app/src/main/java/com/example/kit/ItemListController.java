@@ -114,6 +114,10 @@ public class ItemListController implements DefaultLifecycleObserver {
         adapter.updateOptions(options);
     }
 
+    /**
+     * Sets the listener for each individual items UI elements
+     * @param listener
+     */
     public void setListener(SelectListener listener) {
         adapter.setListener(listener);
     }
@@ -135,22 +139,40 @@ public class ItemListController implements DefaultLifecycleObserver {
                 });
     }
 
+    /**
+     * Deletes list of items from the database, and therefore the item set
+     * See {@link #deleteItem(Item) deleteItem}
+     * @param items
+     */
     public void deleteItems(ArrayList<Item> items) {
         for (int i = 0; i < items.size(); i++) {
             deleteItem(items.get(i));
         }
     }
 
+    /**
+     * Return an item based on position
+     * @param position
+     * @return
+     */
     public Item getItem(int position) {
         return itemSet.getItem(position);
     }
 
 
+    /**
+     * Starts the adapter listening when the ItemListFragment starts
+     * @param owner
+     */
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
         adapter.startListening();
     }
 
+    /**
+     * Stops the adapter from listening when the ItemListFragment stops
+     * @param owner
+     */
     @Override
     public void onStop(@NonNull LifecycleOwner owner) {
         adapter.stopListening();

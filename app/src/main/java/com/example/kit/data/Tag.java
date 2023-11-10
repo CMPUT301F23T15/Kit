@@ -4,6 +4,10 @@ import android.graphics.Color;
 
 import androidx.annotation.Nullable;
 
+    /**
+     * A tag consists of a name, and a color. This data type is
+     * used to represent a tag
+     */
 public class Tag {
     private String name;
     private Color color;

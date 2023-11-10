@@ -31,6 +31,12 @@ public class ItemDisplayFragment extends Fragment {
     private boolean newItem;
     private String itemID;
 
+
+    /**
+     * Standard fragment lifecycle
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +48,18 @@ public class ItemDisplayFragment extends Fragment {
         }
     }
 
+    /**
+     * Standard fragment lifecylce, initializes binding, navContoller, and UI elements
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,12 +70,18 @@ public class ItemDisplayFragment extends Fragment {
 
     }
 
+    /**
+     * Loads the inputted item on start
+     */
     @Override
     public void onStart() {
         super.onStart();
         loadItem();
     }
 
+    /**
+     * Initializes the confirmation button and its listener
+     */
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +97,9 @@ public class ItemDisplayFragment extends Fragment {
         });
     }
 
+    /**
+     * Loads the item from arguments
+     */
     private void loadItem() {
         // Retrieve the item from the bundle
         Item item = (Item) getArguments().getSerializable("item");
@@ -99,6 +126,10 @@ public class ItemDisplayFragment extends Fragment {
         }
     }
 
+    /**
+     * Builds a new item
+     * @return {@link com.example.kit.data.Item}
+     */
     private Item buildItem() {
         Item newItem = new Item();
 

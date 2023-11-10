@@ -65,7 +65,16 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             chip.setVisibility(View.VISIBLE);
         }
     }
+
+    /**
+     * This sets up listeners for individual UI elements for each item,
+     * this requires a {@link com.example.kit.SelectListener}
+     * @param listener
+     * @param holder
+     * @param model
+     */
     public void setupListeners(SelectListener listener, ItemViewHolder holder, Item model){
+        // Click listener for the entire item
         binding.itemCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +84,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 listener.onItemClick(model);
             }
         });
+        // Long Click listener for the entire item
         binding.itemCardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -82,6 +92,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 return true;
             }
         });
+        // Click listener for the tags
         binding.addTagChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +100,12 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
+
+    /**
+     * Gets the binding to allow for manipulation of the UI of an item from
+     * outside the view holder
+     * @return binding
+     */
     public ItemListRowBinding getBinding() {
         return binding;
     }
