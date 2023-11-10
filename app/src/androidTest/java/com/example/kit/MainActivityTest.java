@@ -14,12 +14,14 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 
 import android.util.Log;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -100,13 +102,6 @@ public class MainActivityTest {
         onView(withId(R.id.floatingActionButton)).perform(click());
         onView(allOf(withText("$9,999.00"), hasSibling(withText("JUnit Test Item")))).check(matches(isDisplayed()));
         deleteItem("JUnit Test Item");
-    }
-
-    @Test
-    public void testTotalValuation() {
-        // Test if total valuation equals the sum of all values in item list
-        // onData(is(instanceOf(String.class))).inAdapterView(withId(R.id.item_list)).atPosition(0).check(matches((withText("$1.00"))));
-        createItem();
     }
 
     @Test
