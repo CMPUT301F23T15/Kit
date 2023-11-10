@@ -30,6 +30,7 @@ public class MainActivityTest {
     public ActivityScenarioRule<MainActivity> scenario = new
             ActivityScenarioRule<MainActivity>(MainActivity.class);
 
+    // Run at least once
     public void createItem() {
         // Create item to test
         onView(withId(R.id.add_item_button)).perform(click());
