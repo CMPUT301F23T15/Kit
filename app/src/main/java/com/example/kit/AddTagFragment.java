@@ -2,11 +2,13 @@ package com.example.kit;
 
 import com.example.kit.data.Item;
 import com.example.kit.database.ItemFirestoreAdapter;
+import com.example.kit.databinding.AddTagBinding;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 public class AddTagFragment extends DialogFragment {
+    private AddTagBinding binding;
     private OnTagAddedListener onTagAddedListener;
     private Item item;
 
@@ -34,9 +37,10 @@ public class AddTagFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        // Inflate a custom layout for the dialog
-        View dialogView = getLayoutInflater().inflate(R.layout.add_tag, null);
-        builder.setView(dialogView);
+
+        // Inflate binding and set view of dialog to the root of binding
+        binding = AddTagBinding.inflate(getLayoutInflater());
+        builder.setView(binding.getRoot());
 
         // Set positive and negative buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -44,10 +48,8 @@ public class AddTagFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 // Handle tag input and store in strings
                 // Retrieve tag name from the dialog's views
-                EditText searchTag = dialogView.findViewById(R.id.TagSearch);
-                String tagSearch = searchTag.getText().toString();
-                EditText addTag = dialogView.findViewById(R.id.TagName);
-                String tagName = addTag.getText().toString();
+                String tagSearch = binding.TagSearch.getText().toString();
+                String tagName = binding.TagName.getText().toString();
 
                 if (!tagName.isEmpty() && onTagAddedListener != null)  {
                     onTagAddedListener.onTagAdded(item, tagName);
