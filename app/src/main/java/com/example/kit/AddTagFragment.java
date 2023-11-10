@@ -23,6 +23,8 @@ public class AddTagFragment extends DialogFragment {
 
     public interface OnTagAddedListener {
         void onTagAdded(Item item, String tagName);
+
+        void onSearchTag(Item item, String tagName);
     }
 
     public void setOnTagAddedListener(OnTagAddedListener listener) {
@@ -50,6 +52,15 @@ public class AddTagFragment extends DialogFragment {
                 // Retrieve tag name from the dialog's views
                 String tagSearch = binding.TagSearch.getText().toString();
                 String tagName = binding.TagName.getText().toString();
+                
+                if (!tagSearch.isEmpty() && onTagAddedListener != null)  {
+                    String itemID = item.findId();
+                    onTagAddedListener.onSearchTag(item, tagSearch);
+                    Log.v("Tag fragment", "Tag reached searchfragment");
+                }
+                else {
+                    Log.e("Tag Adding", "Error: tagSearch is empty or onTagAddedListener is null");
+                }
 
                 if (!tagName.isEmpty() && onTagAddedListener != null)  {
                     onTagAddedListener.onTagAdded(item, tagName);
