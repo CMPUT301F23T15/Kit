@@ -75,6 +75,7 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
                     Log.v("Tag Adding", "Tag added!!");
                 })
                 .addOnFailureListener(e -> {
+                    Log.v("Tag Adding", "Tag failed!!");
                 });
     }
 
