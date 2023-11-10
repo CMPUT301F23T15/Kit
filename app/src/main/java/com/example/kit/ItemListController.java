@@ -114,7 +114,6 @@ public class ItemListController implements DefaultLifecycleObserver {
         adapter.updateOptions(options);
     }
 
-
     /**
      * Sets a SelectListener to the Firestore adapter for handling item selection.
      *
@@ -145,10 +144,11 @@ public class ItemListController implements DefaultLifecycleObserver {
                     }
                 });
     }
-    /**
-     * Deletes a list of items from the Firestore database.
-     *
-     * @param items The ArrayList of Item objects to delete.
+
+  /**
+     * Deletes list of items from the database, and therefore the item set
+     * See {@link #deleteItem(Item) deleteItem}
+     * @param items
      */
     public void deleteItems(ArrayList<Item> items) {
         for (int i = 0; i < items.size(); i++) {
@@ -167,11 +167,19 @@ public class ItemListController implements DefaultLifecycleObserver {
     }
 
 
+    /**
+     * Starts the adapter listening when the ItemListFragment starts
+     * @param owner
+     */
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
         adapter.startListening();
     }
 
+    /**
+     * Stops the adapter from listening when the ItemListFragment stops
+     * @param owner
+     */
     @Override
     public void onStop(@NonNull LifecycleOwner owner) {
         adapter.stopListening();

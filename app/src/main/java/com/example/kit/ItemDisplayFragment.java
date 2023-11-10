@@ -35,12 +35,12 @@ public class ItemDisplayFragment extends Fragment {
     private boolean newItem;
     private String itemID;
 
-    /**
-     * Called to do initial creation of the fragment. Sets up the navigation controller and determines if a new item is being created.
-     *
-     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
-     */
 
+    /**
+     * Standard fragment lifecycle
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +53,17 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     /**
-     * Called to have the fragment instantiate its user interface view. Initializes the binding and navController.
+     * Standard fragment lifecylce, initializes binding, navContoller, and UI elements
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
      *
-     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
-     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
-     * @return Return the View for the fragment's UI, or null.
+     * @return
      */
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,6 +77,9 @@ public class ItemDisplayFragment extends Fragment {
      * Called when the fragment becomes visible. Handles loading of the item details if editing an existing item.
      */
 
+    /**
+     * Loads the inputted item on start
+     */
     @Override
     public void onStart() {
         super.onStart();

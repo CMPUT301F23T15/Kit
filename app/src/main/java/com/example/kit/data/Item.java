@@ -150,6 +150,11 @@ public class Item implements Serializable {
             return false;
         }
     }
+
+    /**
+     * String representation of an item is it's ID
+     * @return
+     */
     @Override
     public String toString(){
         return this.findId();

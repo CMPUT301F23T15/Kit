@@ -67,13 +67,14 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets up click and long-click listeners for the item view .
-     *
-     * @param listener The SelectListener that will handle item click and long-click actions.
-     * @param holder The ItemViewHolder which holds the view that the listeners are being attached to.
-     * @param model The {@link Item} model associated with the current ViewHolder.
+     * This sets up listeners for individual UI elements for each item,
+     * this requires a {@link com.example.kit.SelectListener}
+     * @param listener
+     * @param holder
+     * @param model
      */
     public void setupListeners(SelectListener listener, ItemViewHolder holder, Item model){
+        // Click listener for the entire item
         binding.itemCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +84,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 listener.onItemClick(model);
             }
         });
+        // Long Click listener for the entire item
         binding.itemCardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -90,6 +92,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 return true;
             }
         });
+        // Click listener for the tags
         binding.addTagChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

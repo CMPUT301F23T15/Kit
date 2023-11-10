@@ -77,6 +77,7 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
     }
+  
     /**
      * Initializes UI interactions, setting up listeners for add and delete buttons.
      */
@@ -180,7 +181,6 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
             }
         }
         controller.deleteItems(deleteItems);
-        // TODO: Fix this, I think it is referencing an outdated value when looping causing a crash, it is intended to reapply the regular mode
         changeMode();
     }
 

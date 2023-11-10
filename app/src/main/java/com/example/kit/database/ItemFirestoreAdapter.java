@@ -62,6 +62,11 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
 
         return new ItemViewHolder(binding);
     }
+
+    /**
+     * Sets listener for any actions done on individual items
+     * @param listener
+     */
     public void setListener(SelectListener listener) {
         this.listener = listener;
     }
