@@ -78,6 +78,18 @@ public class MainActivityTest {
     }
 
     @Test
+    public void testChangeDate() {
+        createItem();
+        onView(withText("JUnit Test Item")).perform(click());
+        onView(withId(R.id.itemDateDisplay)).perform(ViewActions.clearText());
+        onView(withId(R.id.itemDateDisplay)).perform(ViewActions.typeText("11/11/1111"));
+        onView(withId(R.id.itemDateDisplay)).perform(closeSoftKeyboard());
+        onView(withId(R.id.floatingActionButton)).perform(click());
+        onView(allOf(withText("Nov 11, 1111 12:00:00 AM"), hasSibling(withText("JUnit Test Item")))).check(matches(isDisplayed()));
+        deleteItem("JUnit Test Item");
+    }
+
+    @Test
     public void testChangeValue() {
         // Test if changing the 'value' field is properly reflected
         createItem();
