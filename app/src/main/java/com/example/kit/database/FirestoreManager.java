@@ -1,6 +1,10 @@
 package com.example.kit.database;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -33,5 +37,18 @@ public class FirestoreManager {
      */
     public CollectionReference getCollection(String collection) {
         return db.collection(collection);
+    }
+
+    public void addTagToItem(String itemID, String newTag) {
+        DocumentReference itemRef = firestoreManager.getCollection("Items").document(itemID);
+
+        // Update the Firestore document with the new tag
+        itemRef.update("tags", FieldValue.arrayUnion(newTag))
+                .addOnSuccessListener(aVoid -> {
+                    Log.v("Tag Adding", "Tag added!!");
+                })
+                .addOnFailureListener(e -> {
+                    Log.v("Tag Adding", "Tag failed!!");
+                });
     }
 }
