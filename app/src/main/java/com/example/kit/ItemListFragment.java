@@ -11,29 +11,32 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.kit.data.Item;
+import com.example.kit.database.ItemFirestoreAdapter;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed.
  */
-public class ItemListFragment extends Fragment implements SelectListener {
+public class ItemListFragment extends Fragment implements SelectListener, AddTagFragment.OnTagAddedListener {
 
     private ItemListBinding binding;
     private ItemListController controller;
     private NavController navController;
     private boolean modeFlag = false;
 
-    /**
-     * Standard lifecycle method for a fragment
-     * @param savedInstanceState If the fragment is being re-created from
-     * a previous saved state, this is the state.
-     */
+    private boolean selectionModeState = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,8 +145,25 @@ public class ItemListFragment extends Fragment implements SelectListener {
      * Handles the event for adding a tag to an item.
      */
     @Override
-    public void onAddTagClick() {
+    public void onAddTagClick(Item item) {
         Log.v("Tag Adding", "Tag add click!");
+        AddTagFragment dialogFragment = new AddTagFragment();
+        dialogFragment.setOnTagAddedListener(this);
+        dialogFragment.setItem(item);
+        dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
+    }
+
+    @Override
+    public void onTagAdded(Item item, String tagName) {
+        Log.v("Tag adding", "Tag reached onTag");
+        String itemID = item.findId();
+        // Call the method to update Firestore with the new tag
+        if (!itemID.isEmpty()) {
+            controller.getAdapter().addTagToItem(itemID, tagName);
+            Log.v("Tag adding", "Tag going to adapter");
+        } else {
+            Log.v("Tag adding", "TagID null");
+        }
     }
 
     /**

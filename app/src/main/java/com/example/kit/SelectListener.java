@@ -16,6 +16,5 @@ import com.example.kit.database.ItemViewHolder;
 public interface SelectListener {
     void onItemClick(Item item);
     void onItemLongClick();
-    void onAddTagClick();
-
+    void onAddTagClick(Item item);
 }

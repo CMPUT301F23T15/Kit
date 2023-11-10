@@ -12,12 +12,15 @@ import com.example.kit.data.Item;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 
 /**
  * RecyclerView Adapter
  */
 public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemViewHolder> {
     private SelectListener listener;
+    private FirestoreManager firestoreManager;
 
     /**
      * Constructor that initializes a query for the Adapter from the Firestore database.
@@ -25,7 +28,9 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
      *  The {@link FirestoreRecyclerOptions} containing the query for the adapter.
      */
     public ItemFirestoreAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
+
         super(options);
+        firestoreManager = FirestoreManager.getInstance();
     }
 
     /**
@@ -59,6 +64,19 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
     }
     public void setListener(SelectListener listener) {
         this.listener = listener;
+    }
+
+    public void addTagToItem(String itemID, String newTag) {
+        DocumentReference itemRef = firestoreManager.getCollection("Items").document(itemID);
+
+        // Update the Firestore document with the new tag
+        itemRef.update("tags", FieldValue.arrayUnion(newTag))
+                .addOnSuccessListener(aVoid -> {
+                    Log.v("Tag Adding", "Tag added!!");
+                })
+                .addOnFailureListener(e -> {
+                    Log.v("Tag Adding", "Tag failed!!");
+                });
     }
 
 }
