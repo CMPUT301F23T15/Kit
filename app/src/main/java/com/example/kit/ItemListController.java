@@ -92,10 +92,6 @@ public class ItemListController implements DefaultLifecycleObserver {
         this.fragment = fragment;
     }
 
-    public BigDecimal getItemSetValue() {
-        return itemSet.getItemSetValue();
-    }
-
     /**
      * Provides a reference to the adapter
      *
