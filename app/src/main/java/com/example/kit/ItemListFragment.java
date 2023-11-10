@@ -41,6 +41,7 @@ public class ItemListFragment extends Fragment implements SelectListener {
         controller = ItemListController.getInstance();
         controller.setListener(this);
         controller.setFragment(this);
+        getLifecycle().addObserver(controller);
     }
 
     /**
@@ -82,6 +83,7 @@ public class ItemListFragment extends Fragment implements SelectListener {
                 onDelete();
             }
         });
+
         binding.addItemButton.setOnClickListener(onClick -> {
             navController.navigate(ItemListFragmentDirections.newItemAction());
         });
