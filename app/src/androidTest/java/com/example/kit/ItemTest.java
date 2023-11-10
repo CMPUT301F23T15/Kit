@@ -1,85 +1,82 @@
 package com.example.kit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.kit.data.Item;
-import com.example.kit.data.ItemSet;
 import com.google.firebase.Timestamp;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
+@RunWith(AndroidJUnit4.class)
 public class ItemTest {
+    public Item mockItem1() {
+        Item item = new Item();
+        item.setName("test name");
+        item.setDescription("This is for testing");
+        item.setComment("this is for testing");
+        item.setValue("1000");
+        item.setAcquisitionDate(new Timestamp(new Date()));
+        item.setMake("JUNIT");
+        item.setModel("tester90000");
+        item.setSerialNumber("1243124124");
+        item.attachID("19191919");
 
-    public ItemSet mockItemSet() {
-        ItemSet mockItems = new ItemSet();
-        Item item1 = new Item();
-        item1.setName("Mock Item 1");
-        item1.setAcquisitionDate(new Timestamp(new Date()));
-        item1.setComment("this is an item for testing");
-        item1.setDescription("Its made up!");
-        item1.setMake("Junit");
-        item1.setModel("Mock Item 9000");
-        item1.addTag("test");
-        item1.addTag("fake");
-        item1.attachID("fakeID");
-        item1.setValue("1000");
-
-        return mockItems;
+        return item;
     }
 
-    public Item mockItem() {
+    public Item mockItem2() {
         Item item = new Item();
-        item.setName("Mock Item 2");
-        item.setDescription("Another fake item");
-        item.setComment("useful comment");
+        item.setName("test item 2");
+        item.setDescription("This is for testing");
+        item.setComment("this is for testing");
+        item.setValue("1500");
         item.setAcquisitionDate(new Timestamp(new Date()));
-        item.setMake("Junit");
-        item.setModel("mock item 9001");
-        item.addTag("testing");
-        item.addTag("fake");
-        item.setValue("500");
+        item.setMake("JUNIT");
+        item.setModel("tester90020");
+        item.setSerialNumber("1243124124");
+        item.attachID("28282828");
 
         return item;
     }
 
     @Test
-    public void testAddItem() {
-        ItemSet items = mockItemSet();
-        items.addItem(mockItem(), "testID");
-        assertEquals(2, items.getItemsCount());
-        assertEquals(mockItem(), items.getItem(1));
+    public void testItemRename() {
+        Item item = mockItem1();
+        assertEquals("test name", item.getName());
+        item.setName("new name");
+        assertEquals("new name", item.getName());
     }
 
     @Test
-    public void testClearSet() {
-        ItemSet items = mockItemSet();
-        assertEquals(1, items.getItemsCount());
-        items.clear();
-        assertEquals(0, items.getItemsCount());
-   }
-
-
-    @Test
-    public void testRemoveItem() {
-        ItemSet items = mockItemSet();
-        Item item = mockItem();
-        item.attachID("testID");
-        items.addItem(item, item.findId());
-        assertEquals(2, items.getItemsCount());
-        items.removeItem(item);
-        assertEquals(1, items.getItemsCount());
+    public void testAddTags() {
+        Item item = mockItem1();
+        assertFalse(item.getTags().contains("test tag"));
+        item.addTag("test tag");
+        assertTrue(item.getTags().contains("test tag"));
     }
 
     @Test
-    public void testItemSetValue() {
-        ItemSet items = mockItemSet();
-        assertEquals(new BigDecimal("1000"), items.getItemSetValue());
-        items.addItem(mockItem(), "testID");
-        assertEquals(new BigDecimal("1500"), items.getItemSetValue());
-        items.removeItem(mockItem());
-        assertEquals(new BigDecimal("1000"), items.getItemSetValue());
+    public void testRemoveTags() {
+        Item item = mockItem1();
+        String tag = "test tag";
+        item.addTag(tag);
+        assertTrue(item.getTags().contains(tag));
+        item.removeTag(tag);
+        assertFalse(item.getTags().contains(tag));
+    }
+    
+    @Test
+    public void testItemEquals() {
+        Item item1 = mockItem1();
+        Item item2 = mockItem2();
+        assertNotEquals(item1, item2);
     }
 }

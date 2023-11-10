@@ -137,7 +137,7 @@ public class Item implements Serializable {
      * @throws NoSuchElementException
      *  Exception thrown if the tag was not present on the item.
      */
-    public void removeTag(Tag tag) {
+    public void removeTag(String tag) {
         if (!tags.remove(tag)) {
             throw new NoSuchElementException();
         }
