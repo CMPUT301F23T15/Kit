@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
@@ -15,6 +16,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 
 import android.util.Log;
 
@@ -52,8 +54,8 @@ public class MainActivityTest {
 
     public void deleteItem(String name) {
         onView(withText(name)).perform(ViewActions.longClick());
-        // onView(allOf(withId(R.id.itemCardView), hasDescendant(withText(name))));
         onView(allOf(withId(R.id.checkBox), hasSibling(allOf(withId(R.id.itemCardView), hasDescendant(withText(name)))))).perform(click());
+        onView(withId(R.id.delete_item_button)).perform(click());
     }
 
     @Test
@@ -66,8 +68,8 @@ public class MainActivityTest {
         onView(withId(R.id.itemNameDisplay)).perform(closeSoftKeyboard());
         onView(withId(R.id.floatingActionButton)).perform(click());
         onView(withText("Changed JUnit Test Item")).check(matches(isDisplayed()));
+        deleteItem("Changed JUnit Test Item");
     }
-
 
     @Test
     public void testChangeValue() {
@@ -79,6 +81,7 @@ public class MainActivityTest {
         onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
         onView(withId(R.id.floatingActionButton)).perform(click());
         onView(withText("$9,999.00")).check(matches(isDisplayed()));
+        deleteItem("JUnit Test Item");
     }
 
     @Test
@@ -93,5 +96,6 @@ public class MainActivityTest {
         // Test if an item is properly deleted
         createItem();
         deleteItem("JUnit Test Item");
+        onView(withText("JUnit Test Item")).check(doesNotExist());
     }
 }
