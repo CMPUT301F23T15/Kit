@@ -1,7 +1,6 @@
 package com.example.kit;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,7 +110,7 @@ public class ItemDisplayFragment extends Fragment {
         // Retrieve the item from the bundle
         Item item = (Item) getArguments().getSerializable("item");
         if (item != null) {
-            this.itemID = item.findId();
+            this.itemID = item.findID();
             // Use View Binding to populate UI elements with item data
             binding.itemNameDisplay.setText(item.getName());
             binding.itemValueDisplay.setText(item.getValue());

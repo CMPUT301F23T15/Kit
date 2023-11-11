@@ -16,7 +16,7 @@ public class DeleteItemCommand extends Command {
 
     @Override
     public void execute() {
-        itemDataSource.deleteDataByID(item.findId());
+        itemDataSource.deleteDataByID(item.findID());
     }
 
     @Override

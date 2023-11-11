@@ -71,7 +71,7 @@ public class ItemSetTest {
         ItemSet items = mockItemSet();
         Item item = mockItem();
         item.attachID("testID");
-        items.addItem(item, item.findId());
+        items.addItem(item, item.findID());
         assertEquals(2, items.getItemsCount());
         items.removeItem(item);
         assertEquals(1, items.getItemsCount());

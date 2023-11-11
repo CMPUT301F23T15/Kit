@@ -7,9 +7,19 @@ import io.grpc.android.BuildConfig;
 
 public class DataSourceManager {
 
-    private static DataSourceManager instance;
     private final DataSource<Item> itemDataSource;
     private final DataSource<Tag> tagDataSource;
+
+    public DataSource<Item> getItemDataSource() {
+        return itemDataSource;
+    }
+
+    public DataSource<Tag> getTagDataSource() {
+        return tagDataSource;
+    }
+
+    // Singleton Instantiation
+    private static DataSourceManager instance;
 
     private DataSourceManager() {
         if (BuildConfig.DEBUG) {
@@ -26,13 +36,5 @@ public class DataSourceManager {
             instance = new DataSourceManager();
         }
         return instance;
-    }
-
-    public DataSource<Item> getItemDataSource() {
-        return itemDataSource;
-    }
-
-    public DataSource<Tag> getTagDataSource() {
-        return tagDataSource;
     }
 }

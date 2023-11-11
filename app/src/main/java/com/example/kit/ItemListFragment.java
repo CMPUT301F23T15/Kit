@@ -11,16 +11,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.kit.data.Item;
-import com.example.kit.database.ItemFirestoreAdapter;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -157,7 +152,7 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
     @Override
     public void onTagAdded(Item item, String tagName) {
         Log.v("Tag adding", "Tag reached onTag");
-        String itemID = item.findId();
+        String itemID = item.findID();
         // Call the method to update Firestore with the new tag
         if (!itemID.isEmpty()) {
             controller.getAdapter().addTagToItem(itemID, tagName);

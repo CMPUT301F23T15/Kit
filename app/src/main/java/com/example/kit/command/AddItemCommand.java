@@ -21,7 +21,7 @@ public class AddItemCommand extends Command {
 
     @Override
     public void unexecute() {
-        dataSource.deleteDataByID(item.findId());
+        dataSource.deleteDataByID(item.findID());
     }
 
     @Override

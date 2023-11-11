@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  * Item is a single item data type, it is a serializable data type
  */
 
-public class Item implements Serializable {
+public class Item implements Serializable, Identifiable {
     // Todo: May use Tag data type for tags, for now, use just strings
     private String id;
     private String name;
@@ -113,7 +113,7 @@ public class Item implements Serializable {
         }
     }
 
-    public String findId() {
+    public String findID() {
         return id;
     }
 
@@ -136,7 +136,7 @@ public class Item implements Serializable {
 
     @Override
     public boolean equals(Object item){
-        if(this.findId() == item.toString()){
+        if(this.findID() == item.toString()){
             return true;
         } else {
             return false;
@@ -149,6 +149,6 @@ public class Item implements Serializable {
      */
     @Override
     public String toString(){
-        return this.findId();
+        return this.findID();
     }
 }

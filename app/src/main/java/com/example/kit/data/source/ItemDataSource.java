@@ -2,8 +2,6 @@ package com.example.kit.data.source;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.example.kit.data.Item;
 import com.example.kit.database.FirestoreManager;
 import com.google.firebase.firestore.CollectionReference;
@@ -20,15 +18,15 @@ public class ItemDataSource implements DataSource<Item> {
     @Override
     public void addData(Item newItem) {
         // Add new item and generate ID if it doesn't have one
-        if (newItem.findId() == null || newItem.findId().isEmpty()) {
+        if (newItem.findID() == null || newItem.findID().isEmpty()) {
             itemCollection.add(newItem)
                     // Log if fails for some reason
                     .addOnFailureListener(exception -> Log.w("Database", "Failed to add new item."));
         } else {
             // Item already has ID, update the existing document
-            itemCollection.document(newItem.findId()).set(newItem)
+            itemCollection.document(newItem.findID()).set(newItem)
                     // Log if fails for some reason
-                    .addOnFailureListener(exception -> Log.w("Database", "Failed to set item with ID: " + newItem.findId()));
+                    .addOnFailureListener(exception -> Log.w("Database", "Failed to set item with ID: " + newItem.findID()));
         }
     }
 

@@ -8,11 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.navigation.NavController;
 
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
@@ -27,7 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 /**
  * A controller class for the {@link ItemListFragment}, managing the {@link ItemFirestoreAdapter}
@@ -129,18 +124,18 @@ public class ItemListController implements DefaultLifecycleObserver {
      * @param item The Item object to delete.
      */
     public void deleteItem(@NonNull Item item) {
-        itemCollection.document(item.findId())
+        itemCollection.document(item.findID())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("Firestore", "Document deleted successfully: " + item.findId());
+                        Log.d("Firestore", "Document deleted successfully: " + item.findID());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("Firestore", "Document deletion failed: " + item.findId());
+                        Log.d("Firestore", "Document deletion failed: " + item.findID());
                     }
                 });
     }
