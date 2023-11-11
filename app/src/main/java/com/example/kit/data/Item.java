@@ -36,18 +36,6 @@ public class Item implements Serializable {
         tags = new ArrayList<>();
     }
 
-    public Item (String name) {
-        this.name = name;
-        this.id = "";
-        this.acquisitionDate = null;
-        this.description = "";
-        this.comment = "";
-        this.make = "";
-        this.model = "";
-        this.serialNumber = "";
-        this.tags = new ArrayList<>();
-    }
-
     public String getName() {
         return name;
     }
@@ -125,9 +113,13 @@ public class Item implements Serializable {
         }
     }
 
-    public String findId() {return id; }
+    public String findId() {
+        return id;
+    }
 
-    public void attachID(String id) {this.id = id; }
+    public void attachID(String id) {
+        this.id = id;
+    }
 
     /**
      * Removes the provided tag from the Item.
