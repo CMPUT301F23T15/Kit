@@ -53,16 +53,16 @@ public class ItemSetTest {
     public void testAddItem() {
         ItemSet items = mockItemSet();
         items.addItem(mockItem(), "testID");
-        assertEquals(2, items.getItemsCount());
+        assertEquals(2, items.getItemCount());
         assertEquals(mockItem(), items.getItem(1));
     }
 
     @Test
     public void testClearSet() {
         ItemSet items = mockItemSet();
-        assertEquals(1, items.getItemsCount());
+        assertEquals(1, items.getItemCount());
         items.clear();
-        assertEquals(0, items.getItemsCount());
+        assertEquals(0, items.getItemCount());
    }
 
 
@@ -72,9 +72,9 @@ public class ItemSetTest {
         Item item = mockItem();
         item.attachID("testID");
         items.addItem(item, item.findID());
-        assertEquals(2, items.getItemsCount());
+        assertEquals(2, items.getItemCount());
         items.removeItem(item);
-        assertEquals(1, items.getItemsCount());
+        assertEquals(1, items.getItemCount());
     }
 
     @Test

@@ -19,6 +19,8 @@ import com.example.kit.databinding.ItemListBinding;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
@@ -29,11 +31,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     private ItemListBinding binding;
     private NavController navController;
     private ItemListController controller;
-
-    private RecyclerView.Adapter<ItemViewHolder> adapter;
-
-
-
+    private ItemAdapter adapter;
     private boolean inDeleteMode = false;
 
 
@@ -41,7 +39,10 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         navController = NavHostFragment.findNavController(this);
-        controller.setListener(this);
+
+        adapter = new ItemAdapter();
+
+        controller = new ItemListController();
         controller.setCallback(this);
     }
 
@@ -71,6 +72,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      * Initialize the RecyclerView of the fragment
      */
     private void initializeItemList() {
+        controller.setAdapter(adapter);
+        controller.setListener(this);
         binding.itemList.setAdapter(adapter);
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
@@ -87,16 +90,19 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     /**
      * Handles item click events. Opens item details if not in delete mode.
      *
-     * @param item The item that was clicked.
+     * @param Ttem The item that was clicked.
      */
     @Override
-    public void onItemClick(Item item) {
+    public void onItemClick(String id) {
         // Disable transition in delete mode
         if (inDeleteMode) return;
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("item", item);
+        bundle.putString("id", id);
         navController.navigate(R.id.displayListItemAction, bundle);
+//        ItemListFragmentDirections.DisplayListItemAction action =
+//                ItemListFragmentDirections.displayListItemAction(id);
+//        navController.navigate(action);
     }
 
     /**
@@ -158,7 +164,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         String itemID = item.findID();
         // Call the method to update Firestore with the new tag
         if (!itemID.isEmpty()) {
-            adapter.addTagToItem(itemID, tagName);
+//            adapter.addTagToItem(itemID, tagName);
             Log.v("Tag adding", "Tag going to adapter");
         } else {
             Log.v("Tag adding", "TagID null");
@@ -169,7 +175,16 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
      */
     public void onDelete(){
-        controller.deleteCheckedItems();
+        HashSet<Integer> checkedPositions = new HashSet<>();
+        int numItems = adapter.getItemCount();
+        for (int i = 0; i < numItems; i++) {
+            ItemViewHolder viewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+            if (viewHolder.isChecked()) {
+                checkedPositions.add(i);
+            }
+        }
+
+        controller.deleteCheckedItems(checkedPositions);
         toggleDeleteMode();
         // TODO: Show snackbar with option to undo
     }

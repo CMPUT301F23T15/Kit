@@ -1,6 +1,8 @@
 package com.example.kit;
 
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -14,10 +16,12 @@ import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.source.DataChangedCallback;
 import com.example.kit.data.source.DataSourceManager;
+import com.example.kit.data.source.ItemDataSource;
 import com.example.kit.database.ItemFirestoreAdapter;
 import com.example.kit.database.ItemViewHolder;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 
 /**
  * A controller class for the {@link ItemListFragment}, managing the {@link ItemFirestoreAdapter}
@@ -27,11 +31,12 @@ public class ItemListController implements DataChangedCallback {
     private ItemAdapter adapter;
     private ItemSet itemSet;
     private ItemSetValueChangedCallback callback;
+    private final DataSourceManager dataSourceManager = DataSourceManager.getInstance();
 
-    private ItemListController() {
+    public ItemListController() {
         itemSet = new ItemSet();
         // Add the controller as a callback when the ItemDataSource has changes in data
-        DataSourceManager.getInstance().getItemDataSource().setCallback(this);
+        dataSourceManager.getItemDataSource().setCallback(this);
     }
 
     /**
@@ -39,9 +44,11 @@ public class ItemListController implements DataChangedCallback {
      *
      * @return Instance of the adapter
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void setAdapter(ItemAdapter adapter) {
         this.adapter = adapter;
         this.adapter.setItemSet(itemSet);
+        this.adapter.notifyDataSetChanged();
     }
 
     /**
@@ -53,12 +60,11 @@ public class ItemListController implements DataChangedCallback {
         adapter.setListener(listener);
     }
 
-    public void deleteCheckedItems() {
-        int numItems = itemSet.getItemsCount();
+    public void deleteCheckedItems(HashSet<Integer> positions) {
         MacroCommand deleteItemsMacro = new MacroCommand();
 
-        for (int i = 0; i < numItems; i++){
-            deleteItemsMacro.addCommand(new DeleteItemCommand(itemSet.getItem(i)));
+        for (int position : positions) {
+            deleteItemsMacro.addCommand(new DeleteItemCommand(itemSet.getItem(position)));
         }
 
         CommandManager.getInstance().executeCommand(deleteItemsMacro);
@@ -70,7 +76,9 @@ public class ItemListController implements DataChangedCallback {
 
     @Override
     public void onDataChanged() {
-        itemSet = DataSourceManager.getInstance().getItemDataSource().getDataCollection();
+        itemSet = dataSourceManager.getItemDataSource().getDataCollection();
+        adapter.setItemSet(itemSet);
+        adapter.notifyDataSetChanged();
         callback.onItemSetValueChanged(itemSet.getItemSetValue());
     }
 

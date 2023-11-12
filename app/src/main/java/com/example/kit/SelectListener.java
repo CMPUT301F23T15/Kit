@@ -11,7 +11,7 @@ import com.example.kit.database.ItemViewHolder;
  * passed as an argument into the class where the view is available.
  */
 public interface SelectListener {
-    void onItemClick(Item item);
+    void onItemClick(String id);
     void onItemLongClick();
     void onAddTagClick(Item item);
 }

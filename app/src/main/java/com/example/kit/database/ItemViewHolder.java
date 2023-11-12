@@ -1,11 +1,13 @@
 package com.example.kit.database;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.kit.ItemAdapter;
 import com.example.kit.SelectListener;
 
 import com.example.kit.data.Item;
@@ -73,17 +75,16 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * @param holder
      * @param model
      */
-    public void setupListeners(SelectListener listener, ItemViewHolder holder, Item model){
+    public void setupListeners(SelectListener listener, ItemViewHolder holder, int position){
         // Click listener for the entire item
-        binding.itemCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ItemFirestoreAdapter adapter = (ItemFirestoreAdapter) holder.getBindingAdapter();
-                String ID = adapter.getSnapshots().getSnapshot(holder.getBindingAdapterPosition()).getId();
-                model.attachID(ID);
-                listener.onItemClick(model);
+        binding.itemCardView.setOnClickListener(onClick -> {
+            ItemAdapter adapter = (ItemAdapter) getBindingAdapter();
+            if (adapter == null) {
+                Log.e("RecyclerView", "Adapter invalid for click on ViewHolder: " + holder + "Position: " + position);
             }
+            listener.onItemClick(adapter.getItem(position).findID());
         });
+
         // Long Click listener for the entire item
         binding.itemCardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -96,10 +97,10 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         binding.addTagChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ItemFirestoreAdapter adapter = (ItemFirestoreAdapter) holder.getBindingAdapter();
-                String ID = adapter.getSnapshots().getSnapshot(holder.getBindingAdapterPosition()).getId();
-                model.attachID(ID);
-                listener.onAddTagClick(model);
+//                ItemFirestoreAdapter adapter = (ItemFirestoreAdapter) holder.getBindingAdapter();
+//                String ID = adapter.getSnapshots().getSnapshot(holder.getBindingAdapterPosition()).getId();
+//                model.attachID(ID);
+//                listener.onAddTagClick(model);
             }
         });
     }

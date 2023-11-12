@@ -1,5 +1,7 @@
 package com.example.kit.data.source;
 
+import android.util.Log;
+
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.Tag;
@@ -26,9 +28,11 @@ public class DataSourceManager {
 
     private DataSourceManager() {
         if (BuildConfig.DEBUG) {
+            Log.i("Database", "Using testing DataSources");
             itemDataSource = new TestItemDataSource();
             tagDataSource = new TestTagDataSource();
         } else {
+            Log.i("Database", "Using production DataSources");
             itemDataSource = new ItemDataSource();
             tagDataSource = new TagDataSource();
         }

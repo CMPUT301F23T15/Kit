@@ -1,6 +1,7 @@
 package com.example.kit;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.kit.command.AddItemCommand;
+import com.example.kit.command.CommandManager;
 import com.example.kit.data.Item;
+import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.database.FirestoreManager;
 import com.example.kit.databinding.ItemDisplayBinding;
 import com.google.android.material.chip.Chip;
@@ -92,13 +96,16 @@ public class ItemDisplayFragment extends Fragment {
         binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (newItem) {
-                    FirestoreManager.getInstance().getCollection("Items").add(buildItem());
-                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
-                } else if (!(itemID == null || itemID.isEmpty())) {
-                    FirestoreManager.getInstance().getCollection("Items").document(itemID).set(buildItem());
-                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
-                }
+                AddItemCommand command = new AddItemCommand(buildItem());
+                CommandManager.getInstance().executeCommand(command);
+                navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
+
+//                if (newItem) {
+//                    FirestoreManager.getInstance().getCollection("Items").add(buildItem());
+//                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
+//                } else if (!(itemID == null || itemID.isEmpty())) {
+//                    FirestoreManager.getInstance().getCollection("Items").document(itemID).set(buildItem());
+//                }
             }
         });
     }
@@ -108,7 +115,12 @@ public class ItemDisplayFragment extends Fragment {
      */
     private void loadItem() {
         // Retrieve the item from the bundle
-        Item item = (Item) getArguments().getSerializable("item");
+        if (getArguments() == null) {
+            // bad stuff
+            return;
+        }
+        String id = getArguments().getString("id");
+        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(id);
         if (item != null) {
             this.itemID = item.findID();
             // Use View Binding to populate UI elements with item data
@@ -164,6 +176,10 @@ public class ItemDisplayFragment extends Fragment {
             if (!chip.getText().toString().isEmpty()) {
                 newItem.addTag(chip.getText().toString());
             }
+        }
+
+        if (itemID != null && !itemID.isEmpty()) {
+            newItem.attachID(itemID);
         }
 
         return newItem;

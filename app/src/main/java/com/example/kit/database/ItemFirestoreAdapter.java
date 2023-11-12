@@ -44,7 +44,7 @@ public class ItemFirestoreAdapter extends FirestoreRecyclerAdapter<Item, ItemVie
     @Override
     protected void onBindViewHolder(@NonNull ItemViewHolder holder, int position, @NonNull Item model) {
         holder.displayItem(model);
-        holder.setupListeners(listener, holder, model);
+//        holder.setupListeners(listener, holder, model);
     }
 
     /**

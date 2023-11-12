@@ -2,24 +2,37 @@ package com.example.kit.data.source;
 
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+
 
 public class ItemDataSource extends DataSource<Item, ItemSet> {
 
     private final CollectionReference itemCollection;
+    private final HashMap<String, Item> itemCache;
 
     public ItemDataSource() {
         this.itemCollection = FirestoreManager.getInstance().getCollection("Items");
-        itemCollection.addSnapshotListener((value, error) -> onDataChanged());
+        itemCache = new HashMap<>();
+        itemCollection.addSnapshotListener((documentSnapshots, error) -> {
+            if (documentSnapshots == null) {
+                Log.e("Database", "SnapshotListener null query result");
+                return;
+            }
+
+            itemCache.clear();
+            for (QueryDocumentSnapshot documentSnapshot: documentSnapshots) {
+                Item item = documentSnapshot.toObject(Item.class);
+                item.attachID(documentSnapshot.getId());
+                itemCache.put(item.findID(), item);
+            }
+            onDataChanged();
+        });
     }
 
     @Override
@@ -46,30 +59,28 @@ public class ItemDataSource extends DataSource<Item, ItemSet> {
 
     @Override
     public Item getDataByID(String id) {
-        // Must use final object reference to receive item from listener
-        final Item[] items = new Item[1];
+//        // Must use final object reference to receive item from listener
+//        final Item[] items = new Item[1];
+//
+//        itemCollection.document(id).get()
+//                // On success, load item into the single array
+//                .addOnSuccessListener(documentSnapshot -> {
+//                    items[0] = documentSnapshot.toObject(Item.class);
+//                    Log.d("Database", "Successfully retrieved item with ID:" + id);
+//                })
+//                .addOnFailureListener(exception -> Log.w("Database", exception));
+//
+//        return items[0];
 
-        itemCollection.document(id).get()
-                // On success, load item into the single array
-                .addOnSuccessListener(documentSnapshot -> {
-                    items[0] = documentSnapshot.toObject(Item.class);
-                    Log.d("Database", "Successfully retrieved item with ID:" + id );
-                })
-                .addOnFailureListener(exception -> Log.w("Database", exception));
-
-        return items[0];
+        return itemCache.get(id);
     }
 
     @Override
     public ItemSet getDataCollection() {
         ItemSet itemSet = new ItemSet();
-        itemCollection.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                Item item = doc.toObject(Item.class);
-                item.attachID(doc.getId());
-                itemSet.addItem(item);
-            }
-        });
+        for (Item item : itemCache.values()) {
+            itemSet.addItem(item);
+        }
         return itemSet;
     }
 }

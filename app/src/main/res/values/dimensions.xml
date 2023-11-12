@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name = "activity_horizontal_margin" >  16dp  </dimen>
-    <dimen name = "item_list_content_horizontal_space">16dp</dimen>
-</resources>

@@ -28,7 +28,7 @@ public class ItemSet {
      * @return
      *  The number of items in the set
      */
-    public int getItemsCount() {
+    public int getItemCount() {
         return items.size();
     }
 
