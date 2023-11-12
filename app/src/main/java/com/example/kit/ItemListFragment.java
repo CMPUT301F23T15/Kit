@@ -10,16 +10,13 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Item;
-import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
 
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -46,19 +43,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         controller.setCallback(this);
     }
 
-    /**
-     * Standard lifecycle method for a fragment
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     *
-     * @return
-     *  Root of the viewbinding
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,6 +84,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         navController.navigate(R.id.displayListItemAction, bundle);
+
+        // Safe args doesn't work for me?
 //        ItemListFragmentDirections.DisplayListItemAction action =
 //                ItemListFragmentDirections.displayListItemAction(id);
 //        navController.navigate(action);
@@ -146,6 +132,25 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             }
         }
     }
+
+    /**
+     * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
+     */
+    public void onDelete(){
+        HashSet<Integer> checkedPositions = new HashSet<>();
+        int numItems = adapter.getItemCount();
+        for (int i = 0; i < numItems; i++) {
+            ItemViewHolder viewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+            if (viewHolder.isChecked()) {
+                checkedPositions.add(i);
+            }
+        }
+
+        controller.deleteCheckedItems(checkedPositions);
+        toggleDeleteMode();
+        // TODO: Show snackbar with option to undo
+    }
+
     /**
      * Handles the event for adding a tag to an item.
      */
@@ -169,24 +174,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         } else {
             Log.v("Tag adding", "TagID null");
         }
-    }
-
-    /**
-     * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
-     */
-    public void onDelete(){
-        HashSet<Integer> checkedPositions = new HashSet<>();
-        int numItems = adapter.getItemCount();
-        for (int i = 0; i < numItems; i++) {
-            ItemViewHolder viewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-            if (viewHolder.isChecked()) {
-                checkedPositions.add(i);
-            }
-        }
-
-        controller.deleteCheckedItems(checkedPositions);
-        toggleDeleteMode();
-        // TODO: Show snackbar with option to undo
     }
 
     /**

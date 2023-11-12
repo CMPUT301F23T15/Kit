@@ -36,7 +36,7 @@ public class TestTagDataSource extends DataSource<Tag, ArrayList<Tag>> {
     }
 
     @Override
-    public ArrayList<Tag> getDataCollection() {
+    public ArrayList<Tag> getDataSet() {
         return new ArrayList<>(tags.values());
     }
 }

@@ -1,7 +1,7 @@
 package com.example.kit.data.source;
 
 import com.example.kit.data.Tag;
-import com.example.kit.database.FirestoreManager;
+import com.example.kit.data.FirestoreManager;
 import com.google.firebase.firestore.CollectionReference;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
     }
 
     @Override
-    public ArrayList<Tag> getDataCollection() {
+    public ArrayList<Tag> getDataSet() {
         return null;
     }
 }

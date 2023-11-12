@@ -1,4 +1,4 @@
-package com.example.kit.database;
+package com.example.kit;
 
 import android.util.Log;
 import android.view.View;
@@ -6,9 +6,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.example.kit.ItemAdapter;
-import com.example.kit.SelectListener;
 
 import com.example.kit.data.Item;
 import com.example.kit.databinding.ItemListRowBinding;
@@ -18,9 +15,6 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-/**
- * ViewHolder for {@link Item} that binds the data to a view for {@link ItemFirestoreAdapter}
- */
 public class ItemViewHolder extends RecyclerView.ViewHolder {
     private final ItemListRowBinding binding;
 
@@ -33,9 +27,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         super(binding.getRoot());
         this.binding = binding;
     }
-
-    // TODO: Expand
-
+    
     /**
      * Displays an {@link Item} within the ViewHolder, binding the data.
      * @param item

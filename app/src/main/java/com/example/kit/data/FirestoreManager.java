@@ -1,4 +1,4 @@
-package com.example.kit.database;
+package com.example.kit.data;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;

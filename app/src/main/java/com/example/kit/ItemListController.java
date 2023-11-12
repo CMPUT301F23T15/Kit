@@ -3,30 +3,16 @@ package com.example.kit;
 
 import android.annotation.SuppressLint;
 
-import androidx.annotation.NonNull;
-
-import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.DeleteItemCommand;
 import com.example.kit.command.MacroCommand;
-import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.source.DataChangedCallback;
 import com.example.kit.data.source.DataSourceManager;
-import com.example.kit.data.source.ItemDataSource;
-import com.example.kit.database.ItemFirestoreAdapter;
-import com.example.kit.database.ItemViewHolder;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 
-/**
- * A controller class for the {@link ItemListFragment}, managing the {@link ItemFirestoreAdapter}
- * with queries and filtering.
- */
 public class ItemListController implements DataChangedCallback {
     private ItemAdapter adapter;
     private ItemSet itemSet;
@@ -44,11 +30,9 @@ public class ItemListController implements DataChangedCallback {
      *
      * @return Instance of the adapter
      */
-    @SuppressLint("NotifyDataSetChanged")
     public void setAdapter(ItemAdapter adapter) {
         this.adapter = adapter;
-        this.adapter.setItemSet(itemSet);
-        this.adapter.notifyDataSetChanged();
+        updateAdapterData(this.adapter);
     }
 
     /**
@@ -63,10 +47,12 @@ public class ItemListController implements DataChangedCallback {
     public void deleteCheckedItems(HashSet<Integer> positions) {
         MacroCommand deleteItemsMacro = new MacroCommand();
 
+        // Create a new deletion command for each item that is to be deleted.
         for (int position : positions) {
             deleteItemsMacro.addCommand(new DeleteItemCommand(itemSet.getItem(position)));
         }
 
+        // Delete all items
         CommandManager.getInstance().executeCommand(deleteItemsMacro);
     }
 
@@ -76,10 +62,17 @@ public class ItemListController implements DataChangedCallback {
 
     @Override
     public void onDataChanged() {
-        itemSet = dataSourceManager.getItemDataSource().getDataCollection();
-        adapter.setItemSet(itemSet);
-        adapter.notifyDataSetChanged();
+        // Get new data and update the adapter with the new dataset
+        itemSet = dataSourceManager.getItemDataSource().getDataSet();
+        updateAdapterData(adapter);
+        // Update the Total Valuation in the fragment
         callback.onItemSetValueChanged(itemSet.getItemSetValue());
+    }
+
+    private void updateAdapterData(ItemAdapter adapter) {
+        adapter.setItemSet(itemSet);
+        // TODO: Find performant way to use more specific data-changed notifiers.
+        adapter.notifyDataSetChanged();
     }
 
     public interface ItemSetValueChangedCallback {

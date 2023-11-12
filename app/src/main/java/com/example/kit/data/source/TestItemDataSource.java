@@ -31,7 +31,7 @@ public class TestItemDataSource extends DataSource<Item, ItemSet> {
     }
 
     @Override
-    public ItemSet getDataCollection() {
+    public ItemSet getDataSet() {
         ItemSet itemSet = new ItemSet();
         ArrayList<Item> itemArray = new ArrayList<>(items.values());
         for (Item item : itemArray) {

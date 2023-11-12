@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
-import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListRowBinding;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {

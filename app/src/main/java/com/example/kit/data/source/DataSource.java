@@ -10,7 +10,7 @@ public abstract class DataSource<T, C> {
 
     public abstract T getDataByID(String id);
 
-    public abstract C getDataCollection();
+    public abstract C getDataSet();
 
     public void setCallback(DataChangedCallback callback) {
         this.callback = callback;

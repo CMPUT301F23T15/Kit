@@ -1,7 +1,6 @@
 package com.example.kit;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.CommandManager;
 import com.example.kit.data.Item;
 import com.example.kit.data.source.DataSourceManager;
-import com.example.kit.database.FirestoreManager;
 import com.example.kit.databinding.ItemDisplayBinding;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.Timestamp;

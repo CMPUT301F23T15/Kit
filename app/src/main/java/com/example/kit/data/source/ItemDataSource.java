@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
-import com.example.kit.database.FirestoreManager;
+import com.example.kit.data.FirestoreManager;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -59,24 +59,11 @@ public class ItemDataSource extends DataSource<Item, ItemSet> {
 
     @Override
     public Item getDataByID(String id) {
-//        // Must use final object reference to receive item from listener
-//        final Item[] items = new Item[1];
-//
-//        itemCollection.document(id).get()
-//                // On success, load item into the single array
-//                .addOnSuccessListener(documentSnapshot -> {
-//                    items[0] = documentSnapshot.toObject(Item.class);
-//                    Log.d("Database", "Successfully retrieved item with ID:" + id);
-//                })
-//                .addOnFailureListener(exception -> Log.w("Database", exception));
-//
-//        return items[0];
-
         return itemCache.get(id);
     }
 
     @Override
-    public ItemSet getDataCollection() {
+    public ItemSet getDataSet() {
         ItemSet itemSet = new ItemSet();
         for (Item item : itemCache.values()) {
             itemSet.addItem(item);
