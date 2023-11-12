@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.kit.data.Item;
 import com.example.kit.database.ItemViewHolder;
 import com.example.kit.databinding.ItemListBinding;
@@ -17,29 +19,30 @@ import com.example.kit.databinding.ItemListBinding;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed.
  */
-public class ItemListFragment extends Fragment implements SelectListener, AddTagFragment.OnTagAddedListener {
+public class ItemListFragment extends Fragment implements SelectListener, ItemListController.ItemSetValueChangedCallback, AddTagFragment.OnTagAddedListener {
 
     private ItemListBinding binding;
-    private ItemListController controller;
     private NavController navController;
-    private boolean modeFlag = false;
+    private ItemListController controller;
 
-    private boolean selectionModeState = false;
+    private RecyclerView.Adapter<ItemViewHolder> adapter;
+
+
+
+    private boolean inDeleteMode = false;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         navController = NavHostFragment.findNavController(this);
-        controller = ItemListController.getInstance();
         controller.setListener(this);
-        controller.setFragment(this);
-        getLifecycle().addObserver(controller);
+        controller.setCallback(this);
     }
 
     /**
@@ -68,9 +71,8 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
      * Initialize the RecyclerView of the fragment
      */
     private void initializeItemList() {
-        binding.itemList.setAdapter(controller.getAdapter());
+        binding.itemList.setAdapter(adapter);
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
     }
   
     /**
@@ -78,16 +80,8 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
      */
     //TODO: Implement add and profile buttons here
     public void initializeUIInteractions(){
-        binding.deleteItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDelete();
-            }
-        });
-
-        binding.addItemButton.setOnClickListener(onClick -> {
-            navController.navigate(ItemListFragmentDirections.newItemAction());
-        });
+        binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
+        binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
     }
 
     /**
@@ -97,11 +91,12 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
      */
     @Override
     public void onItemClick(Item item) {
-        if(!modeFlag) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("item", item);
-            navController.navigate(R.id.displayListItemAction, bundle);
-        }
+        // Disable transition in delete mode
+        if (inDeleteMode) return;
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("item", item);
+        navController.navigate(R.id.displayListItemAction, bundle);
     }
 
     /**
@@ -109,16 +104,16 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
      */
     @Override
     public void onItemLongClick() {
-        changeMode();
+        toggleDeleteMode();
     }
 
     /**
      * Toggles the UI mode between normal and deletion mode, showing or hiding checkboxes and buttons accordingly.
      */
-    private void changeMode() {
-        modeFlag = !modeFlag;
-        int numItems = controller.getAdapter().getItemCount();
-        if(modeFlag){
+    private void toggleDeleteMode() {
+        inDeleteMode = !inDeleteMode;
+
+        if (inDeleteMode) {
             binding.addItemButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
         } else {
@@ -126,17 +121,25 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
             binding.deleteItemButton.setVisibility(View.GONE);
         }
 
+        toggleViewHolderCheckBoxes();
+    }
+
+    private void toggleViewHolderCheckBoxes() {
+        int numItems = adapter.getItemCount();
         for (int i = 0; i < numItems; i++) {
             ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-            if(modeFlag) {
-                itemViewHolder.getBinding().checkBox.setVisibility(View.VISIBLE);
+
+            if (itemViewHolder == null) {
+                throw new NullPointerException("ItemViewHolder at position " + i + " was null!");
+            }
+
+            if(inDeleteMode) {
+                itemViewHolder.showCheckbox();
             } else {
-                itemViewHolder.getBinding().checkBox.setChecked(false);
-                itemViewHolder.getBinding().checkBox.setVisibility(View.GONE);
+                itemViewHolder.hideCheckbox();
             }
         }
     }
-
     /**
      * Handles the event for adding a tag to an item.
      */
@@ -155,7 +158,7 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
         String itemID = item.findID();
         // Call the method to update Firestore with the new tag
         if (!itemID.isEmpty()) {
-            controller.getAdapter().addTagToItem(itemID, tagName);
+            adapter.addTagToItem(itemID, tagName);
             Log.v("Tag adding", "Tag going to adapter");
         } else {
             Log.v("Tag adding", "TagID null");
@@ -166,17 +169,9 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
      * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
      */
     public void onDelete(){
-        int numItems = binding.itemList.getAdapter().getItemCount();
-        ArrayList<Item> deleteItems = new ArrayList<>();
-        for (int i = 0; i < numItems; i++) {
-            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-            if (itemViewHolder.getBinding().checkBox.isChecked()){
-                deleteItems.add(controller.getItem(i));
-                itemViewHolder.getBinding().checkBox.setChecked(false);
-            }
-        }
-        controller.deleteItems(deleteItems);
-        changeMode();
+        controller.deleteCheckedItems();
+        toggleDeleteMode();
+        // TODO: Show snackbar with option to undo
     }
 
     /**
@@ -184,7 +179,8 @@ public class ItemListFragment extends Fragment implements SelectListener, AddTag
      *
      * @param value The total value to display.
      */
-    public void updateTotalItemValue(BigDecimal value) {
+    @Override
+    public void onItemSetValueChanged(BigDecimal value) {
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
     }

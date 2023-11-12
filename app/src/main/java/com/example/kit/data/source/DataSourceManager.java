@@ -1,20 +1,23 @@
 package com.example.kit.data.source;
 
 import com.example.kit.data.Item;
+import com.example.kit.data.ItemSet;
 import com.example.kit.data.Tag;
+
+import java.util.ArrayList;
 
 import io.grpc.android.BuildConfig;
 
 public class DataSourceManager {
 
-    private final DataSource<Item> itemDataSource;
-    private final DataSource<Tag> tagDataSource;
+    private final DataSource<Item, ItemSet> itemDataSource;
+    private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
 
-    public DataSource<Item> getItemDataSource() {
+    public DataSource<Item, ItemSet> getItemDataSource() {
         return itemDataSource;
     }
 
-    public DataSource<Tag> getTagDataSource() {
+    public DataSource<Tag, ArrayList<Tag>> getTagDataSource() {
         return tagDataSource;
     }
 

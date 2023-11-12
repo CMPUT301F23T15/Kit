@@ -1,11 +1,24 @@
 package com.example.kit.data.source;
 
-public interface DataSource<T> {
+public abstract class DataSource<T, C> {
 
-    void addData(T newData);
+    private DataChangedCallback callback;
 
-    void deleteDataByID(String id);
+    public abstract void addData(T newData);
 
-    T getDataByID(String id);
+    public abstract void deleteDataByID(String id);
 
+    public abstract T getDataByID(String id);
+
+    public abstract C getDataCollection();
+
+    public void setCallback(DataChangedCallback callback) {
+        this.callback = callback;
+    }
+
+    protected void onDataChanged() {
+        if (callback != null) {
+            callback.onDataChanged();
+        }
+    }
 }

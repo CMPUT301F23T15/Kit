@@ -1,12 +1,13 @@
 package com.example.kit.command;
 
+import com.example.kit.data.ItemSet;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.data.Item;
 
 public class AddItemCommand extends Command {
 
-    private final DataSource<Item> dataSource;
+    private final DataSource<Item, ItemSet> dataSource;
     private final Item item;
 
     public AddItemCommand(Item item) {

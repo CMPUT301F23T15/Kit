@@ -54,8 +54,7 @@ public class ItemSet {
      * @param id
      *  The Item to be added
      */
-    public void addItem(Item item, String id){
-        item.attachID(id);
+    public void addItem(Item item){
         items.add(item);
     }
 

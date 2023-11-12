@@ -2,17 +2,24 @@ package com.example.kit.data.source;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.example.kit.data.Item;
+import com.example.kit.data.ItemSet;
 import com.example.kit.database.FirestoreManager;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-
-public class ItemDataSource implements DataSource<Item> {
+public class ItemDataSource extends DataSource<Item, ItemSet> {
 
     private final CollectionReference itemCollection;
 
     public ItemDataSource() {
         this.itemCollection = FirestoreManager.getInstance().getCollection("Items");
+        itemCollection.addSnapshotListener((value, error) -> onDataChanged());
     }
 
     @Override
@@ -51,5 +58,18 @@ public class ItemDataSource implements DataSource<Item> {
                 .addOnFailureListener(exception -> Log.w("Database", exception));
 
         return items[0];
+    }
+
+    @Override
+    public ItemSet getDataCollection() {
+        ItemSet itemSet = new ItemSet();
+        itemCollection.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                Item item = doc.toObject(Item.class);
+                item.attachID(doc.getId());
+                itemSet.addItem(item);
+            }
+        });
+        return itemSet;
     }
 }

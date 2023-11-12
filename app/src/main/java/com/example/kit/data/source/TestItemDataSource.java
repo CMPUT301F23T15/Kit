@@ -1,22 +1,42 @@
 package com.example.kit.data.source;
 
 import com.example.kit.data.Item;
+import com.example.kit.data.ItemSet;
 
-public class TestItemDataSource implements DataSource<Item> {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
+public class TestItemDataSource extends DataSource<Item, ItemSet> {
+
+    private final HashMap<String, Item> items;
+
+    public TestItemDataSource() {
+        items = new HashMap<>();
+    }
 
     @Override
-    public void addData(Item newData) {
-
+    public void addData(Item item) {
+        items.put(item.findID(), item);
     }
 
     @Override
     public void deleteDataByID(String id) {
-
+        items.remove(id);
     }
 
     @Override
     public Item getDataByID(String id) {
-        return null;
+        return items.get(id);
+    }
+
+    @Override
+    public ItemSet getDataCollection() {
+        ItemSet itemSet = new ItemSet();
+        ArrayList<Item> itemArray = new ArrayList<>(items.values());
+        for (Item item : itemArray) {
+            itemSet.addItem(item);
+        }
+        return itemSet;
     }
 }

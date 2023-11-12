@@ -104,6 +104,19 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
+    public void showCheckbox() {
+        binding.checkBox.setVisibility(View.VISIBLE);
+    }
+
+    public void hideCheckbox() {
+        binding.checkBox.setChecked(false);
+        binding.checkBox.setVisibility(View.GONE);
+    }
+
+    public boolean isChecked() {
+        return binding.checkBox.isChecked();
+    }
+
     /**
      * Returns the ItemListRowBinding associated with this ViewHolder.
      *
