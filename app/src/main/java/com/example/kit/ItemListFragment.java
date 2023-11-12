@@ -31,16 +31,12 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     private ItemAdapter adapter;
     private boolean inDeleteMode = false;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Get NavController for screen navigation
         navController = NavHostFragment.findNavController(this);
-
-        adapter = new ItemAdapter();
-
         controller = new ItemListController();
-        controller.setCallback(this);
     }
 
     @Nullable
@@ -49,6 +45,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         binding = ItemListBinding.inflate(inflater, container, false);
         initializeItemList();
         initializeUIInteractions();
+        controller.setCallback(this);
         return binding.getRoot();
     }
 
@@ -56,8 +53,15 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      * Initialize the RecyclerView of the fragment
      */
     private void initializeItemList() {
+        adapter = new ItemAdapter();
+
+        // Bind the fragment as a listener for Clicks, Long Clicks, and the add TagButton clicks
+        adapter.setListener(this);
+
+        // Make controller aware of the adapter
         controller.setAdapter(adapter);
-        controller.setListener(this);
+
+        // Initialize RecyclerView with adapter and layout manager
         binding.itemList.setAdapter(adapter);
         binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
@@ -73,8 +77,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
     /**
      * Handles item click events. Opens item details if not in delete mode.
-     *
-     * @param Ttem The item that was clicked.
+     * @param id The ID for the Item that was clicked.
      */
     @Override
     public void onItemClick(String id) {
@@ -122,7 +125,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
 
             if (itemViewHolder == null) {
-                throw new NullPointerException("ItemViewHolder at position " + i + " was null!");
+                Log.e("RecyclerView", "ItemViewHolder at position " + i + " was null.");
+                continue;
             }
 
             if(inDeleteMode) {
@@ -137,10 +141,16 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
      */
     public void onDelete(){
+        // Store positions of checked items to be passed to the controller to delete.
         HashSet<Integer> checkedPositions = new HashSet<>();
         int numItems = adapter.getItemCount();
         for (int i = 0; i < numItems; i++) {
             ItemViewHolder viewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
+            if (viewHolder == null) {
+                Log.e("RecyclerView", "ItemViewHolder at position " + i + " was null.");
+                continue;
+            }
+
             if (viewHolder.isChecked()) {
                 checkedPositions.add(i);
             }
@@ -148,7 +158,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         controller.deleteCheckedItems(checkedPositions);
         toggleDeleteMode();
-        // TODO: Show snackbar with option to undo
+        // TODO: Show SnackBar with option to undo
     }
 
     /**
@@ -178,7 +188,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
     /**
      * Updates the displayed total value of all items in the set.
-     *
+     * Called by {@link ItemListController} when the dataset changes.
      * @param value The total value to display.
      */
     @Override

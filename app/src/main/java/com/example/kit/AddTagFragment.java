@@ -1,16 +1,12 @@
 package com.example.kit;
 
 import com.example.kit.data.Item;
-import com.example.kit.database.ItemFirestoreAdapter;
 import com.example.kit.databinding.AddTagBinding;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;

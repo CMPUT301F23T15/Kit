@@ -10,7 +10,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
 
-
 public class ItemDataSource extends DataSource<Item, ItemSet> {
 
     private final CollectionReference itemCollection;

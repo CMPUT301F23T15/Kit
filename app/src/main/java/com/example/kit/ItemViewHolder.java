@@ -27,7 +27,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         super(binding.getRoot());
         this.binding = binding;
     }
-    
+
     /**
      * Displays an {@link Item} within the ViewHolder, binding the data.
      * @param item

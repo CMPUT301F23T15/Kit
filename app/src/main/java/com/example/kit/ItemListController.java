@@ -25,23 +25,14 @@ public class ItemListController implements DataChangedCallback {
         dataSourceManager.getItemDataSource().setCallback(this);
     }
 
-    /**
-     * Provides a reference to the adapter
-     *
-     * @return Instance of the adapter
-     */
     public void setAdapter(ItemAdapter adapter) {
         this.adapter = adapter;
         updateAdapterData(this.adapter);
     }
 
-    /**
-     * Sets a SelectListener to the Firestore adapter for handling item selection.
-     *
-     * @param listener The SelectListener to set on the adapter.
-     */
-    public void setListener(SelectListener listener) {
-        adapter.setListener(listener);
+    public void setCallback(ItemSetValueChangedCallback callback) {
+        this.callback = callback;
+        callback.onItemSetValueChanged(itemSet.getItemSetValue());
     }
 
     public void deleteCheckedItems(HashSet<Integer> positions) {
@@ -52,12 +43,8 @@ public class ItemListController implements DataChangedCallback {
             deleteItemsMacro.addCommand(new DeleteItemCommand(itemSet.getItem(position)));
         }
 
-        // Delete all items
+        // Delete all items in the command
         CommandManager.getInstance().executeCommand(deleteItemsMacro);
-    }
-
-    public void setCallback(ItemSetValueChangedCallback callback) {
-        this.callback = callback;
     }
 
     @Override

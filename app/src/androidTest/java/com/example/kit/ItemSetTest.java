@@ -31,6 +31,7 @@ public class ItemSetTest {
         item1.attachID("fakeID");
         item1.setValue("1000");
 
+        mockItems.addItem(item1);
         return mockItems;
     }
 
@@ -45,6 +46,7 @@ public class ItemSetTest {
         item.addTag("testing");
         item.addTag("fake");
         item.setValue("500");
+        item.attachID("testID");
 
         return item;
     }
@@ -52,7 +54,7 @@ public class ItemSetTest {
     @Test
     public void testAddItem() {
         ItemSet items = mockItemSet();
-        items.addItem(mockItem(), "testID");
+        items.addItem(mockItem());
         assertEquals(2, items.getItemCount());
         assertEquals(mockItem(), items.getItem(1));
     }
@@ -70,8 +72,7 @@ public class ItemSetTest {
     public void testRemoveItem() {
         ItemSet items = mockItemSet();
         Item item = mockItem();
-        item.attachID("testID");
-        items.addItem(item, item.findID());
+        items.addItem(item);
         assertEquals(2, items.getItemCount());
         items.removeItem(item);
         assertEquals(1, items.getItemCount());
@@ -81,7 +82,7 @@ public class ItemSetTest {
     public void testItemSetValue() {
         ItemSet items = mockItemSet();
         assertEquals(new BigDecimal("1000"), items.getItemSetValue());
-        items.addItem(mockItem(), "testID");
+        items.addItem(mockItem());
         assertEquals(new BigDecimal("1500"), items.getItemSetValue());
         items.removeItem(mockItem());
         assertEquals(new BigDecimal("1000"), items.getItemSetValue());

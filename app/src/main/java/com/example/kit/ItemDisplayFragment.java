@@ -16,6 +16,7 @@ import com.example.kit.command.CommandManager;
 import com.example.kit.data.Item;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
+import com.example.kit.databinding.ItemEditBinding;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.Timestamp;
 
@@ -25,17 +26,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
- * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
- */
 public class ItemDisplayFragment extends Fragment {
 
     private ItemDisplayBinding binding;
     private NavController navController;
-    private boolean newItem;
     private String itemID;
-
 
     /**
      * Standard fragment lifecycle
@@ -46,11 +41,6 @@ public class ItemDisplayFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         navController = NavHostFragment.findNavController(this);
-        if (getArguments() == null || getArguments().isEmpty()) {
-            newItem = true;
-        } else {
-            newItem = false;
-        }
     }
 
     /**
@@ -69,14 +59,9 @@ public class ItemDisplayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
-        navController = NavHostFragment.findNavController(this);
         initializeConfirmButton();
         return binding.getRoot();
-
     }
-    /**
-     * Called when the fragment becomes visible. Handles loading of the item details if editing an existing item.
-     */
 
     /**
      * Loads the inputted item on start
@@ -91,20 +76,11 @@ public class ItemDisplayFragment extends Fragment {
      * Initializes the floating action button to handle the creation or update of an item in the Firestore database.
      */
     private void initializeConfirmButton() {
-        binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddItemCommand command = new AddItemCommand(buildItem());
-                CommandManager.getInstance().executeCommand(command);
-                navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
-
-//                if (newItem) {
-//                    FirestoreManager.getInstance().getCollection("Items").add(buildItem());
-//                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
-//                } else if (!(itemID == null || itemID.isEmpty())) {
-//                    FirestoreManager.getInstance().getCollection("Items").document(itemID).set(buildItem());
-//                }
-            }
+        binding.floatingActionButton.setOnClickListener(onClick -> navController.popBackStack());
+        binding.floatingActionButton2.setOnClickListener(onClick -> {
+            Bundle itemId = new Bundle();
+            itemId.putString("id",itemID);
+            navController.navigate(R.id.editDisplayItemAction, itemId);
         });
     }
 
@@ -118,68 +94,26 @@ public class ItemDisplayFragment extends Fragment {
             return;
         }
         String id = getArguments().getString("id");
+        this.itemID = id;
         Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(id);
-        if (item != null) {
-            this.itemID = item.findID();
-            // Use View Binding to populate UI elements with item data
-            binding.itemNameDisplay.setText(item.getName());
-            binding.itemValueDisplay.setText(item.getValue());
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-            String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
-            binding.itemDateDisplay.setText(formattedDate);
-            binding.itemDescriptionDisplay.setText(item.getDescription());
-            binding.itemCommentDisplay.setText(item.getComment());
-            binding.itemMakeDisplay.setText(item.getMake());
-            binding.itemModelDisplay.setText(item.getModel());
-            binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
 
-            binding.itemDisplayTagGroup.removeAllViews();
-            for (String tag : item.getTags()) {
-                Chip chip = new Chip(getContext());
-                chip.setText(tag);
-                binding.itemDisplayTagGroup.addView(chip);
-            }
+        // Use View Binding to populate UI elements with item data
+        binding.itemNameDisplay.setText(item.getName());
+        binding.itemValueDisplay.setText(item.getValue());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
+        binding.itemDateDisplay.setText(formattedDate);
+        binding.itemDescriptionDisplay.setText(item.getDescription());
+        binding.itemCommentDisplay.setText(item.getComment());
+        binding.itemMakeDisplay.setText(item.getMake());
+        binding.itemModelDisplay.setText(item.getModel());
+        binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
+
+        binding.itemDisplayTagGroup.removeAllViews();
+        for (String tag : item.getTags()) {
+            Chip chip = new Chip(getContext());
+            chip.setText(tag);
+            binding.itemDisplayTagGroup.addView(chip);
         }
-    }
-
-    /**
-     * Constructs an {@link Item} object from the data input in the UI fields.
-     * This method includes date parsing and exception handling for invalid date formats.
-     *
-     * @return {@link Item} The newly constructed or updated item.
-     * @throws RuntimeException If there is a problem parsing the acquisition date.
-     */
-    private Item buildItem() {
-        Item newItem = new Item();
-
-        newItem.setName(binding.itemNameDisplay.getText().toString());
-        newItem.setValue(binding.itemValueDisplay.getText().toString());
-        // Absolutely terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
-        try {
-            Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
-            newItem.setAcquisitionDate(new Timestamp(date));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        newItem.setDescription(binding.itemDescriptionDisplay.getText().toString());
-        newItem.setComment(binding.itemCommentDisplay.getText().toString());
-        newItem.setMake(binding.itemMakeDisplay.getText().toString());
-        newItem.setModel(binding.itemModelDisplay.getText().toString());
-        newItem.setSerialNumber(binding.itemSerialNumberDisplay.getText().toString());
-
-        // Tags are sort of 1 indexed because the first tag is the add new tag button
-        int numTags = binding.itemDisplayTagGroup.getChildCount();
-        for (int i = 1; i < numTags; i++) {
-            Chip chip = (Chip) binding.itemDisplayTagGroup.getChildAt(i);
-            if (!chip.getText().toString().isEmpty()) {
-                newItem.addTag(chip.getText().toString());
-            }
-        }
-
-        if (itemID != null && !itemID.isEmpty()) {
-            newItem.attachID(itemID);
-        }
-
-        return newItem;
     }
 }
