@@ -1,6 +1,7 @@
 package com.example.kit;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,7 @@ public class ItemDisplayFragment extends Fragment {
     private void loadItem() {
         // Retrieve the item from the bundle
         if (getArguments() == null) {
-            // bad stuff
+            Log.e("Navigation", "No arguments found for the transition to fragment.");
             return;
         }
         String id = getArguments().getString("id");

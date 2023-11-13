@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.kit.data.Item;
+import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemListBinding;
 
 
@@ -36,6 +37,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         super.onCreate(savedInstanceState);
         // Get NavController for screen navigation
         navController = NavHostFragment.findNavController(this);
+        // Create controller for the Item List
         controller = new ItemListController();
     }
 
@@ -45,6 +47,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         binding = ItemListBinding.inflate(inflater, container, false);
         initializeItemList();
         initializeUIInteractions();
+
+        // Add self as callback for updates when the dataset changes
         controller.setCallback(this);
         return binding.getRoot();
     }
@@ -108,10 +112,10 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     private void toggleDeleteMode() {
         inDeleteMode = !inDeleteMode;
 
-        if (inDeleteMode) {
+        if (inDeleteMode) { // Show delete button
             binding.addItemButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
-        } else {
+        } else {            // Show add button
             binding.addItemButton.setVisibility(View.VISIBLE);
             binding.deleteItemButton.setVisibility(View.GONE);
         }
@@ -119,6 +123,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         toggleViewHolderCheckBoxes();
     }
 
+    /**
+     * Toggles the state of the checkboxes used for multi select items in the RecyclerView
+     */
     private void toggleViewHolderCheckBoxes() {
         int numItems = adapter.getItemCount();
         for (int i = 0; i < numItems; i++) {
@@ -178,6 +185,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         Log.v("Tag adding", "Tag reached onTag");
         String itemID = item.findID();
         // Call the method to update Firestore with the new tag
+        DataSourceManager.getInstance().getTagDataSource().addData()
         if (!itemID.isEmpty()) {
 //            adapter.addTagToItem(itemID, tagName);
             Log.v("Tag adding", "Tag going to adapter");

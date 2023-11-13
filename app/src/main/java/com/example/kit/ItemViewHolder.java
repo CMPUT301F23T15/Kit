@@ -73,17 +73,15 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             ItemAdapter adapter = (ItemAdapter) getBindingAdapter();
             if (adapter == null) {
                 Log.e("RecyclerView", "Adapter invalid for click on ViewHolder: " + holder + "Position: " + position);
+                return;
             }
             listener.onItemClick(adapter.getItem(position).findID());
         });
 
         // Long Click listener for the entire item
-        binding.itemCardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                listener.onItemLongClick();
-                return true;
-            }
+        binding.itemCardView.setOnLongClickListener(onLongClick -> {
+            listener.onItemLongClick();
+            return true;
         });
         // Click listener for the tags
         binding.addTagChip.setOnClickListener(new View.OnClickListener() {
