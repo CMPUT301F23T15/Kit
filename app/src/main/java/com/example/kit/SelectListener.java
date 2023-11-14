@@ -10,5 +10,5 @@ import com.example.kit.data.Item;
 public interface SelectListener {
     void onItemClick(String id);
     void onItemLongClick();
-    void onAddTagClick(Item item);
+    void onAddTagClick(String id);
 }

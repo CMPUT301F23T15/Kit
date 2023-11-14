@@ -47,18 +47,6 @@ public class ItemEditFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
     }
 
-    /**
-     * Standard fragment lifecylce, initializes binding, navContoller, and UI elements
-     * @param inflater The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     *
-     * @return
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,9 +54,6 @@ public class ItemEditFragment extends Fragment {
         initializeConfirmButton();
         return binding.getRoot();
     }
-    /**
-     * Called when the fragment becomes visible. Handles loading of the item details if editing an existing item.
-     */
 
     /**
      * Loads the inputted item on start
@@ -84,6 +69,7 @@ public class ItemEditFragment extends Fragment {
      */
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(onClick -> {
+            // Add item to the database and navigate back to the list
             CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
             navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
         });

@@ -11,7 +11,18 @@ import androidx.annotation.Nullable;
 public class Tag implements Identifiable {
     private String id;
     private String name;
-    private Color color;
+    // Colorlong is what is stored on the database,
+    private long colorLong;
+
+
+    /**
+     * Empty constructor for Firestore object storage
+     */
+    public Tag() {};
+
+    public Tag(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -21,17 +32,29 @@ public class Tag implements Identifiable {
         this.name = name;
     }
 
-    public Color getColor() {
-        return color;
+    public long getColorLong() {
+        return colorLong;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setColorLong(long colorLong) {
+        this.colorLong = colorLong;
     }
 
-        // TODO: Implement for use in ArrayList<Tag>.contains()
+    public Color tagColor() {
+        return Color.valueOf(colorLong);
+    }
+
+    public void changeColor(Color color) {
+        this.colorLong = color.pack();
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
+        // If compared to another Tag, check their ID's to see if they are the same tag
+        if (obj instanceof Tag) {
+            Tag otherTag = (Tag) obj;
+            return this.findID().equals(otherTag.findID());
+        }
         return false;
     }
 

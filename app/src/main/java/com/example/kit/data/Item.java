@@ -135,12 +135,14 @@ public class Item implements Serializable, Identifiable {
     }
 
     @Override
-    public boolean equals(Object item){
-        if(this.findID() == item.toString()){
-            return true;
-        } else {
-            return false;
+    public boolean equals(Object obj){
+        // If compared to another Item, check their ID's to see if they are the same Item
+        if (obj instanceof Item) {
+            Item otherItem = (Item) obj;
+            return this.findID().equals(otherItem.findID());
         }
+
+        return false;
     }
 
     /**

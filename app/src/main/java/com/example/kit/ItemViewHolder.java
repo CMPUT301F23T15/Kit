@@ -75,6 +75,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 Log.e("RecyclerView", "Adapter invalid for click on ViewHolder: " + holder + "Position: " + position);
                 return;
             }
+
             listener.onItemClick(adapter.getItem(position).findID());
         });
 
@@ -83,15 +84,16 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             listener.onItemLongClick();
             return true;
         });
+
         // Click listener for the tags
-        binding.addTagChip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                ItemFirestoreAdapter adapter = (ItemFirestoreAdapter) holder.getBindingAdapter();
-//                String ID = adapter.getSnapshots().getSnapshot(holder.getBindingAdapterPosition()).getId();
-//                model.attachID(ID);
-//                listener.onAddTagClick(model);
+        binding.addTagChip.setOnClickListener(onAddTagClick -> {
+            ItemAdapter adapter = (ItemAdapter) getBindingAdapter();
+            if (adapter == null) {
+                Log.e("RecyclerView", "Adapter invalid for click on ViewHolder: " + holder + "Position: " + position);
+                return;
             }
+
+            listener.onAddTagClick(adapter.getItem(position).findID());
         });
     }
 
@@ -106,14 +108,5 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     public boolean isChecked() {
         return binding.checkBox.isChecked();
-    }
-
-    /**
-     * Returns the ItemListRowBinding associated with this ViewHolder.
-     *
-     * @return The binding instance containing the layout for the item row.
-     */
-    public ItemListRowBinding getBinding() {
-        return binding;
     }
 }

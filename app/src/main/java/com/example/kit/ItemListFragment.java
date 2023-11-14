@@ -148,7 +148,12 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      * Handles the deletion of selected items. Collects all items marked for deletion and requests their removal.
      */
     public void onDelete(){
-        // Store positions of checked items to be passed to the controller to delete.
+        controller.deleteCheckedItems(checkedItems());
+        toggleDeleteMode();
+        // TODO: Show SnackBar with option to undo
+    }
+
+    private HashSet<Integer> checkedItems() {
         HashSet<Integer> checkedPositions = new HashSet<>();
         int numItems = adapter.getItemCount();
         for (int i = 0; i < numItems; i++) {
@@ -162,17 +167,14 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                 checkedPositions.add(i);
             }
         }
-
-        controller.deleteCheckedItems(checkedPositions);
-        toggleDeleteMode();
-        // TODO: Show SnackBar with option to undo
+        return checkedPositions;
     }
 
     /**
      * Handles the event for adding a tag to an item.
      */
     @Override
-    public void onAddTagClick(Item item) {
+    public void onAddTagClick(String itemID) {
         Log.v("Tag Adding", "Tag add click!");
         AddTagFragment dialogFragment = new AddTagFragment();
         dialogFragment.setOnTagAddedListener(this);
@@ -181,11 +183,11 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     @Override
-    public void onTagAdded(Item item, String tagName) {
+    public void onTagAdded(String tagID, String itemID) {
         Log.v("Tag adding", "Tag reached onTag");
         String itemID = item.findID();
         // Call the method to update Firestore with the new tag
-        DataSourceManager.getInstance().getTagDataSource().addData()
+
         if (!itemID.isEmpty()) {
 //            adapter.addTagToItem(itemID, tagName);
             Log.v("Tag adding", "Tag going to adapter");

@@ -14,14 +14,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private ItemSet itemSet;
     private SelectListener listener;
 
-    public void setItemSet(ItemSet itemSet) {
-        this.itemSet = itemSet;
-    }
-
-    public void setListener(SelectListener listener) {
-        this.listener = listener;
-    }
-
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,5 +36,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     public Item getItem(int position) {
         return itemSet.getItem(position);
+    }
+
+    public void setItemSet(ItemSet itemSet) {
+        this.itemSet = itemSet;
+    }
+
+    public void setListener(SelectListener listener) {
+        this.listener = listener;
     }
 }
