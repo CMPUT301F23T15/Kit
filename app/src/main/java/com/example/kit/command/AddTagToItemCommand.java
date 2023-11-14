@@ -7,10 +7,10 @@ import com.example.kit.data.source.DataSourceManager;
 
 public class AddTagToItemCommand extends Command {
 
-    private String tagID, itemID;
+    private String tagName, itemID;
 
-    public AddTagToItemCommand(String tagID, String itemID) {
-        this.tagID = tagID;
+    public AddTagToItemCommand(String tagName, String itemID) {
+        this.tagName = tagName;
         this.itemID = itemID;
     }
 
@@ -18,7 +18,7 @@ public class AddTagToItemCommand extends Command {
     public void execute() {
         DataSource<Item, ItemSet> itemDataSource = DataSourceManager.getInstance().getItemDataSource();
         Item item = itemDataSource.getDataByID(itemID);
-        item.addTag(tagID);
+        item.addTag(tagName);
         itemDataSource.addData(item);
     }
 

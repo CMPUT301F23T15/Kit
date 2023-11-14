@@ -24,7 +24,7 @@ import java.util.HashSet;
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed.
  */
-public class ItemListFragment extends Fragment implements SelectListener, ItemListController.ItemSetValueChangedCallback, AddTagFragment.OnTagAddedListener {
+public class ItemListFragment extends Fragment implements SelectListener, ItemListController.ItemSetValueChangedCallback {
 
     private ItemListBinding binding;
     private NavController navController;
@@ -175,25 +175,20 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      */
     @Override
     public void onAddTagClick(String itemID) {
+        HashSet<String> itemIDs = new HashSet<>();
+        itemIDs.add(itemID);
+
+        // Below lines demonstrate adding tags to multiple items but I think this is a very jank
+        // way to do it, but I think it is a good idea to only use the item IDs.
+//        HashSet<Integer> chkd = checkedItems();
+//        for (int pos : chkd) {
+//            itemIDs.add(adapter.getItem(pos).findID());
+//        }
+
         Log.v("Tag Adding", "Tag add click!");
         AddTagFragment dialogFragment = new AddTagFragment();
-        dialogFragment.setOnTagAddedListener(this);
-        dialogFragment.setItem(item);
+        dialogFragment.addItemIDs(itemIDs);
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
-    }
-
-    @Override
-    public void onTagAdded(String tagID, String itemID) {
-        Log.v("Tag adding", "Tag reached onTag");
-        String itemID = item.findID();
-        // Call the method to update Firestore with the new tag
-
-        if (!itemID.isEmpty()) {
-//            adapter.addTagToItem(itemID, tagName);
-            Log.v("Tag adding", "Tag going to adapter");
-        } else {
-            Log.v("Tag adding", "TagID null");
-        }
     }
 
     /**

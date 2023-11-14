@@ -18,12 +18,12 @@ public class DeleteTagCommand extends Command {
 
     @Override
     public void execute() {
-        tagDataSource.addData(tag);
+        tagDataSource.deleteDataByID(tag.getName());
     }
 
     @Override
     public void unexecute() {
-        tagDataSource.deleteDataByID(tag.findID());
+        tagDataSource.addData(tag);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class AddTagCommand extends Command {
 
     @Override
     public void unexecute() {
-        tagDataSource.deleteDataByID(tag.findID());
+        tagDataSource.deleteDataByID(tag.getName());
     }
 
     @Override

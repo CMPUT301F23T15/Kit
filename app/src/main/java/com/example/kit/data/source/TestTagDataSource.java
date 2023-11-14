@@ -17,7 +17,7 @@ public class TestTagDataSource extends DataSource<Tag, ArrayList<Tag>> {
 
     @Override
     public void addData(Tag tag) {
-        tags.put(tag.findID(), tag);
+//        tags.put(tag.findID(), tag);
     }
 
     // Maybe throw errors if tag not found?
