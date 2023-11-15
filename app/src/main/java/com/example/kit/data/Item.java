@@ -24,7 +24,7 @@ public class Item implements Serializable, Identifiable {
     private String make;
     private String model;
     private String serialNumber;
-    private ArrayList<String> tags;
+    private ArrayList<Tag> tags;
     private ArrayList<Image> images; // Placeholder, may store locally with something like a path to the directory?
                                     // Looking into FireStore and images, we can use a cloud solution and then have
                                     // FireStore manage it (kinda)
@@ -104,11 +104,11 @@ public class Item implements Serializable, Identifiable {
         this.serialNumber = serialNumber;
     }
 
-    public ArrayList<String> getTags() {
+    public ArrayList<Tag> getTags() {
         return tags;
     }
 
-    public void addTag(String tag) {
+    public void addTag(Tag tag) {
         if (!tags.contains(tag)) {
             tags.add(tag);
         }

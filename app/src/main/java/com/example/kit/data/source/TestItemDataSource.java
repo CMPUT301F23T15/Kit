@@ -4,10 +4,9 @@ import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
-public class TestItemDataSource extends DataSource<Item, ItemSet> {
+public class TestItemDataSource extends AbstractItemDataSource {
 
     private final HashMap<String, Item> items;
 

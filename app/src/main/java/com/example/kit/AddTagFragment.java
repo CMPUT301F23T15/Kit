@@ -59,12 +59,13 @@ public class AddTagFragment extends DialogFragment {
     }
 
     private void addTag(String name) {
-        AddTagCommand tagCommand = new AddTagCommand(new Tag(name, Color.valueOf(Color.RED)));
+        Tag tag = new Tag(name, Color.valueOf(Color.RED));
+        AddTagCommand tagCommand = new AddTagCommand(tag);
         CommandManager.getInstance().executeCommand(tagCommand);
 
         MacroCommand addTagToItemMacro = new MacroCommand();
         for (String itemID : itemIDs) {
-            addTagToItemMacro.addCommand(new AddTagToItemCommand(name, itemID));
+            addTagToItemMacro.addCommand(new AddTagToItemCommand(tag, itemID));
         }
 
         CommandManager.getInstance().executeCommand(addTagToItemMacro);

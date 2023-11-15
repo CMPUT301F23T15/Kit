@@ -19,28 +19,9 @@ public class Tag {
         this.name = name;
     }
 
-    public Tag(String name, Color color ) {
+    public Tag(String name, Color color) {
         this.name = name;
         this.color = color;
-    }
-
-    public Tag(String name, HashMap<String, Object> pack) {
-        this.name = name;
-        Color tagColor;
-
-        Double red = (Double) pack.get("red");
-        Double green = (Double) pack.get("green");
-        Double blue = (Double) pack.get("blue");
-        Double alpha = (Double) pack.get("alpha");
-
-        if (red == null || green == null || blue == null || alpha == null) {
-            Log.e("Tag Color", "Tag attempted to be constructed from a null color pack.");
-            tagColor = new Color();
-        } else {
-            tagColor = Color.valueOf(red.floatValue(), green.floatValue(), blue.floatValue(), alpha.floatValue());
-        }
-
-        this.color = tagColor;
     }
 
     public String getName() {
@@ -57,16 +38,6 @@ public class Tag {
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    public HashMap<String, Float> pack() {
-        HashMap<String, Float> packed = new HashMap<>();
-        packed.put("alpha", color.alpha());
-        packed.put("red", color.red());
-        packed.put("green", color.green());
-        packed.put("blue", color.blue());
-
-        return packed;
     }
 
 //        @Override

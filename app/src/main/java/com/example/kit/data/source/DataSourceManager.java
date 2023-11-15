@@ -12,7 +12,7 @@ import io.grpc.android.BuildConfig;
 
 public class DataSourceManager {
 
-    private final DataSource<Item, ItemSet> itemDataSource;
+    private final AbstractItemDataSource itemDataSource;
     private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
 
     public DataSource<Item, ItemSet> getItemDataSource() {
@@ -24,24 +24,23 @@ public class DataSourceManager {
     }
 
     // Singleton Instantiation
-    private static DataSourceManager instance;
+    private static final DataSourceManager instance = new DataSourceManager();
 
     private DataSourceManager() {
         if (BuildConfig.DEBUG) {
             Log.i("Database", "Using testing DataSources");
-            itemDataSource = new TestItemDataSource();
             tagDataSource = new TestTagDataSource();
+            itemDataSource = new TestItemDataSource();
         } else {
             Log.i("Database", "Using production DataSources");
-            itemDataSource = new ItemDataSource();
             tagDataSource = new TagDataSource();
+            itemDataSource = new ItemDataSource();
         }
+
+        itemDataSource.tagDataSource = tagDataSource;
     }
 
     public static synchronized DataSourceManager getInstance() {
-        if (instance == null) {
-            instance = new DataSourceManager();
-        }
         return instance;
     }
 }

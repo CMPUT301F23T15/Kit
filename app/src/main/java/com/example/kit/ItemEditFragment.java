@@ -14,6 +14,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.CommandManager;
 import com.example.kit.data.Item;
+import com.example.kit.data.Tag;
+import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
 import com.example.kit.databinding.ItemEditBinding;
@@ -23,6 +25,7 @@ import com.google.firebase.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -101,9 +104,10 @@ public class ItemEditFragment extends Fragment {
             binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
 
             binding.itemDisplayTagGroup.removeAllViews();
-            for (String tag : item.getTags()) {
+            for (Tag tag : item.getTags()) {
                 Chip chip = new Chip(getContext());
-                chip.setText(tag);
+                chip.setText(tag.getName());
+                chip.setBackgroundColor(tag.getColor().toArgb());
                 binding.itemDisplayTagGroup.addView(chip);
             }
         }
@@ -118,7 +122,7 @@ public class ItemEditFragment extends Fragment {
      */
     private Item buildItem() {
         Item newItem = new Item();
-
+        DataSource<Tag, ArrayList<Tag>> tagDataSource = DataSourceManager.getInstance().getTagDataSource();
         newItem.setName(binding.itemNameDisplay.getText().toString());
         newItem.setValue(binding.itemValueDisplay.getText().toString());
         // Absolutely terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
@@ -139,7 +143,7 @@ public class ItemEditFragment extends Fragment {
         for (int i = 1; i < numTags; i++) {
             Chip chip = (Chip) binding.itemDisplayTagGroup.getChildAt(i);
             if (!chip.getText().toString().isEmpty()) {
-                newItem.addTag(chip.getText().toString());
+                newItem.addTag(tagDataSource.getDataByID(chip.getText().toString()));
             }
         }
 

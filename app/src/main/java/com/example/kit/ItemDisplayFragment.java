@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.CommandManager;
 import com.example.kit.data.Item;
+import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
 import com.example.kit.databinding.ItemEditBinding;
@@ -111,9 +112,9 @@ public class ItemDisplayFragment extends Fragment {
         binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
 
         binding.itemDisplayTagGroup.removeAllViews();
-        for (String tag : item.getTags()) {
+        for (Tag tag : item.getTags()) {
             Chip chip = new Chip(getContext());
-            chip.setText(tag);
+            chip.setText(tag.getName());
             binding.itemDisplayTagGroup.addView(chip);
         }
     }

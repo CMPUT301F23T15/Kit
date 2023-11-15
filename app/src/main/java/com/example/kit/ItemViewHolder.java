@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.kit.data.Item;
+import com.example.kit.data.Tag;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.google.android.material.chip.Chip;
 
@@ -40,7 +41,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         binding.itemDateRow.setText(df.format(item.getAcquisitionDate().toDate()));
         String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
         binding.itemValueRow.setText(formattedValue);
-        ArrayList<String> tags = item.getTags();
+        ArrayList<Tag> tags = item.getTags();
 
         // Populate chips with tags
         // Leave first "+" chip blank as button to add new tag
@@ -55,7 +56,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 continue;
             }
 
-            chip.setText(tags.get(i-1));
+            chip.setText(tags.get(i-1).getName());
+            chip.setBackgroundColor(tags.get(i-1).getColor().toArgb());
             chip.setVisibility(View.VISIBLE);
         }
     }
@@ -65,7 +67,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * this requires a {@link com.example.kit.SelectListener}
      * @param listener
      * @param holder
-     * @param model
+     * @param position
      */
     public void setupListeners(SelectListener listener, ItemViewHolder holder, int position){
         // Click listener for the entire item
