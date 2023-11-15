@@ -60,7 +60,7 @@ public class DataSourceManager {
      */
     public static synchronized DataSourceManager getInstance() {
         if (instance == null) {
-            return new DataSourceManager();
+            instance = new DataSourceManager();
         }
         return instance;
     }
