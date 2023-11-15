@@ -11,7 +11,7 @@ public class CommandManager {
     private final LinkedList<Command> redoList;
 
     /**
-     * Execute the given command, add it to the command history list if it is reversible. Clears the
+     * Execute the given command, adds it to the command history list if it is reversible. Clears the
      * history of commands if it is not reversible to prevent undo-ing commands from other contexts.
      * Clear the redo list, for simplicity.
      * @param command Command to be executed.
