@@ -12,8 +12,7 @@ public class FirestoreManager {
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private FirestoreManager() {
-    }
+    private FirestoreManager() {}
 
     /**
      * Provides the instance of the FirestoreManager Singleton

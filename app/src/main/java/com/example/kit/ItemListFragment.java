@@ -1,4 +1,5 @@
 package com.example.kit;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,10 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.kit.data.Item;
-import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemListBinding;
-
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -22,7 +20,7 @@ import java.util.HashSet;
 
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
- * Displays the total value of the items currently displayed.
+ * Displays the total value of the items currently displayed. Controlled by {@link ItemListController}
  */
 public class ItemListFragment extends Fragment implements SelectListener, ItemListController.ItemSetValueChangedCallback {
 
@@ -54,7 +52,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     /**
-     * Initialize the RecyclerView of the fragment
+     * Initialize the RecyclerView of the fragment, setting the Adapter and registering this Fragment
+     * as a listener for clicks.
      */
     private void initializeItemList() {
         adapter = new ItemAdapter();
@@ -153,6 +152,10 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         // TODO: Show SnackBar with option to undo
     }
 
+    /**
+     * Helper method to return the positions of the items within the RecyclerView that are checked.
+     * @return HashSet of the checked item positions.
+     */
     private HashSet<Integer> checkedItems() {
         HashSet<Integer> checkedPositions = new HashSet<>();
         int numItems = adapter.getItemCount();
@@ -186,8 +189,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 //        }
 
         Log.v("Tag Adding", "Tag add click!");
-        AddTagFragment dialogFragment = new AddTagFragment();
-        dialogFragment.addItemIDs(itemIDs);
+        AddTagFragment dialogFragment = new AddTagFragment(itemIDs);
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
     }
 

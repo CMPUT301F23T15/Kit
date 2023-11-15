@@ -13,8 +13,7 @@ import java.util.NoSuchElementException;
  * Item is a single item data type, it is a serializable data type
  */
 
-public class Item implements Serializable, Identifiable {
-    // Todo: May use Tag data type for tags, for now, use just strings
+public class Item implements Serializable {
     private String id;
     private String name;
     private Timestamp acquisitionDate;
@@ -24,100 +23,186 @@ public class Item implements Serializable, Identifiable {
     private String make;
     private String model;
     private String serialNumber;
-    private ArrayList<Tag> tags;
+    private final ArrayList<Tag> tags;
     private ArrayList<Image> images; // Placeholder, may store locally with something like a path to the directory?
                                     // Looking into FireStore and images, we can use a cloud solution and then have
                                     // FireStore manage it (kinda)
 
     // TODO: Images
 
-
+    /**
+     * Constructs an Item with an empty list of {@link Tag}s.
+     */
     public Item() {
         tags = new ArrayList<>();
     }
 
+    /**
+     * Gets the name of the Item.
+     * @return The name of the Item.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the Item.
+     * @param name The name to set.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets the acquisition date of the Item.
+     * @return The acquisition date of the Item.
+     */
     public Timestamp getAcquisitionDate() {
         return acquisitionDate;
     }
 
+    /**
+     * Sets the acquisition date of the Item.
+     * @param acquisitionDate The acquisition date to set.
+     */
     public void setAcquisitionDate(Timestamp acquisitionDate) {
         this.acquisitionDate = acquisitionDate;
     }
 
+    /**
+     * Gets the description of the Item.
+     * @return The description of the Item.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the description of the Item.
+     * @param description The description to set.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Gets the comment on the Item.
+     * @return The comment on the Item.
+     */
     public String getComment() {
         return comment;
     }
 
+    /**
+     * Sets the comment on the Item.
+     * @param comment The comment to set.
+     */
     public void setComment(String comment) {
         this.comment = comment;
     }
 
+    /**
+     * Gets the value of the Item as a {@link BigDecimal}.
+     * @return The BigDecimal value of the Item.
+     */
     public BigDecimal valueToBigDecimal() {
         return new BigDecimal(value);
     }
 
+    /**
+     * Gets the value of the Item as a String.
+     * @return The value of the Item.
+     */
     public String getValue() {
         return value;
     }
 
+    /**
+     * Sets the value of the Item from a String.
+     * @param value The value String to set.
+     */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     * Gets the Make of the Item.
+     * @return The Make of the Item.
+     */
     public String getMake() {
         return make;
     }
 
+    /**
+     * Sets the Make of the Item.
+     * @param make The Make to set.
+     */
     public void setMake(String make) {
         this.make = make;
     }
 
+    /**
+     * Gets the Model of the Item.
+     * @return The model of the Item.
+     */
     public String getModel() {
         return model;
     }
 
+    /**
+     * Sets the Model of the Item.
+     * @param model The Model to set.
+     */
     public void setModel(String model) {
         this.model = model;
     }
 
+    /**
+     * Gets the serial number of the Item.
+     * @return The serial number of the Item.
+     */
     public String getSerialNumber() {
         return serialNumber;
     }
 
+    /**
+     * Sets the serial number of the Item.
+     * @param serialNumber The serial number to set.
+     */
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
 
+    /**
+     * Gets the list of {@link Tag}s on the Item.
+     * @return The list of Tags from the Item.
+     */
     public ArrayList<Tag> getTags() {
         return tags;
     }
 
+    /**
+     * Add a {@link Tag} to the Item.
+     * @param tag The Tag to add.
+     */
     public void addTag(Tag tag) {
         if (!tags.contains(tag)) {
             tags.add(tag);
         }
     }
 
+    /**
+     * Gets the ID of the Item.
+     * @return The ID of the Item.
+     */
     public String findID() {
         return id;
     }
 
+    /**
+     * Sets the ID of the Item.
+     * @param id The ID to set.
+     */
     public void attachID(String id) {
         this.id = id;
     }
@@ -129,12 +214,18 @@ public class Item implements Serializable, Identifiable {
      * @throws NoSuchElementException
      *  Exception thrown if the tag was not present on the item.
      */
-    public void removeTag(String tag) {
+    public void removeTag(Tag tag) {
         if (!tags.remove(tag)) {
             throw new NoSuchElementException();
         }
     }
 
+    /**
+     * Equality comparison of two objects, false if it is not an Item, or true if it is an Item
+     * and their ID's match.
+     * @param obj Object to test equality.
+     * @return The equality of the other Item's ID to this Item's ID.
+     */
     @Override
     public boolean equals(Object obj){
         // If compared to another Item, check their ID's to see if they are the same Item
@@ -148,7 +239,7 @@ public class Item implements Serializable, Identifiable {
 
     /**
      * String representation of an item is it's ID
-     * @return
+     * @return The ID of the this item.
      */
     @Override
     public String toString(){

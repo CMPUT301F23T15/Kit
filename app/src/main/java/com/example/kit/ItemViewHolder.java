@@ -16,13 +16,16 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
+/**
+ * A RecyclerView ViewHolder for an {@link Item} to be displayed.
+ * Shows the Name, Value, Acquisition Date, and {@link  Tag}s of the item.
+ */
 public class ItemViewHolder extends RecyclerView.ViewHolder {
     private final ItemListRowBinding binding;
 
     /**
      * Create new ViewHolder from a binding.
-     * @param binding
-     *  The binding with desired layout for the ViewHolder.
+     * @param binding The binding with desired layout for the ViewHolder.
      */
     public ItemViewHolder(@NonNull ItemListRowBinding binding) {
         super(binding.getRoot());
@@ -31,8 +34,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     /**
      * Displays an {@link Item} within the ViewHolder, binding the data.
-     * @param item
-     *  The {@link Item} to be displayed
+     * @param item The {@link Item} to be displayed
      */
     public void displayItem(@NonNull Item item){
         // Fill in item row values
@@ -65,9 +67,9 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     /**
      * This sets up listeners for individual UI elements for each item,
      * this requires a {@link com.example.kit.SelectListener}
-     * @param listener
-     * @param holder
-     * @param position
+     * @param listener The {@link SelectListener} listening to clicks on this ViewHolder.
+     * @param holder The holder itself
+     * @param position The position of the holder within the adapter.
      */
     public void setupListeners(SelectListener listener, ItemViewHolder holder, int position){
         // Click listener for the entire item
@@ -99,15 +101,25 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
+    /**
+     * Shows the multiselect checkbox.
+     */
     public void showCheckbox() {
         binding.checkBox.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Hides the multiselect checkbox, also unchecks it.
+     */
     public void hideCheckbox() {
         binding.checkBox.setChecked(false);
         binding.checkBox.setVisibility(View.GONE);
     }
 
+    /**
+     * Exposes the status of the checkbox for multiselection.
+     * @return Status of the selection checkbox
+     */
     public boolean isChecked() {
         return binding.checkBox.isChecked();
     }

@@ -12,22 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.kit.command.AddItemCommand;
-import com.example.kit.command.CommandManager;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
-import com.example.kit.databinding.ItemEditBinding;
 import com.google.android.material.chip.Chip;
-import com.google.firebase.Timestamp;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Fragment that displays an {@link Item} for viewing purposes.
+ */
 public class ItemDisplayFragment extends Fragment {
 
     private ItemDisplayBinding binding;
@@ -46,7 +42,7 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     /**
-     * Standard fragment lifecylce, initializes binding, navContoller, and UI elements
+     * Standard fragment lifecycle, initializes binding, NavController, and UI elements
      * @param inflater The LayoutInflater object that can be used to inflate
      * any views in the fragment,
      * @param container If non-null, this is the parent view that the fragment's
@@ -55,7 +51,7 @@ public class ItemDisplayFragment extends Fragment {
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      * from a previous saved state as given here.
      *
-     * @return
+     * @return The root view of the binding.
      */
     @Nullable
     @Override

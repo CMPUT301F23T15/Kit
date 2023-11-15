@@ -40,7 +40,7 @@ public class ItemEditFragment extends Fragment {
     private String itemID;
 
     /**
-     * Standard fragment lifecycle
+     * Standard fragment lifecycle, stores a reference to the NavController.
      * @param savedInstanceState If the fragment is being re-created from
      * a previous saved state, this is the state.
      */
@@ -50,6 +50,18 @@ public class ItemEditFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
     }
 
+    /**
+     * Standard Fragment lifecycle function, inflates the binding and initializes buttons.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return The root view of the binding.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
