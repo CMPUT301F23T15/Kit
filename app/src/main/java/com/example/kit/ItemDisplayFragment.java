@@ -77,7 +77,7 @@ public class ItemDisplayFragment extends Fragment {
         binding.floatingActionButton.setOnClickListener(onClick -> navController.popBackStack());
         binding.floatingActionButton2.setOnClickListener(onClick -> {
             Bundle itemId = new Bundle();
-            itemId.putString("id",itemID);
+            itemId.putString("id", itemID);
             navController.navigate(R.id.editDisplayItemAction, itemId);
         });
     }

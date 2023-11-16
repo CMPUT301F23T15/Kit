@@ -45,7 +45,7 @@ public class ItemListController implements DataChangedCallback {
      */
     public void setCallback(ItemSetValueChangedCallback callback) {
         this.callback = callback;
-        callback.onItemSetValueChanged(itemSet.getItemSetValue());
+        onDataChanged();
     }
 
     /**
