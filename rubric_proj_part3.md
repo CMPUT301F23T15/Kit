@@ -1,0 +1,94 @@
+# Project Part 3 Rubric
+
+## Addressing Feedback
+    -All addressed
+    -Well addressed
+    -Issues tracked
+
+## User Interface Mockup and Storyboard
+    -Consistent and clear
+    -Complete UI mockups
+    -Labeled elements on UI mockups
+    -Detailed storyboard
+    -Labeled actions for storyboard transitions
+    -Covers all requirements
+    -Intuitive user interface
+    -Displays understanding of UI mockups and storyboarding
+
+## Sprint Planning and Reviews
+    -Comprehensive
+    -Displays understanding of Scrum
+    -Displays regular and frequent pacing of working software
+    -Each sprint is planned by user story
+    -Riskier requirements are done earlier
+    -Each sprint is reviewed
+    -Members all present at each review
+    -User stories are fully “done done” (implemented, tested, integrated, documented)
+    -Early and frequent integration
+
+## Tangible Demo
+    -Demo ability
+    -Clear and coherent
+    -Logically organized by tangible features
+    -Realistic data and inputs
+    -All members present
+    -Members well coordinated
+
+## Tool Practices
+    -All team members contribute to GitHub regularly
+    -Effective use of GitHub features
+
+## Relative Quality
+    -Well above average relative quality, overall comprehensiveness, creativity, attractiveness, and innovation
+
+## Code Base of Prototype
+    -Excellent quality
+    -At least ½ of requirements implemented and fully done
+    -Comprehensive connectivity to server
+    -Code is clear
+    -Readable
+    -Useful comments
+    -Checks for errors
+    -Follows conventions
+
+## Code Documentation
+    -Third party could easily understand
+    -Complete and correct Javadoc comments for entity (model) classes and methods
+    -Consistent with requirements, design, code, and tests
+
+## Product Backlog
+    -Numbered, tracked, and organized requirements
+    -Comprehensive requirements
+    -Complete story point estimates
+    -Complete risk levels
+    -Displays understanding of requirements specification/elicitation
+    -Requirements noted for half-way checkpoint
+
+## Test Cases
+    -Test exist and can run
+    -Convincing and passing testing for completed implementation
+    -Comprehensive unit tests of entity (model) and control classes
+    -Comprehensive intent tests for implemented user stories
+    -Correct tests
+    -Realistic test data
+    -Consistent with requirements, design, code, and documentation
+
+## Object-Oriented Design
+    -Clean design
+    -Design intent is clear
+    -Properly OO
+    -Clearly separates concerns
+    -Layering in design, including entity, control, and boundary objects
+    -Uses architectural or design patterns
+    -Comprehensive information hiding
+    -Proper encapsulation
+    -Clear classes and interfaces
+    -Important elements described
+    -Correct notation
+    -Neatly laid out and labeled diagrams
+    -Helpful explanations or commentary
+    -Consistent with requirements, code, tests, and documentation
+
+
+
+

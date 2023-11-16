@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/itemListFragment">
+
+    <fragment
+        android:id="@+id/itemListFragment"
+        android:name="com.example.kit.ItemListFragment"
+        android:label="ItemListFragment"
+        tools:layout="@layout/item_list">
+
+        <action
+            android:id="@+id/displayListItemAction"
+            app:destination="@id/itemDisplayFragment">
+
+        </action>
+
+        <action
+            android:id="@+id/newItemAction"
+            app:destination="@id/itemEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/itemEditFragment"
+        android:name="com.example.kit.ItemEditFragment"
+        android:label="ItemEditFragment"
+        tools:layout="@layout/item_edit">
+
+        <action
+            android:id="@+id/itemCreatedAction"
+            app:destination="@id/itemListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemDisplayFragment"
+        android:name="com.example.kit.ItemDisplayFragment"
+        android:label="ItemDisplayFragment"
+        tools:layout="@layout/item_display">
+        <action
+            android:id="@+id/returnToListAction"
+            app:destination="@id/itemListFragment" />
+        <action
+            android:id="@+id/editDisplayItemAction"
+            app:destination="@id/itemEditFragment" />
+    </fragment>
+</navigation>
