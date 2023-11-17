@@ -1,9 +1,6 @@
 package com.example.kit;
 
-import android.view.View;
-
 import com.example.kit.data.Item;
-import com.example.kit.database.ItemViewHolder;
 
 
 /** SelectListener is an interface that is used to implement UI interactions
@@ -11,7 +8,7 @@ import com.example.kit.database.ItemViewHolder;
  * passed as an argument into the class where the view is available.
  */
 public interface SelectListener {
-    void onItemClick(Item item);
+    void onItemClick(String id);
     void onItemLongClick();
-    void onAddTagClick(Item item);
+    void onAddTagClick(String id);
 }
