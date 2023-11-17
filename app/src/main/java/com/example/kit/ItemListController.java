@@ -3,6 +3,7 @@ package com.example.kit;
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.DeleteItemCommand;
 import com.example.kit.command.MacroCommand;
+import com.example.kit.data.Filter;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.source.DataChangedCallback;
 import com.example.kit.data.source.DataSourceManager;
@@ -13,7 +14,7 @@ import java.util.HashSet;
 /**
  * Controller that handles data management and manipulation for a {@link ItemListFragment}.
  */
-public class ItemListController implements DataChangedCallback {
+public class ItemListController implements DataChangedCallback, FilterSheetController.FilterUpdateCallback {
     private ItemAdapter adapter;
     private ItemSet itemSet;
     private ItemSetValueChangedCallback callback;
@@ -36,6 +37,15 @@ public class ItemListController implements DataChangedCallback {
     public void setAdapter(ItemAdapter adapter) {
         this.adapter = adapter;
         updateAdapterData();
+    }
+
+    /**
+     * Helper method to update the {@link ItemSet} for the adapter.
+     */
+    private void updateAdapterData() {
+        adapter.setItemSet(itemSet);
+        // TODO: Find performant way to use more specific data-changed notifiers.
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -65,7 +75,7 @@ public class ItemListController implements DataChangedCallback {
     }
 
     /**
-     * Call back method for the {@link DataChangedCallback} called whenever the data from the
+     * Callback method for the {@link DataChangedCallback} called whenever the data from the
      * {@link com.example.kit.data.source.DataSource} changes. Updates the {@link ItemSet} and
      * adapter. Relays the call to the {@link ItemSetValueChangedCallback}
      * as the data changed likely means the total value has changed too.
@@ -80,12 +90,13 @@ public class ItemListController implements DataChangedCallback {
     }
 
     /**
-     * Helper method to update the {@link ItemSet} for the adapter.
+     * Callback method for the {@link FilterSheetController.FilterUpdateCallback} called
+     * whenever the filter from the {@link FilterSheetFragment} is changed.
+     * @param filter The new {@link Filter} to apply to the datasource
      */
-    private void updateAdapterData() {
-        adapter.setItemSet(itemSet);
-        // TODO: Find performant way to use more specific data-changed notifiers.
-        adapter.notifyDataSetChanged();
+    @Override
+    public void onFilterChangedCallback(Filter filter) {
+
     }
 
     /**

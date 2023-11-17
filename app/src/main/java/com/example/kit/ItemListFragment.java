@@ -45,9 +45,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         binding = ItemListBinding.inflate(inflater, container, false);
         initializeItemList();
         initializeUIInteractions();
-        FilterBottomSheetDialogFragment bottomSheet = new FilterBottomSheetDialogFragment();
-        bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
-
+        initializeFilterSheet();
         // Add self as callback for updates when the dataset changes
         controller.setCallback(this);
         return binding.getRoot();
@@ -75,9 +73,21 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      * Initializes UI interactions, setting up listeners for add and delete buttons.
      */
     //TODO: Implement add and profile buttons here
-    public void initializeUIInteractions(){
+    private void initializeUIInteractions() {
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
         binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+    }
+
+    /**
+     * Initialize the FilterSheet, including registering the {@link ItemListController} as a
+     * callback for the {@link FilterSheetController.FilterUpdateCallback}.
+     */
+    private void initializeFilterSheet() {
+        FilterSheetFragment bottomSheet = new FilterSheetFragment();
+        bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
+
+        // Add the controller as a callback for when the filter changes
+        bottomSheet.setCallback(controller);
     }
 
     /**

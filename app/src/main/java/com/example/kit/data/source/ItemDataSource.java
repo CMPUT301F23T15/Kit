@@ -2,6 +2,7 @@ package com.example.kit.data.source;
 
 import android.util.Log;
 
+import com.example.kit.data.Filter;
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.FirestoreManager;
@@ -20,7 +21,7 @@ import java.util.List;
  * An interface for a database of {@link Item}s, providing storage, retrieval, and deletion
  * functionality.
  */
-public class ItemDataSource extends AbstractItemDataSource {
+public class ItemDataSource extends AbstractItemDataSource implements FilterableDataSource<Item, ItemSet> {
 
     private final CollectionReference itemCollection;
     private final HashMap<String, Item> itemCache;
@@ -99,6 +100,11 @@ public class ItemDataSource extends AbstractItemDataSource {
             itemSet.addItem(item);
         }
         return itemSet;
+    }
+
+    @Override
+    public ItemSet getFilteredDataSet(Filter filter) {
+        return null;
     }
 
     /**
