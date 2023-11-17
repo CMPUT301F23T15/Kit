@@ -45,6 +45,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         binding = ItemListBinding.inflate(inflater, container, false);
         initializeItemList();
         initializeUIInteractions();
+        FilterBottomSheetDialogFragment bottomSheet = new FilterBottomSheetDialogFragment();
+        bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
 
         // Add self as callback for updates when the dataset changes
         controller.setCallback(this);
