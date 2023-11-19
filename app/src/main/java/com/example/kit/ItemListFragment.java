@@ -46,7 +46,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
     {
         fadeOutFAB = new AlphaAnimation(1.0f, 0.0f);
-        fadeOutFAB.setDuration(250);
+        fadeOutFAB.setDuration(100);
         fadeOutFAB.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -55,8 +55,11 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                binding.addItemButton.setVisibility(View.GONE);
-                binding.deleteItemButton.setVisibility(View.GONE);
+                if (inDeleteMode) {
+                    binding.deleteItemButton.setVisibility(View.GONE);
+                } else {
+                    binding.addItemButton.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -66,7 +69,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         });
 
         fadeInFAB = new AlphaAnimation(0.0f, 1.0f);
-        fadeInFAB.setDuration(250);
+        fadeInFAB.setDuration(100);
         fadeInFAB.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -207,10 +210,10 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
     private void fadeOutFABs() {
         if (inDeleteMode) {
-            if (binding.deleteItemButton.getVisibility() == View.GONE) return;
+            if (binding.deleteItemButton.getAnimation() != null || binding.addItemButton.getVisibility() == View.GONE) return;
             binding.deleteItemButton.startAnimation(fadeOutFAB);
         } else {
-            if (binding.addItemButton.getVisibility() == View.GONE) return;
+            if (binding.addItemButton.getAnimation() != null || binding.addItemButton.getVisibility() == View.GONE) return;
             binding.addItemButton.startAnimation(fadeOutFAB);
         }
     }
