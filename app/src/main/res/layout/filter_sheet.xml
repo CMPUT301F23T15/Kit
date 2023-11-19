@@ -3,197 +3,233 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="100dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <ImageView
-        android:id="@+id/searchIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toBottomOf="@+id/searchBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/searchBar"
-        app:srcCompat="@drawable/baseline_search_24" />
-
-    <EditText
-        android:id="@+id/searchBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_horizontal_space"
-        android:layout_marginTop="@dimen/activity_top_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Name"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/cardview_default_elevation"
+        android:outlineProvider="bounds"
+        app:cardCornerRadius="@dimen/corner_radius"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/searchIcon"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/dateIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toBottomOf="@+id/dateStart"
-        app:layout_constraintEnd_toStartOf="@+id/dateStart"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dateStart"
-        app:srcCompat="@drawable/baseline_calendar_month_24" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="16dp">
 
-    <EditText
-        android:id="@+id/dateStart"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_vertical_space"
-        android:layout_marginTop="@dimen/content_vertical_space"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintEnd_toStartOf="@+id/dateTo"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dateIcon"
-        app:layout_constraintTop_toBottomOf="@+id/searchBar" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-    <TextView
-        android:id="@+id/dateTo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_horizontal_space"
-        android:layout_marginEnd="@dimen/content_horizontal_space"
-        android:text="To"
-        app:layout_constraintBottom_toBottomOf="@+id/dateStart"
-        app:layout_constraintEnd_toStartOf="@+id/dateEnd"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dateStart"
-        app:layout_constraintTop_toTopOf="@+id/dateStart" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <EditText
-        android:id="@+id/dateEnd"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintBottom_toBottomOf="@+id/dateStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dateTo"
-        app:layout_constraintTop_toTopOf="@+id/dateStart" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
-    <ImageView
-        android:id="@+id/valueIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toBottomOf="@+id/valueLow"
-        app:layout_constraintEnd_toStartOf="@+id/valueLow"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/valueLow"
-        app:srcCompat="@drawable/baseline_attach_money_24" />
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/searchBar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/searchBar"
+                app:srcCompat="@drawable/baseline_search_24" />
 
-    <EditText
-        android:id="@+id/valueLow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_horizontal_space"
-        android:layout_marginTop="@dimen/content_vertical_space"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/valueTo"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/valueIcon"
-        app:layout_constraintTop_toBottomOf="@+id/dateStart" />
+            <EditText
+                android:id="@+id/searchBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
+                android:layout_marginTop="@dimen/activity_top_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/searchIcon"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/valueTo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_horizontal_space"
-        android:layout_marginEnd="@dimen/content_horizontal_space"
-        android:text="To"
-        app:layout_constraintBottom_toBottomOf="@+id/valueLow"
-        app:layout_constraintEnd_toStartOf="@+id/valueHigh"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/valueLow"
-        app:layout_constraintTop_toTopOf="@+id/valueLow" />
+            <ImageView
+                android:id="@+id/dateIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/dateStart"
+                app:layout_constraintEnd_toStartOf="@+id/dateStart"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/dateStart"
+                app:srcCompat="@drawable/baseline_calendar_month_24" />
 
-    <EditText
-        android:id="@+id/valueHigh"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintBottom_toBottomOf="@+id/valueLow"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/valueTo"
-        app:layout_constraintTop_toTopOf="@+id/valueLow" />
+            <EditText
+                android:id="@+id/dateStart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_vertical_space"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                android:ems="10"
+                android:inputType="date"
+                app:layout_constraintEnd_toStartOf="@+id/dateTo"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/dateIcon"
+                app:layout_constraintTop_toBottomOf="@+id/searchBar" />
 
-    <ImageView
-        android:id="@+id/tagIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_horizontal_space"
-        android:layout_marginTop="38dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/valueIcon"
-        app:srcCompat="@drawable/baseline_label_24" />
+            <TextView
+                android:id="@+id/dateTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
+                android:layout_marginEnd="@dimen/content_horizontal_space"
+                android:text="To"
+                app:layout_constraintBottom_toBottomOf="@+id/dateStart"
+                app:layout_constraintEnd_toStartOf="@+id/dateEnd"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/dateStart"
+                app:layout_constraintTop_toTopOf="@+id/dateStart" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/tagChipGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_horizontal_space"
-        android:layout_marginTop="@dimen/content_vertical_space"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tagIcon"
-        app:layout_constraintTop_toBottomOf="@+id/valueLow">
+            <EditText
+                android:id="@+id/dateEnd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:inputType="date"
+                app:layout_constraintBottom_toBottomOf="@+id/dateStart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/dateTo"
+                app:layout_constraintTop_toTopOf="@+id/dateStart" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip3"
-            style="@style/tag_chip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.chip.ChipGroup>
+            <ImageView
+                android:id="@+id/valueIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/valueLow"
+                app:layout_constraintEnd_toStartOf="@+id/valueLow"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/valueLow"
+                app:srcCompat="@drawable/baseline_attach_money_24" />
 
-    <ImageView
-        android:id="@+id/makeIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        app:layout_constraintBottom_toBottomOf="@+id/makeSelector"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/makeSelector"
-        app:srcCompat="@drawable/baseline_business_center_24" />
+            <EditText
+                android:id="@+id/valueLow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                app:layout_constraintEnd_toStartOf="@+id/valueTo"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/valueIcon"
+                app:layout_constraintTop_toBottomOf="@+id/dateStart" />
 
-    <Spinner
-        android:id="@+id/makeSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/content_horizontal_space"
-        android:layout_marginTop="@dimen/content_vertical_space"
-        app:layout_constraintStart_toEndOf="@+id/makeIcon"
-        app:layout_constraintTop_toBottomOf="@+id/tagChipGroup" />
+            <TextView
+                android:id="@+id/valueTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
+                android:layout_marginEnd="@dimen/content_horizontal_space"
+                android:text="To"
+                app:layout_constraintBottom_toBottomOf="@+id/valueLow"
+                app:layout_constraintEnd_toStartOf="@+id/valueHigh"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/valueLow"
+                app:layout_constraintTop_toTopOf="@+id/valueLow" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/makeChipGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/content_horizontal_space"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/makeSelector"
-        app:layout_constraintTop_toBottomOf="@+id/makeSelector">
+            <EditText
+                android:id="@+id/valueHigh"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                app:layout_constraintBottom_toBottomOf="@+id/valueLow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/valueTo"
+                app:layout_constraintTop_toTopOf="@+id/valueLow" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.chip.ChipGroup>
+            <ImageView
+                android:id="@+id/tagIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
+                app:layout_constraintBottom_toBottomOf="@+id/tagSpinner"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tagSpinner"
+                app:srcCompat="@drawable/baseline_label_24" />
+
+            <Spinner
+                android:id="@+id/tagSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                app:layout_constraintStart_toEndOf="@+id/tagIcon"
+                app:layout_constraintTop_toBottomOf="@+id/valueLow" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/tagChipGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tagSpinner"
+                app:layout_constraintTop_toBottomOf="@+id/tagSpinner">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip3"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <ImageView
+                android:id="@+id/makeIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                app:layout_constraintBottom_toBottomOf="@+id/makeSelector"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/makeSelector"
+                app:srcCompat="@drawable/baseline_business_center_24" />
+
+            <Spinner
+                android:id="@+id/makeSelector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                app:layout_constraintStart_toEndOf="@+id/makeIcon"
+                app:layout_constraintTop_toBottomOf="@+id/tagChipGroup" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/makeChipGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/content_horizontal_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/makeSelector"
+                app:layout_constraintTop_toBottomOf="@+id/makeSelector">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.chip.ChipGroup>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

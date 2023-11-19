@@ -1,18 +1,25 @@
 package com.example.kit;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -24,11 +31,63 @@ import java.util.HashSet;
  */
 public class ItemListFragment extends Fragment implements SelectListener, ItemListController.ItemSetValueChangedCallback {
 
+    // Item List Fields
     private ItemListBinding binding;
     private NavController navController;
     private ItemListController controller;
     private ItemAdapter adapter;
     private boolean inDeleteMode = false;
+
+    // Filter Sheet Fields
+    private FilterSheetBinding filterBinding;
+    private BottomSheetBehavior<ConstraintLayout> filterSheetBehavior;
+    private final AlphaAnimation fadeInFAB;
+    private final AlphaAnimation fadeOutFAB;
+
+    {
+        fadeOutFAB = new AlphaAnimation(1.0f, 0.0f);
+        fadeOutFAB.setDuration(250);
+        fadeOutFAB.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                binding.addItemButton.setVisibility(View.GONE);
+                binding.deleteItemButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        fadeInFAB = new AlphaAnimation(0.0f, 1.0f);
+        fadeInFAB.setDuration(250);
+        fadeInFAB.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (inDeleteMode) {
+                    binding.deleteItemButton.setVisibility(View.VISIBLE);
+                } else {
+                    binding.addItemButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,9 +102,11 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemListBinding.inflate(inflater, container, false);
+        filterBinding = binding.filterSheet;
         initializeItemList();
         initializeUIInteractions();
         initializeFilterSheet();
+
         // Add self as callback for updates when the dataset changes
         controller.setCallback(this);
         return binding.getRoot();
@@ -83,11 +144,38 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      * callback for the {@link FilterSheetController.FilterUpdateCallback}.
      */
     private void initializeFilterSheet() {
-        FilterSheetFragment bottomSheet = new FilterSheetFragment();
-        bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
+        filterSheetBehavior = BottomSheetBehavior.from(filterBinding.getRoot());
+        filterSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @SuppressLint("SwitchIntDef")
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        fadeInFABs();
+                        setCollapsedFilterLayout();
+                        break;
 
-        // Add the controller as a callback for when the filter changes
-        bottomSheet.setCallback(controller);
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        fadeOutFABs();
+                        break;
+
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        setExpandedFilterLayout();
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
+        });
+    }
+
+    private void setExpandedFilterLayout() {
+    }
+
+    private void setCollapsedFilterLayout() {
     }
 
     /**
@@ -115,6 +203,24 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     @Override
     public void onItemLongClick() {
         toggleDeleteMode();
+    }
+
+    private void fadeOutFABs() {
+        if (inDeleteMode) {
+            if (binding.deleteItemButton.getVisibility() == View.GONE) return;
+            binding.deleteItemButton.startAnimation(fadeOutFAB);
+        } else {
+            if (binding.addItemButton.getVisibility() == View.GONE) return;
+            binding.addItemButton.startAnimation(fadeOutFAB);
+        }
+    }
+
+    private void fadeInFABs() {
+        if (inDeleteMode) {
+            binding.deleteItemButton.startAnimation(fadeInFAB);
+        } else {
+            binding.addItemButton.startAnimation(fadeInFAB);
+        }
     }
 
     /**

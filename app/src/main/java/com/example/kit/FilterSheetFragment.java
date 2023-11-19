@@ -26,7 +26,6 @@ public class FilterSheetFragment extends BottomSheetDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         this.controller = new FilterSheetController();
         BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-        dialog.setCanceledOnTouchOutside(false);
         return dialog;
     }
 
