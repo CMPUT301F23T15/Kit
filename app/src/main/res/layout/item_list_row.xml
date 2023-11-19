@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rowConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -103,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip3"
@@ -111,7 +112,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip4"
@@ -119,7 +120,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip5"
@@ -127,7 +128,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip6"
@@ -135,7 +136,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip7"
@@ -143,7 +144,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip8"
@@ -151,7 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip9"
@@ -159,7 +160,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip10"
@@ -167,7 +168,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip11"
@@ -175,7 +176,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip12"
@@ -183,7 +184,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip13"
@@ -191,7 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip14"
@@ -199,7 +200,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip15"
@@ -207,7 +208,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip16"
@@ -215,7 +216,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip17"
@@ -223,7 +224,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip18"
@@ -231,7 +232,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip19"
@@ -239,7 +240,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tagChip20"
@@ -282,8 +283,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="left"
+        app:constraint_referenced_ids="checkBox"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:constraint_referenced_ids="checkBox"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

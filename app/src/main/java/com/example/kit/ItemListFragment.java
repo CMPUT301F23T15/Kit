@@ -210,7 +210,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
     private void fadeOutFABs() {
         if (inDeleteMode) {
-            if (binding.deleteItemButton.getAnimation() != null || binding.addItemButton.getVisibility() == View.GONE) return;
+            if (binding.deleteItemButton.getAnimation() != null || binding.deleteItemButton.getVisibility() == View.GONE) return;
             binding.deleteItemButton.startAnimation(fadeOutFAB);
         } else {
             if (binding.addItemButton.getAnimation() != null || binding.addItemButton.getVisibility() == View.GONE) return;

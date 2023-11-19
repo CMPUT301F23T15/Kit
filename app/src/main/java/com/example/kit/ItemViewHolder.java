@@ -2,9 +2,14 @@ package com.example.kit;
 
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.ChangeBounds;
+import androidx.transition.TransitionManager;
 
 
 import com.example.kit.data.Item;
@@ -22,6 +27,7 @@ import java.util.ArrayList;
  */
 public class ItemViewHolder extends RecyclerView.ViewHolder {
     private final ItemListRowBinding binding;
+    private static final int TRANSITION_TIME = 125;
 
     /**
      * Create new ViewHolder from a binding.
@@ -105,6 +111,14 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * Shows the multiselect checkbox.
      */
     public void showCheckbox() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(binding.getRoot());
+        constraintSet.connect(binding.itemCardView.getId(), ConstraintSet.END, binding.checkBox.getId(), ConstraintSet.START);
+        constraintSet.applyTo(binding.getRoot());
+
+        ChangeBounds changeBounds = new ChangeBounds();
+        changeBounds.setDuration(TRANSITION_TIME);
+        TransitionManager.beginDelayedTransition(binding.rowConstraintLayout, changeBounds);
         binding.checkBox.setVisibility(View.VISIBLE);
     }
 
@@ -112,6 +126,14 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * Hides the multiselect checkbox, also unchecks it.
      */
     public void hideCheckbox() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(binding.getRoot());
+        constraintSet.connect(binding.itemCardView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        constraintSet.applyTo(binding.getRoot());
+
+        ChangeBounds changeBounds = new ChangeBounds();
+        changeBounds.setDuration(TRANSITION_TIME);
+        TransitionManager.beginDelayedTransition(binding.rowConstraintLayout, changeBounds);
         binding.checkBox.setChecked(false);
         binding.checkBox.setVisibility(View.GONE);
     }
