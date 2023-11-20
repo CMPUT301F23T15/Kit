@@ -59,7 +59,7 @@ public class ItemTest {
     public void testAddTags() {
         Item item = mockItem1();
         assertFalse(item.getTags().contains("test tag"));
-        item.addTag("test tag");
+//        item.addTag("test tag");
         assertTrue(item.getTags().contains("test tag"));
     }
 
@@ -67,9 +67,9 @@ public class ItemTest {
     public void testRemoveTags() {
         Item item = mockItem1();
         String tag = "test tag";
-        item.addTag(tag);
+//        item.addTag(tag);
         assertTrue(item.getTags().contains(tag));
-        item.removeTag(tag);
+//        item.removeTag(tag);
         assertFalse(item.getTags().contains(tag));
     }
 

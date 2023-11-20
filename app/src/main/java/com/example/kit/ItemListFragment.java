@@ -141,6 +141,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                 itemViewHolder.hideCheckbox();
             }
         }
+
+        // Show checkboxes on recycled views if we are in delete mode
+        adapter.showCheckBoxes(inDeleteMode);
     }
 
     /**

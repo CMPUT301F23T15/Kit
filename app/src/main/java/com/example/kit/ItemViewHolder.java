@@ -30,6 +30,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public ItemViewHolder(@NonNull ItemListRowBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
+        binding.itemTagGroupRow.enableAddChip();
     }
 
     /**
@@ -44,24 +45,29 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
         binding.itemValueRow.setText(formattedValue);
         ArrayList<Tag> tags = item.getTags();
+        binding.itemTagGroupRow.clear();
+
+        for (Tag tag : tags) {
+            binding.itemTagGroupRow.addTag(tag);
+        }
 
         // Populate chips with tags
         // Leave first "+" chip blank as button to add new tag
-        int num_chips = binding.itemTagGroupRow.getChildCount();
-        for(int i = 1; i < num_chips; i++) {
-            Chip chip = (Chip) binding.itemTagGroupRow.getChildAt(i);
-
-            // Hide the unused chips
-            if(i > tags.size()) {
-                chip.setText("");
-                chip.setVisibility(View.GONE);
-                continue;
-            }
-
-            chip.setText(tags.get(i-1).getName());
-            chip.setBackgroundColor(tags.get(i-1).getColor().toArgb());
-            chip.setVisibility(View.VISIBLE);
-        }
+//        int num_chips = binding.itemTagGroupRow.getChildCount();
+//        for(int i = 1; i < num_chips; i++) {
+//            Chip chip = (Chip) binding.itemTagGroupRow.getChildAt(i);
+//
+//            // Hide the unused chips
+//            if(i > tags.size()) {
+//                chip.setText("");
+//                chip.setVisibility(View.GONE);
+//                continue;
+//            }
+//
+//            chip.setText(tags.get(i-1).getName());
+//            chip.setBackgroundColor(tags.get(i-1).getColor().toArgb());
+//            chip.setVisibility(View.VISIBLE);
+//        }
     }
 
     /**
@@ -89,8 +95,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             return true;
         });
 
-        // Click listener for the tags
-        binding.addTagChip.setOnClickListener(onAddTagClick -> {
+        // Click listener for the add tag chip
+        binding.itemTagGroupRow.getChildAt(0).setOnClickListener(onAddTagClick -> {
             ItemAdapter adapter = (ItemAdapter) getBindingAdapter();
             if (adapter == null) {
                 Log.e("RecyclerView", "Adapter invalid for click on ViewHolder: " + holder + "Position: " + position);
