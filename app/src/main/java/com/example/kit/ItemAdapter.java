@@ -17,7 +17,6 @@ import com.example.kit.databinding.ItemListRowBinding;
 public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private ItemSet itemSet;
     private SelectListener listener;
-    private boolean showCheckboxes = false;
 
     /**
      * Inflates a new ViewHolder.
@@ -46,11 +45,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.displayItem(itemSet.getItem(position));
         holder.setupListeners(listener, holder, position);
-        if (showCheckboxes) {
-            holder.showCheckbox();
-        } else {
-            holder.hideCheckbox();
-        }
     }
 
     /**
@@ -86,9 +80,5 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
      */
     public void setListener(SelectListener listener) {
         this.listener = listener;
-    }
-
-    public void showCheckBoxes(boolean show){
-        this.showCheckboxes = show;
     }
 }

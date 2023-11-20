@@ -2,7 +2,7 @@
 <resources>
     <style name="tag_chip" parent="Widget.Material3.Chip.Assist">
         <item name="chipMinHeight">@dimen/tag_height</item>
-        <item name="chipMinTouchTargetSize">0dp</item>
+        <item name="chipMinTouchTargetSize">@dimen/tag_touch_height</item>
         <item name="chipEndPadding">@dimen/tag_padding</item>
         <item name="chipStartPadding">@dimen/tag_padding</item>
     </style>
@@ -14,8 +14,6 @@
         <item name="textEndPadding">0dp</item>
         <item name="textStartPadding">0dp</item>
         <item name="chipIcon">@drawable/baseline_add_24</item>
-        <item name="chipIconVisible">true</item>
-        <item name="chipIconEnabled">true</item>
     </style>
     <style name="DisplayTextView" parent="@style/Widget.AppCompat.TextView">
         <item name="android:gravity">center_vertical</item>

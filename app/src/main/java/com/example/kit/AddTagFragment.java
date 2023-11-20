@@ -2,18 +2,22 @@ package com.example.kit;
 
 import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.AddTagToItemCommand;
+import com.example.kit.command.Command;
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.MacroCommand;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.AddTagBinding;
+import com.google.android.material.chip.Chip;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
