@@ -16,8 +16,8 @@ import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
-import com.google.android.material.chip.Chip;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -86,19 +86,28 @@ public class ItemDisplayFragment extends Fragment {
      * Loads an item's details into the UI components if editing an existing item. Retrieves the item from the fragment's arguments.
      */
     private void loadItem() {
-        // Retrieve the item from the bundle
+        // Return to previous screen if we didn't come with an item
         if (getArguments() == null) {
             Log.e("Navigation", "No arguments found for the transition to fragment.");
+            navController.popBackStack();
             return;
         }
+
         String id = getArguments().getString("id");
         this.itemID = id;
         Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(id);
+        // If the item was null, return to the previous screen
+        if (item == null) {
+            Log.e("Item Display Error", "No item found for the bundled ID");
+            navController.popBackStack();
+            return;
+        }
 
         // Use View Binding to populate UI elements with item data
         binding.itemNameDisplay.setText(item.getName());
-        binding.itemValueDisplay.setText(item.getValue());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
+        binding.itemValueDisplay.setText(formattedValue);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
         String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
         binding.itemDateDisplay.setText(formattedDate);
         binding.itemDescriptionDisplay.setText(item.getDescription());
@@ -109,9 +118,7 @@ public class ItemDisplayFragment extends Fragment {
 
         binding.itemDisplayTagGroup.removeAllViews();
         for (Tag tag : item.getTags()) {
-            Chip chip = new Chip(getContext());
-            chip.setText(tag.getName());
-            binding.itemDisplayTagGroup.addView(chip);
+            binding.itemDisplayTagGroup.addTag(tag);
         }
     }
 }

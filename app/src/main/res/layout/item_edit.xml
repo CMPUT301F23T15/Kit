@@ -150,29 +150,44 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tagDisplayLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                app:layout_constraintBottom_toBottomOf="@+id/itemDisplayTagGroup"
-                app:layout_constraintEnd_toStartOf="@+id/itemDisplayTagGroup"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_horizontal_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:hint="@string/new_tag_hint"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/itemDisplayTagGroup"
-                app:srcCompat="@drawable/baseline_label_24_grey" />
+                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout"
+                app:startIconDrawable="@drawable/baseline_label_24_grey"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu" >
+
+                <AutoCompleteTextView
+                    android:id="@+id/tagAutoCompleteField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </AutoCompleteTextView>
+
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/tagAddField"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content" />-->
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.example.kit.TagChipGroup
                 android:id="@+id/itemDisplayTagGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_horizontal_space"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tagDisplayLayout" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/itemMakeDisplayLayout"
