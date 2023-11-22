@@ -16,7 +16,7 @@ import java.util.HashMap;
  * An interface for a database of {@link Tag}s, providing storage, retrieval, and deletion
  * functionality.
  */
-public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
+public class TagDataSource extends AbstractTagDataSource {
 
     private final CollectionReference tagCollection;
     private final HashMap<String, Tag> tagCache;
@@ -41,6 +41,7 @@ public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
             }
             onDataChanged();
         });
+        cullUnusedTags();
     }
 
     /**
