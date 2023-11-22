@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.example.kit.data.Tag;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
@@ -49,8 +50,13 @@ public class TagChipGroup extends ChipGroup {
     public void addTag(Tag tag) {
         tags.add(tag);
         Chip chip = new Chip(new ContextThemeWrapper(context, R.style.tag_chip));
+        ChipDrawable drawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.tag_chip);
+        drawable.setChipBackgroundColor(ColorStateList.valueOf(tag.getColor().toArgb()));
+        chip.setChipDrawable(drawable);
+        chip.setEnsureMinTouchTargetSize(false);
         chip.setText(tag.getName());
-        chip.setChipBackgroundColor(ColorStateList.valueOf(tag.getColor().toArgb()));
+        chip.setPadding(0,0,0,0);
+        chip.setChipMinHeightResource(R.dimen.tag_height);
         addView(chip);
     }
 

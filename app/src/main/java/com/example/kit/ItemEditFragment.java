@@ -1,6 +1,8 @@
 package com.example.kit;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +98,8 @@ public class ItemEditFragment extends Fragment {
     private void loadItem() {
         // Retrieve the item from the bundle
         if (getArguments() == null) {
-            // bad stuff
+            Log.e("Navigation", "Null Arguments in the edit item fragment");
+            navController.popBackStack();
             return;
         }
         String id = getArguments().getString("id");
@@ -106,7 +109,7 @@ public class ItemEditFragment extends Fragment {
             // Use View Binding to populate UI elements with item data
             binding.itemNameDisplay.setText(item.getName());
             binding.itemValueDisplay.setText(item.getValue());
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
             String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
             binding.itemDateDisplay.setText(formattedDate);
             binding.itemDescriptionDisplay.setText(item.getDescription());
@@ -117,10 +120,7 @@ public class ItemEditFragment extends Fragment {
 
             binding.itemDisplayTagGroup.removeAllViews();
             for (Tag tag : item.getTags()) {
-                Chip chip = new Chip(getContext());
-                chip.setText(tag.getName());
-                chip.setBackgroundColor(tag.getColor().toArgb());
-                binding.itemDisplayTagGroup.addView(chip);
+                binding.itemDisplayTagGroup.addTag(tag);
             }
         }
     }

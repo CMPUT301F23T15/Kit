@@ -14,7 +14,9 @@ import com.google.android.material.chip.Chip;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * A RecyclerView ViewHolder for an {@link Item} to be displayed.
@@ -38,9 +40,9 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      */
     public void displayItem(@NonNull Item item){
         // Fill in item row values
-        DateFormat df = DateFormat.getDateTimeInstance();
+        DateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.CANADA);
         binding.itemNameRow.setText(item.getName());
-        binding.itemDateRow.setText(df.format(item.getAcquisitionDate().toDate()));
+        binding.itemDateRow.setText(dateFormat.format(item.getAcquisitionDate().toDate()));
         String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
         binding.itemValueRow.setText(formattedValue);
         ArrayList<Tag> tags = item.getTags();

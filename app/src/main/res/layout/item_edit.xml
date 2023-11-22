@@ -34,8 +34,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_launcher_foreground" />
 
-            <EditText
-                android:id="@+id/itemNameDisplay"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemNameDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -47,10 +47,19 @@
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                app:startIconDrawable="@drawable/baseline_assignment_24">
 
-            <EditText
-                android:id="@+id/itemDescriptionDisplay"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemNameDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemDescriptionDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -62,10 +71,17 @@
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemNameDisplay" />
+                app:layout_constraintTop_toBottomOf="@+id/itemNameDisplayLayout"
+                app:startIconDrawable="@drawable/baseline_short_text_24">
 
-            <EditText
-                android:id="@+id/itemCommentDisplay"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemDescriptionDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemCommentDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -77,12 +93,20 @@
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDescriptionDisplay" />
+                app:layout_constraintTop_toBottomOf="@+id/itemDescriptionDisplayLayout"
+                app:startIconDrawable="@drawable/baseline_comment_24">
 
-            <EditText
-                android:id="@+id/itemDateDisplay"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemCommentDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemDateDisplayLayout"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/content_horizontal_space"
@@ -90,13 +114,21 @@
                 android:hint="@string/item_display_date_hint"
                 android:inputType="date"
                 android:minHeight="48dp"
-                app:layout_constraintEnd_toStartOf="@+id/itemValueDisplay"
+                app:layout_constraintEnd_toStartOf="@+id/itemValueDisplayLayout"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemCommentDisplay" />
+                app:layout_constraintTop_toBottomOf="@+id/itemCommentDisplayLayout"
+                app:startIconDrawable="@drawable/baseline_calendar_month_24">
 
-            <EditText
-                android:id="@+id/itemValueDisplay"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemDateDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemValueDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -104,32 +136,46 @@
                 android:hint="@string/item_display_value_hint"
                 android:inputType="numberDecimal"
                 android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="@+id/itemDateDisplay"
+                app:layout_constraintBottom_toBottomOf="@+id/itemDateDisplayLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/itemDateDisplay"
-                app:layout_constraintTop_toTopOf="@+id/itemDateDisplay" />
+                app:layout_constraintStart_toEndOf="@+id/itemDateDisplayLayout"
+                app:layout_constraintTop_toTopOf="@+id/itemDateDisplayLayout"
+                app:startIconDrawable="@drawable/baseline_attach_money_24">
 
-            <com.google.android.material.chip.ChipGroup
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemValueDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                app:layout_constraintBottom_toBottomOf="@+id/itemDisplayTagGroup"
+                app:layout_constraintEnd_toStartOf="@+id/itemDisplayTagGroup"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/itemDisplayTagGroup"
+                app:srcCompat="@drawable/baseline_label_24_grey" />
+
+            <com.example.kit.TagChipGroup
                 android:id="@+id/itemDisplayTagGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/content_horizontal_space"
                 android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplay">
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/addTagChipDisplay"
-                    style="@style/tag_add_chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.chip.ChipGroup>
-
-            <EditText
-                android:id="@+id/itemMakeDisplay"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemMakeDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -139,13 +185,21 @@
                 android:hint="@string/item_display_make_hint"
                 android:inputType="text"
                 android:minHeight="48dp"
-                app:layout_constraintEnd_toStartOf="@+id/itemModelDisplay"
+                app:layout_constraintEnd_toStartOf="@+id/itemModelDisplayLayout"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup" />
+                app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup"
+                app:startIconDrawable="@drawable/baseline_work_outline_24">
 
-            <EditText
-                android:id="@+id/itemModelDisplay"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemMakeDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemModelDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/content_vertical_space"
@@ -156,11 +210,19 @@
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/itemMakeDisplay"
-                app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup" />
+                app:layout_constraintStart_toEndOf="@+id/itemMakeDisplayLayout"
+                app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup"
+                app:startIconDrawable="@drawable/baseline_work_24">
 
-            <EditText
-                android:id="@+id/itemSerialNumberDisplay"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemModelDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/itemSerialNumberDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -174,7 +236,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemMakeDisplay" />
+                app:layout_constraintTop_toBottomOf="@+id/itemMakeDisplayLayout"
+                app:startIconDrawable="@drawable/baseline_numbers_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/itemSerialNumberDisplay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
