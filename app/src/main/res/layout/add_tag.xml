@@ -29,19 +29,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView">
+        app:layout_constraintTop_toBottomOf="@+id/colorSelector">
 
     </com.example.kit.TagChipGroup>
 
     <EditText
-        android:id="@+id/TagName"
+        android:id="@+id/newTagName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/content_horizontal_space"
         android:layout_marginTop="@dimen/content_vertical_space"
         android:layout_marginEnd="@dimen/content_horizontal_space"
         android:ems="10"
-        android:hint="New Tag..."
+        android:hint="@string/new_tag_hint"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -52,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="@dimen/content_vertical_space"
-        android:text="Add Existing Tags"
+        android:text="@string/add_existing_tags"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -63,13 +64,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/content_horizontal_space"
         android:layout_marginTop="@dimen/content_vertical_space"
-        android:text="Add New Tag"
+        android:text="@string/add_new_tag"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tagSpinner" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/colorSelector"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/content_horizontal_space"
@@ -77,6 +78,6 @@
         android:layout_marginEnd="@dimen/content_horizontal_space"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TagName" />
+        app:layout_constraintTop_toBottomOf="@+id/newTagName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

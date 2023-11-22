@@ -2,22 +2,17 @@ package com.example.kit;
 
 import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.AddTagToItemCommand;
-import com.example.kit.command.Command;
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.MacroCommand;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.AddTagBinding;
-import com.google.android.material.chip.Chip;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -35,12 +30,10 @@ import java.util.HashSet;
 
 /**
  * Small dialog fragment that facilitates adding tags to the database and to the selected items.
- * INCOMPLETE.
  */
 public class AddTagFragment extends DialogFragment {
     private AddTagBinding binding;
     private final HashSet<String> itemIDs;
-    private final ArrayList<Tag> existingTags;
     private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
 
     /**
@@ -50,11 +43,6 @@ public class AddTagFragment extends DialogFragment {
     public AddTagFragment(HashSet<String> itemIDs) {
         this.itemIDs = itemIDs;
         tagDataSource = DataSourceManager.getInstance().getTagDataSource();
-        // Create a copy so we can remove tags from the list as they get selected.
-        existingTags = new ArrayList<>(tagDataSource.getDataSet());
-        // Add a dummy tag to the list that represents a hint for selection to prevent adding
-        // tags at undesired times
-        existingTags.add(0, new Tag("Select a Tag"));
     }
 
     /**
@@ -84,12 +72,15 @@ public class AddTagFragment extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * Initialize the New Tag field with a listener for enter clicks on the field to add the tag
+     * to the {@link TagChipGroup}.
+     */
     private void initializeNewTagField(){
-        binding.TagName.setSingleLine(true);
-        binding.TagName.setOnEditorActionListener((view, actionId, event) -> {
+        binding.newTagName.setOnEditorActionListener((view, actionId, event) -> {
             // If enter/done is pressed on the keyboard, TODO: Expand if not comprehensive
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                addChipToGroup(view.getText().toString());
+                binding.tagsToAddGroup.addTag(new Tag(view.getText().toString()));
                 view.setText("");
                 return true;
             }
@@ -97,7 +88,19 @@ public class AddTagFragment extends DialogFragment {
         });
     }
 
+    /**
+     * Initialize a spinner with the names of all Tags currently in the tag data source.
+     * After a tag is selected from the spinner it is added to the {@link TagChipGroup} then removed
+     * from the list.
+     */
     private void initializeSpinner() {
+        // Create a copy of the existing tags so we can remove tags from the list as they get selected.
+        ArrayList<Tag> existingTags = new ArrayList<>(tagDataSource.getDataSet());
+
+        // Add a dummy tag to the list that represents a hint for selection to prevent adding
+        // tags at undesired times
+        existingTags.add(0, new Tag("Select a Tag"));
+
         TagAdapter adapter = new TagAdapter(getContext(), existingTags);
         binding.tagSpinner.setAdapter(adapter);
 
@@ -120,17 +123,19 @@ public class AddTagFragment extends DialogFragment {
         });
     }
 
-
-    private void addChipToGroup(String toString) {
-        binding.tagsToAddGroup.addTag(new Tag(toString));
-    }
-
     /**
      * Callback method for when the positive button is clicked on the dialog, extracts data from
      * the view fields and checks it before adding to the data source.
      */
     private void positiveButtonClick() {
         ArrayList<Tag> tags = binding.tagsToAddGroup.getTags();
+
+        // Add whatever is typed in the tag field too
+        String newTagText = binding.newTagName.getText().toString();
+        if (!newTagText.isEmpty()) {
+            tags.add(new Tag(newTagText));
+        }
+
         MacroCommand addTagsMacro = new MacroCommand();
         MacroCommand addTagsToItemsMacro = new MacroCommand();
 
@@ -153,26 +158,8 @@ public class AddTagFragment extends DialogFragment {
     }
 
     /**
-     * Adds the new tag to the data source, and adds it to the items given in the Item IDs.
-     * @param name Name of the tag to be added.
+     * Custom Adapter for displaying Tags as options in a Spinner
      */
-    private void addTag(String name) {
-        // Build Tag, red default color until color picker is implemented.
-        Tag tag = new Tag(name, Color.valueOf(Color.RED));
-
-        // Add the tag to the database
-        AddTagCommand tagCommand = new AddTagCommand(tag);
-        CommandManager.getInstance().executeCommand(tagCommand);
-
-        // Attach the tag to the items associated with the selected Item IDs
-        MacroCommand addTagToItemMacro = new MacroCommand();
-        for (String itemID : itemIDs) {
-            addTagToItemMacro.addCommand(new AddTagToItemCommand(tag, itemID));
-        }
-
-        CommandManager.getInstance().executeCommand(addTagToItemMacro);
-    }
-
     private static class TagAdapter extends ArrayAdapter<Tag> {
         public TagAdapter(Context context, ArrayList<Tag> data) {
             super(context, androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item, data);
