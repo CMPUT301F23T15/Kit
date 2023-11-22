@@ -142,10 +142,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
     }
 
-    /**
-     * Initialize the FilterSheet, including registering the {@link ItemListController} as a
-     * callback for the {@link FilterSheetController.FilterUpdateCallback}.
-     */
     private void initializeFilterSheet() {
         filterSheetBehavior = BottomSheetBehavior.from(filterBinding.getRoot());
         filterSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -166,7 +162,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                     case BottomSheetBehavior.STATE_EXPANDED:
                         setExpandedFilterLayout();
                         break;
-
                 }
             }
 

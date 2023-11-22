@@ -89,15 +89,6 @@ public class ItemListController implements DataChangedCallback, FilterSheetContr
         callback.onItemSetValueChanged(itemSet.getItemSetValue());
     }
 
-    /**
-     * Callback method for the {@link FilterSheetController.FilterUpdateCallback} called
-     * whenever the filter from the {@link FilterSheetFragment} is changed.
-     * @param filter The new {@link Filter} to apply to the datasource
-     */
-    @Override
-    public void onFilterChangedCallback(Filter filter) {
-
-    }
 
     /**
      * Interface to register a callback when the value of the {@link ItemSet} changes.
