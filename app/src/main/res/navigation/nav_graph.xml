@@ -20,6 +20,9 @@
         <action
             android:id="@+id/newItemAction"
             app:destination="@id/itemEditFragment" />
+        <action
+            android:id="@+id/itemList_to_profilePage"
+            app:destination="@id/profilePageFragment" />
     </fragment>
 
     <fragment
@@ -44,4 +47,8 @@
             android:id="@+id/editDisplayItemAction"
             app:destination="@id/itemEditFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profilePageFragment"
+        android:name="com.example.kit.ProfilePageFragment"
+        android:label="ProfilePageFragment" />
 </navigation>

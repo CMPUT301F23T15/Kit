@@ -76,6 +76,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     public void initializeUIInteractions(){
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
         binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+        binding.profileButton.setOnClickListener(onClick ->navController.navigate((ItemListFragmentDirections.itemListToProfilePage())));
     }
 
     /**
