@@ -85,9 +85,52 @@ public class ItemEditFragment extends Fragment {
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(onClick -> {
             // Add item to the database and navigate back to the list
-            CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
-            navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
+            if(validateFields()) {
+                CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
+                navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
+            }
         });
+    }
+
+    private boolean validateFields() {
+        String name = binding.itemNameDisplay.getText().toString();
+        String value = binding.itemValueDisplay.getText().toString();
+
+        // Find date picker library to replace date validation
+        String date = binding.itemDateDisplay.getText().toString();
+
+        boolean validName = true;
+        boolean validValue = true;
+        boolean validDate = true;
+
+        binding.itemNameDisplay.setError(null);
+        binding.itemValueDisplay.setError(null);
+        binding.itemDateDisplay.setError(null);
+
+        if (name.equals("")) {
+            binding.itemNameDisplay.setError("Name is mandatory");
+            validName = false;
+        }
+        if (value.equals("")) {
+            binding.itemValueDisplay.setError("Value is mandatory");
+            validValue = false;
+        }
+        if (date.equals("")) {
+            binding.itemDateDisplay.setError("Date is mandatory");
+            validDate = false;
+        }
+
+        // Replace with date picker library
+        if(validDate) {
+            try {
+                DateFormat.getDateInstance(DateFormat.SHORT).parse(date);
+            } catch (ParseException e) {
+                binding.itemDateDisplay.setError("Invalid date format");
+                validDate = false;
+            }
+        }
+
+        return validName && validValue && validDate;
     }
 
     /**
@@ -137,13 +180,16 @@ public class ItemEditFragment extends Fragment {
         DataSource<Tag, ArrayList<Tag>> tagDataSource = DataSourceManager.getInstance().getTagDataSource();
         newItem.setName(binding.itemNameDisplay.getText().toString());
         newItem.setValue(binding.itemValueDisplay.getText().toString());
-        // Absolutely terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
+        // Slightly less terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
+
         try {
             Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
             newItem.setAcquisitionDate(new Timestamp(date));
         } catch (ParseException e) {
+            // Will never execute
             throw new RuntimeException(e);
         }
+
         newItem.setDescription(binding.itemDescriptionDisplay.getText().toString());
         newItem.setComment(binding.itemCommentDisplay.getText().toString());
         newItem.setMake(binding.itemMakeDisplay.getText().toString());
