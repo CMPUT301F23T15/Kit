@@ -41,6 +41,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Navigation", "NavHostFragment Null, this is bad.");
             throw new NullPointerException("NavHostFragment Null");
         }
-        navHostFragment.getNavController();
+        //navHostFragment.getNavController();
     }
 }

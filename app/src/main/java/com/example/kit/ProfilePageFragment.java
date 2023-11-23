@@ -1,32 +1,26 @@
 package com.example.kit;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.kit.data.FirestoreManager;
 import com.example.kit.databinding.ProfilePageBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.concurrent.Executor;
+import java.util.HashMap;
 
 public class ProfilePageFragment extends Fragment {
     private ProfilePageBinding binding;
@@ -35,18 +29,17 @@ public class ProfilePageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userAuth = FirebaseAuth.getInstance();
         navController = NavHostFragment.findNavController(this);
+        userAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = userAuth.getCurrentUser();
-        String uid = currentUser.getUid();
 
-        if(false){
+        if(currentUser != null){
+            Log.i("User Info", currentUser.getEmail() + " " + currentUser.getUid());
             navController.navigate(ProfilePageFragmentDirections.profilePageToItemList());
         }
         binding.button.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +62,7 @@ public class ProfilePageFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+
                         navController.navigate(ProfilePageFragmentDirections.profilePageToItemList());
                         Log.i("Sign In", "Signed in succesfully!");
                     }
@@ -95,15 +89,15 @@ public class ProfilePageFragment extends Fragment {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         Log.d("Create User", "createUserWithEmail:success");
+                        HashMap<String, String> userData = new HashMap<>();
+                        userData.put("Email", userAuth.getCurrentUser().getEmail());
+                        FirestoreManager.getInstance().getCollection("Users").document(userAuth.getCurrentUser().getUid()).set(userData);
                         signIn(email, password);
-                        navController.navigate(ProfilePageFragmentDirections.profilePageToItemList());
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
                         Log.w("Create User", "createUserWithEmail:failure", e);
                         switch(e.getMessage()){
                             case "Password should be at least 6 characters":
@@ -118,7 +112,6 @@ public class ProfilePageFragment extends Fragment {
                 });
 
     }
-
     private void updateUI(FirebaseUser user) {
 
     }

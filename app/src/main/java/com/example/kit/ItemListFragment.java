@@ -37,6 +37,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         navController = NavHostFragment.findNavController(this);
         // Create controller for the Item List
         controller = new ItemListController();
+
     }
 
     @Nullable

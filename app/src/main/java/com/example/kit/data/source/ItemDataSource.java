@@ -2,14 +2,20 @@ package com.example.kit.data.source;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.FirestoreManager;
 import com.example.kit.data.Tag;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.kit.data.Tag;
 import com.example.kit.data.FirestoreManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -18,15 +19,15 @@ import java.util.HashMap;
  */
 public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
 
-    private final CollectionReference tagCollection;
+    private CollectionReference tagCollection;
     private final HashMap<String, Tag> tagCache;
+    private FirebaseAuth userAuth;
 
     /**
      * Constructor that establishes connection to the {@link FirestoreManager} for the Tag Collection.
      * Creates a cache for the state of the database that is updated whenever the database changes.
      */
     public TagDataSource() {
-        tagCollection = FirestoreManager.getInstance().getCollection("Tags");
         tagCache = new HashMap<>();
         tagCollection.addSnapshotListener((tagSnapshots, error) -> {
             if (tagSnapshots == null) {
@@ -41,6 +42,10 @@ public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
             }
             onDataChanged();
         });
+    }
+
+    void setTagCollection(FirebaseAuth userAuth){
+        this.tagCollection = FirestoreManager.getInstance().getCollection("Users").document(userAuth.getCurrentUser().getUid()).collection("Items");
     }
 
     /**

@@ -17,7 +17,7 @@ public class ItemListController implements DataChangedCallback {
     private ItemAdapter adapter;
     private ItemSet itemSet;
     private ItemSetValueChangedCallback callback;
-    private final DataSourceManager dataSourceManager = DataSourceManager.getInstance();
+    private final DataSourceManager dataSourceManager;
 
     /**
      * Initializes the {@link ItemSet} and attaches the controller as a {@link DataChangedCallback}
@@ -25,6 +25,8 @@ public class ItemListController implements DataChangedCallback {
      */
     public ItemListController() {
         itemSet = new ItemSet();
+        dataSourceManager = DataSourceManager.getInstance();
+
         // Add the controller as a callback when the ItemDataSource has changes in data
         dataSourceManager.getItemDataSource().setCallback(this);
     }
