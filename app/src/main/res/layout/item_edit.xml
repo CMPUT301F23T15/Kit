@@ -19,20 +19,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/imageCarousel"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/item_display_image_size"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_top_margin"
-                android:maxWidth="@dimen/item_display_image_size"
-                android:maxHeight="@dimen/item_display_image_size"
-                android:minWidth="@dimen/item_display_image_size"
-                android:minHeight="@dimen/item_display_image_size"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_launcher_foreground" />
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/itemNameDisplayLayout"
@@ -47,7 +44,7 @@
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                app:layout_constraintTop_toBottomOf="@+id/imageCarousel"
                 app:startIconDrawable="@drawable/baseline_assignment_24">
 
                 <com.google.android.material.textfield.TextInputEditText

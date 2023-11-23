@@ -1,6 +1,5 @@
 package com.example.kit;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,15 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.AddTagCommand;
@@ -27,6 +25,9 @@ import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemEditBinding;
+import com.google.android.material.carousel.CarouselLayoutManager;
+import com.google.android.material.carousel.CarouselSnapHelper;
+import com.google.android.material.carousel.HeroCarouselStrategy;
 import com.google.firebase.Timestamp;
 
 import java.text.DateFormat;
@@ -35,6 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -43,12 +45,17 @@ import java.util.Locale;
  */
 public class ItemEditFragment extends Fragment {
 
+    private String itemID;
     private ItemEditBinding binding;
     private NavController navController;
     private DataSource<Tag, ArrayList<Tag>> tagDataSource;
-    private ArrayAdapter<String> adapter;
+
+    // Image Carousel Fields
+    private CarouselImageAdapter imageAdapter;
+
+    // Tag Dropdown Fields
+    private ArrayAdapter<String> tagNameAdapter;
     private ArrayList<String> tagNames;
-    private String itemID;
 
     /**
      * Standard fragment lifecycle, stores a reference to the NavController.
@@ -79,6 +86,7 @@ public class ItemEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemEditBinding.inflate(inflater, container, false);
         initializeConfirmButton();
+        initializeImageCarousel();
         initializeItemValueField();
         initializeTagField();
         return binding.getRoot();
@@ -102,6 +110,17 @@ public class ItemEditFragment extends Fragment {
             CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
             navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
         });
+    }
+
+    private void initializeImageCarousel() {
+        CarouselLayoutManager layoutManager
+                = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.VERTICAL);
+
+        binding.imageCarousel.setLayoutManager(layoutManager);
+        binding.imageCarousel.setNestedScrollingEnabled(false);
+        CarouselSnapHelper snapHelper = new CarouselSnapHelper();
+        snapHelper.attachToRecyclerView(binding.imageCarousel);
+        imageAdapter = new CarouselImageAdapter();
     }
 
     private void initializeItemValueField() {
@@ -146,13 +165,13 @@ public class ItemEditFragment extends Fragment {
         for (Tag tag : dbTags) {
             tagNames.add(tag.getName());
         }
-        adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
-        binding.tagAutoCompleteField.setAdapter(adapter);
+        tagNameAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
+        binding.tagAutoCompleteField.setAdapter(tagNameAdapter);
 
         binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
             binding.itemDisplayTagGroup.addTag(addTag);
-            adapter.notifyDataSetChanged();
+            tagNameAdapter.notifyDataSetChanged();
             // Clear the field
             binding.tagAutoCompleteField.setText("", false);
         });
@@ -173,7 +192,7 @@ public class ItemEditFragment extends Fragment {
                 } else {
                     // Remove the existing tag from the options in the dropdown
                     tagNames.remove(newTag.getName());
-                    adapter.notifyDataSetChanged();
+                    tagNameAdapter.notifyDataSetChanged();
                 }
 
                 binding.itemDisplayTagGroup.addTag(newTag);
@@ -184,6 +203,14 @@ public class ItemEditFragment extends Fragment {
             }
             return false;
         });
+    }
+
+
+    private void updateCarousel() {
+        List<CarouselImage> images = new ArrayList<>();
+        images.add(new CarouselImage(R.drawable.baseline_add_24));
+        images.add(new CarouselImage(R.drawable.baseline_attach_money_24));
+        imageAdapter.submitList(images);
     }
 
     /**
@@ -211,6 +238,9 @@ public class ItemEditFragment extends Fragment {
         }
 
         this.itemID = item.findID();
+
+        updateCarousel();
+
         // Use View Binding to populate UI elements with item data
         binding.itemNameDisplay.setText(item.getName());
 
