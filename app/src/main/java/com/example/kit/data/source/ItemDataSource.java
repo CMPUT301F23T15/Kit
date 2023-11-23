@@ -58,7 +58,7 @@ public class ItemDataSource extends AbstractItemDataSource {
         if (newItem.findID() == null || newItem.findID().isEmpty()) {
             itemCollection.add(packItem(newItem))
                     // Log if fails for some reason
-                    .addOnFailureListener(exception -> Log.w("Database", "Failed to add new item."));
+                    .addOnFailureListener(exception -> Log.w("Database", "Failed to add new item: " + exception));
         } else {
             // Item already has ID, update the existing document
             itemCollection.document(newItem.findID()).set(packItem(newItem))

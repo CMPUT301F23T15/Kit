@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/itemListFragment">
+    app:startDestination="@id/profilePageFragment">
 
     <fragment
         android:id="@+id/itemListFragment"
@@ -50,5 +50,9 @@
     <fragment
         android:id="@+id/profilePageFragment"
         android:name="com.example.kit.ProfilePageFragment"
-        android:label="ProfilePageFragment" />
+        android:label="ProfilePageFragment" >
+        <action
+            android:id="@+id/profilePage_to_itemList"
+            app:destination="@id/itemListFragment" />
+    </fragment>
 </navigation>
