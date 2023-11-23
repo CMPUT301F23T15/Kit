@@ -151,45 +151,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tagDisplayLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/content_horizontal_space"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:hint="@string/new_tag_hint"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout"
-                app:startIconDrawable="@drawable/baseline_label_24_grey"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu" >
-
-                <AutoCompleteTextView
-                    android:id="@+id/tagAutoCompleteField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </AutoCompleteTextView>
-
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/tagAddField"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content" />-->
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.example.kit.TagChipGroup
-                android:id="@+id/itemDisplayTagGroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/content_vertical_space"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tagDisplayLayout" />
-
-            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/itemMakeDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -203,7 +164,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/itemModelDisplayLayout"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup"
+                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout"
                 app:startIconDrawable="@drawable/baseline_work_outline_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -217,16 +178,16 @@
                 android:id="@+id/itemModelDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
                 android:hint="@string/item_display_model_hint"
                 android:inputType="text"
                 android:minHeight="48dp"
+                app:layout_constraintBottom_toBottomOf="@+id/itemMakeDisplayLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/itemMakeDisplayLayout"
-                app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup"
+                app:layout_constraintTop_toTopOf="@+id/itemMakeDisplayLayout"
                 app:startIconDrawable="@drawable/baseline_work_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -243,12 +204,10 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="96dp"
                 android:ems="10"
                 android:hint="@string/item_display_serial_number_hint"
                 android:inputType="text"
                 android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/itemMakeDisplayLayout"
@@ -260,6 +219,43 @@
                     android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tagDisplayLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:hint="@string/new_tag_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemSerialNumberDisplayLayout"
+                app:startIconDrawable="@drawable/baseline_label_24_grey">
+
+                <AutoCompleteTextView
+                    android:id="@+id/tagAutoCompleteField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true">
+
+                </AutoCompleteTextView>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.example.kit.TagChipGroup
+                android:id="@+id/itemDisplayTagGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="64dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tagDisplayLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

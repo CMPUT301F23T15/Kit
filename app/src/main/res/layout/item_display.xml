@@ -156,30 +156,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                app:layout_constraintBottom_toBottomOf="@+id/itemDisplayTagGroup"
-                app:layout_constraintEnd_toStartOf="@+id/itemDisplayTagGroup"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/itemDisplayTagGroup"
-                app:srcCompat="@drawable/baseline_label_24_grey" />
-
-            <com.example.kit.TagChipGroup
-                android:id="@+id/itemDisplayTagGroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_horizontal_space"
-                android:layout_marginTop="@dimen/content_vertical_space"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/itemMakeDisplayLayout"
                 android:layout_width="0dp"
@@ -194,7 +170,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/itemModelDisplayLayout"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup"
+                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout"
                 app:startIconDrawable="@drawable/baseline_work_outline_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -218,7 +194,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/itemMakeDisplayLayout"
-                app:layout_constraintTop_toBottomOf="@+id/itemDisplayTagGroup"
+                app:layout_constraintTop_toBottomOf="@+id/itemValueDisplayLayout"
                 app:startIconDrawable="@drawable/baseline_work_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -236,12 +212,10 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="96dp"
                 android:ems="10"
                 android:hint="@string/item_display_serial_number_hint"
                 android:inputType="text"
                 android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/itemMakeDisplayLayout"
@@ -254,6 +228,32 @@
                     android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="14dp"
+                app:layout_constraintEnd_toStartOf="@+id/itemDisplayTagGroup"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemSerialNumberDisplayLayout"
+                app:srcCompat="@drawable/baseline_label_24_grey" />
+
+            <com.example.kit.TagChipGroup
+                android:id="@+id/itemDisplayTagGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="64dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/itemSerialNumberDisplayLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -271,13 +271,14 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton2"
+        style="?attr/floatingActionButtonSmallStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/content_vertical_space"
         android:clickable="true"
         android:src="@drawable/baseline_edit_24"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/floatingActionButton"
+        app:layout_constraintStart_toStartOf="@+id/floatingActionButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -105,7 +105,9 @@ public class ItemDisplayFragment extends Fragment {
 
         // Use View Binding to populate UI elements with item data
         binding.itemNameDisplay.setText(item.getName());
-        String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
+        // Format value as a number, but remove the $ symbol because the new text views have icons
+        String formattedValue =
+                NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal()).substring(1);
         binding.itemValueDisplay.setText(formattedValue);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
         String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
