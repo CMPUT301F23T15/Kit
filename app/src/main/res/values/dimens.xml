@@ -11,5 +11,6 @@
     <dimen name="item_display_image_size">256dp</dimen>
     <dimen name="item_thumbnail_size">96dp</dimen>
     <dimen name="tag_height">20dp</dimen>
+    <dimen name="tag_touch_height">30dp</dimen>
     <dimen name="tag_padding">4dp</dimen>
 </resources>

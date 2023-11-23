@@ -8,55 +8,46 @@ import java.util.ArrayList;
  * of the items in the set.
  */
 public class ItemSet {
-    private ArrayList<Item> items;
+    private final ArrayList<Item> items;
 
+    /**
+     * Basic constructor, initializes an empty set of Items
+     */
     public ItemSet() {
-        items = new ArrayList<Item>();
+        items = new ArrayList<>();
     }
 
     /**
-     * Returns the {@link Item}s within the ItemSet.
-     * @return
-     *  Returns the Items within the ItemSet as an ArrayList.
+     * Gets an {@link Item} at a given position in the ItemSet
+     * @param position Position of the item.
+     * @return {@link Item} at the given position.
      */
-    public ArrayList<Item> getItems() {
-        return items;
-    }
-
-    /**
-     * Returns the number of {@link Item}s in the ItemSet
-     * @return
-     *  The number of items in the set
-     */
-    public int getItemsCount() {
-        return items.size();
-    }
-
-
-    public Item getItem(int position) {return items.get(position); }
-
-    /**
-     * Calculate the total value of the {@link Item}s within this ItemSet.
-     * @return
-     *  Returns a BigDecimal value of the items within the ItemSet.
-     */
-    public BigDecimal getItemSetValue() {
-        BigDecimal totalValue = new BigDecimal(0);
-        for (Item item : items) {
-            totalValue = totalValue.add(item.valueToBigDecimal());
-        }
-        return totalValue;
+    public Item getItem(int position) {
+        return items.get(position);
     }
 
     /**
      * Add a {@link Item} to the ItemSet via an item and the ID
-     * @param item
-     * @param id
-     *  The Item to be added
+     * @param item The Item to be added
      */
-    public void addItem(Item item, String id){
-        item.attachID(id);
+    public void addItem(Item item){
         items.add(item);
+    }
+
+    /**
+     * Removes an {@link Item} from the ItemSet
+     * @param item {@link Item} to removed
+     */
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    /**
+     * Returns the number of {@link Item}s in the ItemSet
+     * @return The number of items in the set
+     */
+    public int getItemCount() {
+        return items.size();
     }
 
     /**
@@ -67,10 +58,14 @@ public class ItemSet {
     }
 
     /**
-     * Removes item from list
-     * @param item
+     * Calculate the total value of the {@link Item}s within this ItemSet.
+     * @return Returns a BigDecimal value of the items within the ItemSet.
      */
-    public void removeItem(Item item){
-        items.remove(item);
+    public BigDecimal getItemSetValue() {
+        BigDecimal totalValue = new BigDecimal(0);
+        for (Item item : items) {
+            totalValue = totalValue.add(item.valueToBigDecimal());
+        }
+        return totalValue;
     }
 }

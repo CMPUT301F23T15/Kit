@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * Main activity for the app, contains a NavHostFragment to display the various fragments of the app
@@ -15,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
      * @param savedInstanceState If the activity is being re-initialized after
      *     previously being shut down then this Bundle contains the data it most
      *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
-     *
+     * @throws NullPointerException
+     *  If NavHostFragment is null, which is almost should never be.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +25,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         NavHostFragment navHostFragment = (NavHostFragment)
                 getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_container);
-        assert navHostFragment != null;
+        if (navHostFragment == null) {
+            Log.e("Navigation", "NavHostFragment Null, this is bad.");
+            throw new NullPointerException("NavHostFragment Null");
+        }
         navHostFragment.getNavController();
     }
 }
