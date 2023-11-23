@@ -54,10 +54,13 @@
                 app:layout_constraintStart_toEndOf="@+id/itemThumbnail_row"
                 app:layout_constraintTop_toBottomOf="@+id/itemName_row" />
 
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollView2"
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/itemTagGroup_row"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:chipSpacingHorizontal="4dp"
+                app:chipSpacingVertical="0dp"
                 android:layout_marginStart="@dimen/item_list_content_horizontal_space"
                 android:layout_marginTop="@dimen/item_list_content_vertical_space"
                 android:layout_marginEnd="@dimen/item_list_content_horizontal_space"
@@ -65,187 +68,175 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemThumbnail_row">
+                app:layout_constraintTop_toBottomOf="@+id/itemThumbnail_row" >
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/itemTagGroup_row"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/addTagChip"
+                    style="@style/tag_add_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:chipSpacingHorizontal="4dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/itemThumbnail_row"
-                    app:layout_constraintTop_toBottomOf="@+id/itemDate_row"
-                    app:singleLine="true">
+                    app:chipMinHeight="20dp" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/addTagChip"
-                        style="@style/tag_add_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:chipMinHeight="20dp" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip1"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip1"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip2"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip2"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip3"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip3"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip4"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip4"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip5"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip5"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip6"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip6"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip7"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip7"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip8"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip8"
-                        style="@style/tag_add_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip9"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip9"
-                        style="@style/tag_add_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip10"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip10"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip11"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip11"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip12"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip12"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip13"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip13"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip14"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip14"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip15"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip15"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip16"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip16"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip17"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip17"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip18"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip18"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip19"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip19"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/tagChip20"
+                    style="@style/tag_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tagChip20"
-                        style="@style/tag_chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:visibility="gone" />
-
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
+            </com.google.android.material.chip.ChipGroup>
 
             <TextView
                 android:id="@+id/itemValue_row"

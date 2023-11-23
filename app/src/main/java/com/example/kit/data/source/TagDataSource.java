@@ -41,7 +41,6 @@ public class TagDataSource extends AbstractTagDataSource {
             }
             onDataChanged();
         });
-        cullUnusedTags();
     }
 
     /**

@@ -49,6 +49,7 @@ public class DataSourceManager {
 
         itemDataSource.setTagDataSource(tagDataSource);
         tagDataSource.setItemDataSource(itemDataSource);
+        tagDataSource.cullUnusedTags();
     }
 
     /**
