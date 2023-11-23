@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.kit.databinding.ItemListBinding;
 import com.example.kit.databinding.ProfilePageBinding;
 
 public class ProfilePageFragment extends Fragment {
