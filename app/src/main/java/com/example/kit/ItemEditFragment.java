@@ -97,6 +97,9 @@ public class ItemEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets a click and focus listener for the item date display to open a date picker when it's clicked
+     */
     private void initializeDateField() {
         binding.itemDateDisplay.setInputType(InputType.TYPE_NULL);
 
@@ -117,6 +120,10 @@ public class ItemEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Validates the mandatory fields for an item prior to creation or update
+     * @return True, if all of the fields are valid, false otherwise
+     */
     private boolean validateFields() {
         String name = binding.itemNameDisplay.getText().toString();
         String value = binding.itemValueDisplay.getText().toString();
@@ -147,10 +154,14 @@ public class ItemEditFragment extends Fragment {
         return validName && validValue && validDate;
     }
 
+    /**
+     * Opens a date picker, when the item date field is clicked, and sets the date to what the user selects
+     */
     private void openDatePicker() {
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
+
         DatePickerDialog dialog = new DatePickerDialog(this.getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
