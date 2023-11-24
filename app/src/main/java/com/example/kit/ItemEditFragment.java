@@ -199,21 +199,13 @@ public class ItemEditFragment extends Fragment {
     private void initializeDateField() {
         binding.itemDateDisplay.setInputType(InputType.TYPE_NULL);
 
-        binding.itemDateDisplay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
-                    openDatePicker();
-                }
-            }
-        });
-
-        binding.itemDateDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        binding.itemDateDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if(hasFocus) {
                 openDatePicker();
             }
         });
+
+        binding.itemDateDisplay.setOnClickListener(view -> openDatePicker());
     }
 
     /**
