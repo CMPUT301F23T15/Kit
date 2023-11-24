@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.View;
 
@@ -38,13 +39,26 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * Displays an {@link Item} within the ViewHolder, binding the data.
      * @param item The {@link Item} to be displayed
      */
+    @SuppressLint("SetTextI18n")
     public void displayItem(@NonNull Item item){
-        // Fill in item row values
+        // If the item has no name for some reason, display an em
+        if (item.getName() == null) {
+            binding.itemNameRow.setText("ERROR: ITEM MISSING NAME");
+        } else {
+            binding.itemNameRow.setText(item.getName());
+        }
+
+        // Ensure the date exists before trying to display it
         DateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.CANADA);
-        binding.itemNameRow.setText(item.getName());
-        binding.itemDateRow.setText(dateFormat.format(item.getAcquisitionDate().toDate()));
-        String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
-        binding.itemValueRow.setText(formattedValue);
+        if (item.getAcquisitionDate() != null) {
+            binding.itemDateRow.setText(dateFormat.format(item.getAcquisitionDate().toDate()));
+        }
+
+        // Ensure the value exists before trying to display it
+        if (item.getValue() != null) {
+            String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
+            binding.itemValueRow.setText(formattedValue);
+        }
         ArrayList<Tag> tags = item.getTags();
 
         // Populate chips with tags

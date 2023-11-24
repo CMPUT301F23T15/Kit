@@ -27,6 +27,9 @@ import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemEditBinding;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.Timestamp;
 
 import java.text.DateFormat;
@@ -43,13 +46,13 @@ import java.util.Locale;
  * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
  */
 public class ItemEditFragment extends Fragment {
-
     private ItemEditBinding binding;
     private NavController navController;
     private DataSource<Tag, ArrayList<Tag>> tagDataSource;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> tagNames;
     private String itemID;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
 
     /**
      * Standard fragment lifecycle, stores a reference to the NavController.
@@ -218,29 +221,44 @@ public class ItemEditFragment extends Fragment {
      * @return True, if all of the fields are valid, false otherwise
      */
     private boolean validateFields() {
-        String name = binding.itemNameDisplay.getText().toString();
-        String value = binding.itemValueDisplay.getText().toString();
-        String date = binding.itemDateDisplay.getText().toString();
+        String name, value, date;
+        if (binding.itemNameDisplay.getText() == null) {
+            name = "";
+        } else {
+            name = binding.itemNameDisplay.getText().toString();
+        }
+
+        if (binding.itemDateDisplay.getText() == null) {
+            date = "";
+        } else {
+            date = binding.itemDateDisplay.getText().toString();
+        }
+
+        if (binding.itemValueDisplay.getText() == null) {
+            value = "";
+        } else {
+            value = binding.itemValueDisplay.getText().toString();
+        }
 
         boolean validName = true;
         boolean validValue = true;
         boolean validDate = true;
 
-        binding.itemNameDisplay.setError(null);
-        binding.itemValueDisplay.setError(null);
-        binding.itemDateDisplay.setError(null);
+        binding.itemNameDisplayLayout.setError(null);
+        binding.itemValueDisplayLayout.setError(null);
+        binding.itemDateDisplayLayout.setError(null);
 
         // Test empty values
         if (name.equals("")) {
-            binding.itemNameDisplay.setError("Name is required");
+            binding.itemNameDisplayLayout.setError("Name is required");
             validName = false;
         }
         if (value.equals("")) {
-            binding.itemValueDisplay.setError("Value is required");
+            binding.itemValueDisplayLayout.setError("Value is required");
             validValue = false;
         }
         if (date.equals("")) {
-            binding.itemDateDisplay.setError("Date is required");
+            binding.itemDateDisplayLayout.setError("Date is required");
             validDate = false;
         }
 
@@ -249,21 +267,22 @@ public class ItemEditFragment extends Fragment {
 
     /**
      * Opens a date picker, when the item date field is clicked, and sets the date to what the user selects
+     * Only allows dates to be selected from before the present time.
      */
     private void openDatePicker() {
-        Date date = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
+        CalendarConstraints.Builder constraintBuilder = new CalendarConstraints.Builder();
+        constraintBuilder.setValidator(DateValidatorPointBackward.now());
 
-        DatePickerDialog dialog = new DatePickerDialog(this.getContext(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String date = month + "/" + dayOfMonth + "/" + year;
-                binding.itemDateDisplay.setText(date);
-            }
-        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Acquisition Date")
+                .setCalendarConstraints(constraintBuilder.build())
+                .build();
 
-        dialog.show();
+        datePicker.addOnPositiveButtonClickListener(dateSelectionMillis -> {
+            binding.itemDateDisplay.setText(dateFormat.format(new Date(dateSelectionMillis)));
+        });
+
+        datePicker.show(getParentFragmentManager(), "Date Picker");
     }
 
     /**
@@ -297,7 +316,6 @@ public class ItemEditFragment extends Fragment {
         // Value should get formatted appropriately by the text changed listener
         binding.itemValueDisplay.setText(item.getValue());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
         String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
         binding.itemDateDisplay.setText(formattedDate);
 
@@ -334,8 +352,8 @@ public class ItemEditFragment extends Fragment {
 
         // Value
         if (binding.itemValueDisplay.getText() != null) {
-            String replaceable = String.format("[%s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
-            String cleanString = binding.itemValueDisplay.getText().toString().replaceAll(replaceable, "");
+            // Remove any commas, periods, and whitespace
+            String cleanString = binding.itemValueDisplay.getText().toString().replaceAll("[,.\\s]", "");
             newItem.setValue(cleanString);
         } else {
             newItem.setValue("0");
@@ -346,7 +364,9 @@ public class ItemEditFragment extends Fragment {
             Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
             newItem.setAcquisitionDate(new Timestamp(date));
         } catch (ParseException e) {
-            // Will never execute
+            Log.e("Item Edit Fragment", "Date parsing error. Something went very wrong to get here");
+        } catch (NullPointerException e) {
+            Log.e("Item Edit Fragment", "Date field value was null, somehow.");
         }
 
         // Description
