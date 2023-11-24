@@ -2,10 +2,6 @@ package com.example.kit.data.source;
 
 import android.util.Log;
 
-import com.example.kit.data.Tag;
-
-import java.util.ArrayList;
-
 import io.grpc.android.BuildConfig;
 
 /**
@@ -15,7 +11,7 @@ import io.grpc.android.BuildConfig;
 public class DataSourceManager {
 
     private final AbstractItemDataSource itemDataSource;
-    private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
+    private final AbstractTagDataSource tagDataSource;
 
     /**
      * Accessor for the ItemDataSource based on the current environment.
@@ -29,7 +25,7 @@ public class DataSourceManager {
      * Accessor for the TagDataSource based on the current environment.
      * @return Reference to the {@link DataSource} for Tags
      */
-    public DataSource<Tag, ArrayList<Tag>> getTagDataSource() {
+    public AbstractTagDataSource getTagDataSource() {
         return tagDataSource;
     }
 
@@ -52,6 +48,8 @@ public class DataSourceManager {
         }
 
         itemDataSource.setTagDataSource(tagDataSource);
+        tagDataSource.setItemDataSource(itemDataSource);
+        tagDataSource.cullUnusedTags();
     }
 
     /**
