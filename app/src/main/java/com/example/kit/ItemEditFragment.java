@@ -1,9 +1,12 @@
 package com.example.kit;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +29,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -67,6 +71,7 @@ public class ItemEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemEditBinding.inflate(inflater, container, false);
         initializeConfirmButton();
+        initializeDateField();
         return binding.getRoot();
     }
 
@@ -85,9 +90,87 @@ public class ItemEditFragment extends Fragment {
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(onClick -> {
             // Add item to the database and navigate back to the list
-            CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
-            navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
+            if(validateFields()) {
+                CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
+                navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
+            }
         });
+    }
+
+    /**
+     * Sets a click and focus listener for the item date display to open a date picker when it's clicked
+     */
+    private void initializeDateField() {
+        binding.itemDateDisplay.setInputType(InputType.TYPE_NULL);
+
+        binding.itemDateDisplay.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) {
+                    openDatePicker();
+                }
+            }
+        });
+
+        binding.itemDateDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDatePicker();
+            }
+        });
+    }
+
+    /**
+     * Validates the mandatory fields for an item prior to creation or update
+     * @return True, if all of the fields are valid, false otherwise
+     */
+    private boolean validateFields() {
+        String name = binding.itemNameDisplay.getText().toString();
+        String value = binding.itemValueDisplay.getText().toString();
+        String date = binding.itemDateDisplay.getText().toString();
+
+        boolean validName = true;
+        boolean validValue = true;
+        boolean validDate = true;
+
+        binding.itemNameDisplay.setError(null);
+        binding.itemValueDisplay.setError(null);
+        binding.itemDateDisplay.setError(null);
+
+        // Test empty values
+        if (name.equals("")) {
+            binding.itemNameDisplay.setError("Name is required");
+            validName = false;
+        }
+        if (value.equals("")) {
+            binding.itemValueDisplay.setError("Value is required");
+            validValue = false;
+        }
+        if (date.equals("")) {
+            binding.itemDateDisplay.setError("Date is required");
+            validDate = false;
+        }
+
+        return validName && validValue && validDate;
+    }
+
+    /**
+     * Opens a date picker, when the item date field is clicked, and sets the date to what the user selects
+     */
+    private void openDatePicker() {
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        DatePickerDialog dialog = new DatePickerDialog(this.getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                String date = month + "/" + dayOfMonth + "/" + year;
+                binding.itemDateDisplay.setText(date);
+            }
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+
+        dialog.show();
     }
 
     /**
@@ -137,13 +220,14 @@ public class ItemEditFragment extends Fragment {
         DataSource<Tag, ArrayList<Tag>> tagDataSource = DataSourceManager.getInstance().getTagDataSource();
         newItem.setName(binding.itemNameDisplay.getText().toString());
         newItem.setValue(binding.itemValueDisplay.getText().toString());
-        // Absolutely terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
+
         try {
             Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
             newItem.setAcquisitionDate(new Timestamp(date));
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            // Will never execute
         }
+
         newItem.setDescription(binding.itemDescriptionDisplay.getText().toString());
         newItem.setComment(binding.itemCommentDisplay.getText().toString());
         newItem.setMake(binding.itemMakeDisplay.getText().toString());
