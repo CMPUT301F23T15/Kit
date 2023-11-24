@@ -71,6 +71,10 @@ public class AddTagFragment extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * Initialize an autocomplete field that is filled with the existing tags in the database, but
+     * also facilitates adding a new tag to both the database and the items.
+     */
     private void initializeTagField() {
         ArrayList<String> tagNames = new ArrayList<>();
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();
