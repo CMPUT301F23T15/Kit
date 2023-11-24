@@ -14,7 +14,7 @@ import java.util.HashSet;
 /**
  * Controller that handles data management and manipulation for a {@link ItemListFragment}.
  */
-public class ItemListController implements DataChangedCallback, FilterSheetController.FilterUpdateCallback {
+public class ItemListController implements DataChangedCallback {
     private ItemAdapter adapter;
     private ItemSet itemSet;
     private ItemSetValueChangedCallback callback;
@@ -46,6 +46,10 @@ public class ItemListController implements DataChangedCallback, FilterSheetContr
         adapter.setItemSet(itemSet);
         // TODO: Find performant way to use more specific data-changed notifiers.
         adapter.notifyDataSetChanged();
+    }
+
+    public void updateDataFilter(Filter filter) {
+
     }
 
     /**
@@ -88,7 +92,6 @@ public class ItemListController implements DataChangedCallback, FilterSheetContr
         // Update the Total Valuation in the fragment
         callback.onItemSetValueChanged(itemSet.getItemSetValue());
     }
-
 
     /**
      * Interface to register a callback when the value of the {@link ItemSet} changes.

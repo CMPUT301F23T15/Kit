@@ -2,6 +2,8 @@ package com.example.kit;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +19,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.kit.data.Filter;
 import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -40,7 +45,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
     // Filter Sheet Fields
     private FilterSheetBinding filterBinding;
-    private BottomSheetBehavior<ConstraintLayout> filterSheetBehavior;
     private final AlphaAnimation fadeInFAB;
     private final AlphaAnimation fadeOutFAB;
 
@@ -49,9 +53,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         fadeOutFAB.setDuration(100);
         fadeOutFAB.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -63,18 +65,14 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
 
         fadeInFAB = new AlphaAnimation(0.0f, 1.0f);
         fadeInFAB.setDuration(100);
         fadeInFAB.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -86,9 +84,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
     }
 
@@ -143,7 +139,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     private void initializeFilterSheet() {
-        filterSheetBehavior = BottomSheetBehavior.from(filterBinding.getRoot());
+        BottomSheetBehavior<ConstraintLayout> filterSheetBehavior = BottomSheetBehavior.from(filterBinding.getRoot());
         filterSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @SuppressLint("SwitchIntDef")
             @Override
@@ -168,6 +164,18 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
+
+        filterBinding.searchBar.addTextChangedListener(new FilterFieldChangedListener());
+        filterBinding.dateStart.addTextChangedListener(new FilterFieldChangedListener());
+        filterBinding.dateEnd.addTextChangedListener(new FilterFieldChangedListener());
+        filterBinding.valueLow.addTextChangedListener(new FilterFieldChangedListener());
+        filterBinding.valueHigh.addTextChangedListener(new FilterFieldChangedListener());
+    }
+
+    private void updateFilter() {
+        Filter filter = new Filter();
+
+        controller.updateDataFilter(filter);
     }
 
     private void setExpandedFilterLayout() {
@@ -318,5 +326,19 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     public void onItemSetValueChanged(BigDecimal value) {
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
+    }
+
+    private class FilterFieldChangedListener implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            updateFilter();
+        }
     }
 }

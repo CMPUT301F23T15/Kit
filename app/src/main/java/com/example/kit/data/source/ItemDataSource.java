@@ -21,10 +21,9 @@ import java.util.List;
  * An interface for a database of {@link Item}s, providing storage, retrieval, and deletion
  * functionality.
  */
-public class ItemDataSource extends AbstractItemDataSource implements FilterableDataSource<Item, ItemSet> {
+public class ItemDataSource extends AbstractItemDataSource {
 
     private final CollectionReference itemCollection;
-    private final HashMap<String, Item> itemCache;
 
     /**
      * Constructor that establishes connection to the {@link FirestoreManager} for the Tag Collection.
@@ -100,11 +99,6 @@ public class ItemDataSource extends AbstractItemDataSource implements Filterable
             itemSet.addItem(item);
         }
         return itemSet;
-    }
-
-    @Override
-    public ItemSet getFilteredDataSet(Filter filter) {
-        return null;
     }
 
     /**
