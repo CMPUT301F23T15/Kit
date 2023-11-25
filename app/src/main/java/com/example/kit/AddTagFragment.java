@@ -11,6 +11,7 @@ import com.example.kit.databinding.AddTagBinding;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,6 +61,7 @@ public class AddTagFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Inflate binding and set view of dialog to the root of binding
         binding = AddTagBinding.inflate(getLayoutInflater());
+        initializeColorPalette();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(binding.getRoot());
 
@@ -121,6 +126,24 @@ public class AddTagFragment extends DialogFragment {
         });
     }
 
+    private void initializeColorPalette() {
+        int numCols = 5; // ?
+        ColorSplotchAdapter adapter = new ColorSplotchAdapter(requireContext());
+        binding.colorPalette.setAdapter(adapter);
+        binding.colorPalette.setHasFixedSize(true);
+        binding.colorPalette.setLayoutManager(new GridLayoutManager(requireContext(), numCols) {
+            @Override
+            public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+                lp.height = getWidth() / getSpanCount();
+                lp.width = getWidth() / getSpanCount();
+
+                return true;
+            }
+        });
+
+        binding.colorPalette.addItemDecoration(new GridSpacingItemDecoration(numCols, 50, true));
+    }
+
     /**
      * Callback method for when the positive button is clicked on the dialog, extracts data from
      * the view fields and checks it before adding to the data source.
@@ -153,5 +176,40 @@ public class AddTagFragment extends DialogFragment {
 
         CommandManager.getInstance().executeCommand(addTagsMacro);
         CommandManager.getInstance().executeCommand(addTagsToItemsMacro);
+    }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
     }
 }

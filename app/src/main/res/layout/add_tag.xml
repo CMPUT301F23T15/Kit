@@ -43,12 +43,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/colorSelector">
+        app:layout_constraintTop_toBottomOf="@+id/colorPalette">
 
     </com.example.kit.TagChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/colorSelector"
+        android:id="@+id/colorPalette"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/content_horizontal_space"
@@ -56,6 +56,8 @@
         android:layout_marginEnd="@dimen/content_horizontal_space"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tagFieldLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tagFieldLayout"
+        tools:itemCount="5"
+        tools:listitem="@layout/color_splotch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
