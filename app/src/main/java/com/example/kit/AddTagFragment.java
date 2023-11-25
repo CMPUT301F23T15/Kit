@@ -178,31 +178,13 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
     }
 
     private void showColorPalette(boolean show) {
-        ChangeBounds changeBounds = new ChangeBounds();
-        changeBounds.setDuration(50);
-        TransitionManager.beginDelayedTransition(binding.getRoot(), changeBounds);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(binding.getRoot());
-
         if (show){
-            // Constrain the Tag Group to the bottom of the Color Palette with vertical space margin
-            constraintSet.connect(binding.tagsToAddGroup.getId(), ConstraintSet.TOP,
-                    binding.colorPalette.getId(), ConstraintSet.BOTTOM,
-                    R.dimen.content_vertical_space);
-
             binding.colorPalette.setVisibility(View.VISIBLE);
         }
         else {
-            // Constrain the Tag Group to the bottom of the Tag Field with vertical space margin
-            constraintSet.connect(binding.tagsToAddGroup.getId(), ConstraintSet.TOP,
-                    binding.tagFieldLayout.getId(), ConstraintSet.BOTTOM,
-                    R.dimen.content_vertical_space);
-
             binding.colorPalette.setVisibility(View.GONE);
         }
 
-        // Apply new constraints
-        constraintSet.applyTo(binding.getRoot());
     }
 
     @Override
