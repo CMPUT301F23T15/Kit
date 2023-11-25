@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.ItemListRowBinding;
-import com.google.android.material.chip.Chip;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -61,22 +60,10 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         }
         ArrayList<Tag> tags = item.getTags();
 
-        // Populate chips with tags
-        // Leave first "+" chip blank as button to add new tag
-        int num_chips = binding.itemTagGroupRow.getChildCount();
-        for(int i = 1; i < num_chips; i++) {
-            Chip chip = (Chip) binding.itemTagGroupRow.getChildAt(i);
-
-            // Hide the unused chips
-            if(i > tags.size()) {
-                chip.setText("");
-                chip.setVisibility(View.GONE);
-                continue;
-            }
-
-            chip.setText(tags.get(i-1).getName());
-            chip.setBackgroundColor(tags.get(i-1).getColor().toArgb());
-            chip.setVisibility(View.VISIBLE);
+        binding.itemTagGroupRow.enableAddChip(true);
+        binding.itemTagGroupRow.clearTags();
+        for (Tag tag : tags) {
+            binding.itemTagGroupRow.addTag(tag);
         }
     }
 
@@ -87,7 +74,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * @param holder The holder itself
      * @param position The position of the holder within the adapter.
      */
-    public void setupListeners(SelectListener listener, ItemViewHolder holder, int position){
+    public void setupListeners(SelectListener listener, ItemViewHolder holder, int position) {
         // Click listener for the entire item
         binding.itemCardView.setOnClickListener(onClick -> {
             ItemAdapter adapter = (ItemAdapter) getBindingAdapter();
@@ -105,14 +92,13 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             return true;
         });
 
-        // Click listener for the tags
-        binding.addTagChip.setOnClickListener(onAddTagClick -> {
+        // Click listener for the add tag chip
+        binding.itemTagGroupRow.getChildAt(0).setOnClickListener(onAddTagClick -> {
             ItemAdapter adapter = (ItemAdapter) getBindingAdapter();
             if (adapter == null) {
                 Log.e("RecyclerView", "Adapter invalid for click on ViewHolder: " + holder + "Position: " + position);
                 return;
             }
-
             listener.onAddTagClick(adapter.getItem(position).findID());
         });
     }

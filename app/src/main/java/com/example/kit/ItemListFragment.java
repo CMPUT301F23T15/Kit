@@ -184,13 +184,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         HashSet<String> itemIDs = new HashSet<>();
         itemIDs.add(itemID);
 
-        // Below lines demonstrate adding tags to multiple items but I think this is a very jank
-        // way to do it, but I think it is a good idea to only use the item IDs.
-//        HashSet<Integer> chkd = checkedItems();
-//        for (int pos : chkd) {
-//            itemIDs.add(adapter.getItem(pos).findID());
-//        }
-
         Log.i("Tag Dialog", "Adding tags to a single item.");
         AddTagFragment dialogFragment = new AddTagFragment(itemIDs);
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
