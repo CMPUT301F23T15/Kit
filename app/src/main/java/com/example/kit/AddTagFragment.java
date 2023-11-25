@@ -11,6 +11,7 @@ import com.example.kit.databinding.AddTagBinding;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,10 +25,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.ChangeBounds;
+import androidx.transition.TransitionManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,10 +39,11 @@ import java.util.HashSet;
 /**
  * Small dialog fragment that facilitates adding tags to the database and to the selected items.
  */
-public class AddTagFragment extends DialogFragment {
+public class AddTagFragment extends DialogFragment implements ColorPalette.OnColorSplotchClickListener {
     private AddTagBinding binding;
     private final HashSet<String> itemIDs;
     private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
+    private Tag underConstructionTag;
 
     /**
      * Constructor that takes the itemIDs for the items that should have tags added to them.
@@ -61,14 +66,17 @@ public class AddTagFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Inflate binding and set view of dialog to the root of binding
         binding = AddTagBinding.inflate(getLayoutInflater());
-        initializeColorPalette();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(binding.getRoot());
 
         initializeTagField();
 
+        // Initialize the color palette view
+        binding.colorPalette.setColorSplotchClickListener(this);
+        showColorPalette(false);
+
         // Add the tag to the database and item.
-        builder.setPositiveButton("Add Tag", (dialog, which) -> positiveButtonClick());
+        builder.setPositiveButton("Add Tag(s)", (dialog, which) -> positiveButtonClick());
 
         // Dismiss the dialog when cancel is pressed.
         builder.setNegativeButton("Cancel",  (dialog, which) -> dialog.dismiss());
@@ -81,14 +89,17 @@ public class AddTagFragment extends DialogFragment {
      * also facilitates adding a new tag to both the database and the items.
      */
     private void initializeTagField() {
+        // Build the list of existing tag names and bind it to the dropdown
         ArrayList<String> tagNames = new ArrayList<>();
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();
         for (Tag tag : dbTags) {
             tagNames.add(tag.getName());
         }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
         binding.tagAutoCompleteField.setAdapter(adapter);
 
+        // Add existing tags if they were clicked in the drop down list
         binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
             binding.tagsToAddGroup.addTag(addTag);
@@ -97,51 +108,39 @@ public class AddTagFragment extends DialogFragment {
             binding.tagAutoCompleteField.setText("", false);
         });
 
-        // Listener for enter key pressed to add a tag that doesn't exist
+        // Listener for enter key pressed to add a tag
         binding.tagAutoCompleteField.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
-                String newTagName = binding.tagAutoCompleteField.getText().toString();
-                if (newTagName.isEmpty()) {
-                    return false;
-                }
+            // User hasn't finished typing or moved on yet, don't continue.
+            if ((actionId != EditorInfo.IME_ACTION_NEXT) && (actionId != EditorInfo.IME_ACTION_DONE)) {
+                return false;
+            }
+            // Field is empty, do nothing.
+            String newTagName = binding.tagAutoCompleteField.getText().toString();
+            if (newTagName.isEmpty()) {
+                return false;
+            }
 
-                // Check if the tag already exists, if not create a new Tag
-                Tag newTag = tagDataSource.getDataByID(newTagName);
-                if (newTag == null) {
-                    newTag = new Tag(newTagName);
-                    CommandManager.getInstance().executeCommand(new AddTagCommand(newTag));
-                } else {
-                    // Remove the existing tag from the options in the dropdown
-                    tagNames.remove(newTag.getName());
-                    adapter.notifyDataSetChanged();
-                }
+            // Fetch the tag by name if it exists
+            Tag newTag = tagDataSource.getDataByID(newTagName);
+
+            // Tag doesn't exist, create open color palette and create new tag
+            if (newTag == null) {
+                underConstructionTag = new Tag(newTagName);
+                showColorPalette(true);
+
+            // Tag already exists, add it to the tag group and remove it from the drop down
+            } else {
+                tagNames.remove(newTag.getName());
+                adapter.notifyDataSetChanged();
 
                 binding.tagsToAddGroup.addTag(newTag);
 
                 // Clear the field
                 binding.tagAutoCompleteField.setText("", false);
-                return true;
             }
-            return false;
+
+            return true;
         });
-    }
-
-    private void initializeColorPalette() {
-        int numCols = 5; // ?
-        ColorSplotchAdapter adapter = new ColorSplotchAdapter(requireContext());
-        binding.colorPalette.setAdapter(adapter);
-        binding.colorPalette.setHasFixedSize(true);
-        binding.colorPalette.setLayoutManager(new GridLayoutManager(requireContext(), numCols) {
-            @Override
-            public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
-                lp.height = getWidth() / getSpanCount();
-                lp.width = getWidth() / getSpanCount();
-
-                return true;
-            }
-        });
-
-        binding.colorPalette.addItemDecoration(new GridSpacingItemDecoration(numCols, 50, true));
     }
 
     /**
@@ -178,38 +177,40 @@ public class AddTagFragment extends DialogFragment {
         CommandManager.getInstance().executeCommand(addTagsToItemsMacro);
     }
 
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+    private void showColorPalette(boolean show) {
+        ChangeBounds changeBounds = new ChangeBounds();
+        changeBounds.setDuration(50);
+        TransitionManager.beginDelayedTransition(binding.getRoot(), changeBounds);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(binding.getRoot());
 
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
+        if (show){
+            // Constrain the Tag Group to the bottom of the Color Palette with vertical space margin
+            constraintSet.connect(binding.tagsToAddGroup.getId(), ConstraintSet.TOP,
+                    binding.colorPalette.getId(), ConstraintSet.BOTTOM,
+                    R.dimen.content_vertical_space);
 
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
+            binding.colorPalette.setVisibility(View.VISIBLE);
+        }
+        else {
+            // Constrain the Tag Group to the bottom of the Tag Field with vertical space margin
+            constraintSet.connect(binding.tagsToAddGroup.getId(), ConstraintSet.TOP,
+                    binding.tagFieldLayout.getId(), ConstraintSet.BOTTOM,
+                    R.dimen.content_vertical_space);
+
+            binding.colorPalette.setVisibility(View.GONE);
         }
 
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
+        // Apply new constraints
+        constraintSet.applyTo(binding.getRoot());
+    }
 
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
+    @Override
+    public void onColorSplotchClick(int colorInt) {
+        underConstructionTag.setColor(Color.valueOf(colorInt));
+        binding.tagAutoCompleteField.setText("");
+        binding.tagsToAddGroup.addTag(underConstructionTag);
+        underConstructionTag = null;
+        showColorPalette(false);
     }
 }
