@@ -204,6 +204,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         AddTagFragment dialogFragment =
                 new AddTagFragment(controller.getItemIDsAtPositions(checkedItems()));
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
+        toggleMultiSelectMode();
     }
 
     /**

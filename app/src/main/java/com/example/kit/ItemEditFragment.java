@@ -136,7 +136,7 @@ public class ItemEditFragment extends Fragment {
                         parsed = 0.00;
                     }
                     NumberFormat formatter = NumberFormat.getCurrencyInstance();
-                    formatter.setMaximumFractionDigits(0);
+                    formatter.setMaximumFractionDigits(2);
                     String formatted = formatter.format(parsed).substring(1);
 
                     current = formatted;
