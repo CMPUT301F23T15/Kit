@@ -20,7 +20,7 @@ public abstract class AbstractItemDataSource extends DataSource<Item, ItemSet> i
 
     /**
      * Sets the TagDataSource to be used by the ItemDataSource
-     * @param tagDataSource
+     * @param tagDataSource TagDataSource reference.
      */
     protected void setTagDataSource(DataSource<Tag, ArrayList<Tag>> tagDataSource) {
         this.tagDataSource = tagDataSource;

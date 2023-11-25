@@ -24,8 +24,6 @@ import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
-import org.w3c.dom.Text;
-
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.HashSet;
@@ -41,7 +39,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     private NavController navController;
     private ItemListController controller;
     private ItemAdapter adapter;
-    private boolean inDeleteMode = false;
+    private boolean inMultiSelectMode = false;
 
     // Filter Sheet Fields
     private FilterSheetBinding filterBinding;
@@ -57,7 +55,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (inDeleteMode) {
+                if (inMultiSelectMode) {
                     binding.deleteItemButton.setVisibility(View.GONE);
                 } else {
                     binding.addItemButton.setVisibility(View.GONE);
@@ -76,7 +74,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (inDeleteMode) {
+                if (inMultiSelectMode) {
                     binding.deleteItemButton.setVisibility(View.VISIBLE);
                 } else {
                     binding.addItemButton.setVisibility(View.VISIBLE);
@@ -136,6 +134,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     private void initializeUIInteractions() {
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
         binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+        binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
+        binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
     }
 
     private void initializeFilterSheet() {
@@ -185,13 +185,13 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     /**
-     * Handles item click events. Opens item details if not in delete mode.
+     * Handles item click events. Opens item details if not in multiselect mode.
      * @param id The ID for the Item that was clicked.
      */
     @Override
     public void onItemClick(String id) {
         // Disable transition in delete mode
-        if (inDeleteMode) return;
+        if (inMultiSelectMode) return;
 
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
@@ -208,13 +208,15 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      */
     @Override
     public void onItemLongClick() {
-        toggleDeleteMode();
+        toggleMultiSelectMode();
     }
 
     private void fadeOutFABs() {
-        if (inDeleteMode) {
+        if (inMultiSelectMode) {
             if (binding.deleteItemButton.getAnimation() != null || binding.deleteItemButton.getVisibility() == View.GONE) return;
+            if (binding.addTagsButton.getAnimation() != null || binding.addTagsButton.getVisibility() == View.GONE) return;
             binding.deleteItemButton.startAnimation(fadeOutFAB);
+            binding.addTagsButton.startAnimation(fadeOutFAB);
         } else {
             if (binding.addItemButton.getAnimation() != null || binding.addItemButton.getVisibility() == View.GONE) return;
             binding.addItemButton.startAnimation(fadeOutFAB);
@@ -222,26 +224,31 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     private void fadeInFABs() {
-        if (inDeleteMode) {
+        if (inMultiSelectMode) {
             binding.deleteItemButton.startAnimation(fadeInFAB);
+            binding.addTagsButton.startAnimation(fadeInFAB);
         } else {
             binding.addItemButton.startAnimation(fadeInFAB);
         }
     }
 
     /**
-     * Toggles the UI mode between normal and deletion mode, showing or hiding checkboxes and buttons accordingly.
+     * Toggles the UI mode between normal and multiselect mode, showing or hiding checkboxes and buttons accordingly.
      */
-    private void toggleDeleteMode() {
-        inDeleteMode = !inDeleteMode;
+    private void toggleMultiSelectMode() {
+        inMultiSelectMode = !inMultiSelectMode;
 
-        if (inDeleteMode) { // Show delete button
+        if (inMultiSelectMode) { // Show delete button
             binding.addItemButton.setVisibility(View.GONE);
+            binding.addTagsButton.setVisibility(View.VISIBLE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
         } else {            // Show add button
             binding.addItemButton.setVisibility(View.VISIBLE);
+            binding.addTagsButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.GONE);
         }
+
+
 
         toggleViewHolderCheckBoxes();
     }
@@ -259,7 +266,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                 continue;
             }
 
-            if(inDeleteMode) {
+            if(inMultiSelectMode) {
                 itemViewHolder.showCheckbox();
             } else {
                 itemViewHolder.hideCheckbox();
@@ -272,7 +279,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      */
     public void onDelete(){
         controller.deleteCheckedItems(checkedItems());
-        toggleDeleteMode();
+        toggleMultiSelectMode();
         // TODO: Show SnackBar with option to undo
     }
 
@@ -298,23 +305,27 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     /**
-     * Handles the event for adding a tag to an item.
+     * Opens the {@link AddTagFragment} dialog to add tags to the item clicked on
      */
     @Override
     public void onAddTagClick(String itemID) {
         HashSet<String> itemIDs = new HashSet<>();
         itemIDs.add(itemID);
 
-        // Below lines demonstrate adding tags to multiple items but I think this is a very jank
-        // way to do it, but I think it is a good idea to only use the item IDs.
-//        HashSet<Integer> chkd = checkedItems();
-//        for (int pos : chkd) {
-//            itemIDs.add(adapter.getItem(pos).findID());
-//        }
-
-        Log.v("Tag Adding", "Tag add click!");
+        Log.i("Tag Dialog", "Adding tags to a single item.");
         AddTagFragment dialogFragment = new AddTagFragment(itemIDs);
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
+    }
+
+    /**
+     * Opens the {@link AddTagFragment} dialog to add tags to all the checked items.
+     */
+    private void onAddTagMultipleItems() {
+        Log.i("Tag Dialog", "Adding tags to checked items.");
+        AddTagFragment dialogFragment =
+                new AddTagFragment(controller.getItemIDsAtPositions(checkedItems()));
+        dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
+        toggleMultiSelectMode();
     }
 
     /**
