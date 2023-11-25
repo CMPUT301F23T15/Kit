@@ -5,25 +5,32 @@ import com.example.kit.command.AddTagToItemCommand;
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.MacroCommand;
 import com.example.kit.data.Tag;
+import com.example.kit.data.source.DataSource;
+import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.AddTagBinding;
 
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
  * Small dialog fragment that facilitates adding tags to the database and to the selected items.
- * INCOMPLETE.
  */
-public class AddTagFragment extends DialogFragment {
+public class AddTagFragment extends DialogFragment implements ColorPalette.OnColorSplotchClickListener {
     private AddTagBinding binding;
-    private HashSet<String> itemIDs;
+    private final HashSet<String> itemIDs;
+    private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
+    private Tag underConstructionTag;
 
     /**
      * Constructor that takes the itemIDs for the items that should have tags added to them.
@@ -31,6 +38,7 @@ public class AddTagFragment extends DialogFragment {
      */
     public AddTagFragment(HashSet<String> itemIDs) {
         this.itemIDs = itemIDs;
+        tagDataSource = DataSourceManager.getInstance().getTagDataSource();
     }
 
     /**
@@ -43,14 +51,19 @@ public class AddTagFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-
         // Inflate binding and set view of dialog to the root of binding
         binding = AddTagBinding.inflate(getLayoutInflater());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(binding.getRoot());
 
+        initializeTagField();
+
+        // Initialize the color palette view
+        binding.colorPalette.setColorSplotchClickListener(this);
+        showColorPalette(false);
+
         // Add the tag to the database and item.
-        builder.setPositiveButton("Add Tag", (dialog, which) -> positiveButtonClick());
+        builder.setPositiveButton("Add Tag(s)", (dialog, which) -> positiveButtonClick());
 
         // Dismiss the dialog when cancel is pressed.
         builder.setNegativeButton("Cancel",  (dialog, which) -> dialog.dismiss());
@@ -59,39 +72,123 @@ public class AddTagFragment extends DialogFragment {
     }
 
     /**
+     * Initialize an autocomplete field that is filled with the existing tags in the database, but
+     * also facilitates adding a new tag to both the database and the items.
+     */
+    private void initializeTagField() {
+        // Build the list of existing tag names and bind it to the dropdown
+        ArrayList<String> tagNames = new ArrayList<>();
+        ArrayList<Tag> dbTags = tagDataSource.getDataSet();
+        for (Tag tag : dbTags) {
+            tagNames.add(tag.getName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
+        binding.tagAutoCompleteField.setAdapter(adapter);
+
+        // Add existing tags if they were clicked in the drop down list
+        binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
+            Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
+            binding.tagsToAddGroup.addTag(addTag);
+            adapter.notifyDataSetChanged();
+            // Clear the field
+            binding.tagAutoCompleteField.setText("", false);
+        });
+
+        // Listener for enter key pressed to add a tag
+        binding.tagAutoCompleteField.setOnEditorActionListener((v, actionId, event) -> {
+            // User hasn't finished typing or moved on yet, don't continue.
+            if ((actionId != EditorInfo.IME_ACTION_NEXT) && (actionId != EditorInfo.IME_ACTION_DONE)) {
+                return false;
+            }
+            // Field is empty, do nothing.
+            String newTagName = binding.tagAutoCompleteField.getText().toString();
+            if (newTagName.isEmpty()) {
+                return false;
+            }
+
+            // Fetch the tag by name if it exists
+            Tag newTag = tagDataSource.getDataByID(newTagName);
+
+            // Tag doesn't exist, create open color palette and create new tag
+            if (newTag == null) {
+                underConstructionTag = new Tag(newTagName);
+                showColorPalette(true);
+
+            // Tag already exists, add it to the tag group and remove it from the drop down
+            } else {
+                tagNames.remove(newTag.getName());
+                adapter.notifyDataSetChanged();
+
+                binding.tagsToAddGroup.addTag(newTag);
+
+                // Clear the field
+                binding.tagAutoCompleteField.setText("", false);
+            }
+
+            return true;
+        });
+    }
+
+    /**
      * Callback method for when the positive button is clicked on the dialog, extracts data from
      * the view fields and checks it before adding to the data source.
      */
     private void positiveButtonClick() {
-        // Handle tag input and store in strings
-        // Retrieve tag name from the dialog's views
-        String tagSearch = binding.TagSearch.getText().toString();
-        String tagName = binding.TagName.getText().toString();
+        ArrayList<Tag> tags = binding.tagsToAddGroup.getTags();
 
-        // Add the new tag to the database
-        if (!tagName.isEmpty()) {
-            addTag(tagName);
+        // Add whatever is typed in the tag field too
+        String newTagText = binding.tagAutoCompleteField.getText().toString();
+        if (!newTagText.isEmpty()) {
+            tags.add(new Tag(newTagText));
         }
+
+        MacroCommand addTagsMacro = new MacroCommand();
+        MacroCommand addTagsToItemsMacro = new MacroCommand();
+
+        for (Tag tag : tags) {
+            // Add new tags to the database
+            if (tagDataSource.getDataByID(tag.getName()) == null) {
+                AddTagCommand addTagCommand = new AddTagCommand(tag);
+                addTagsMacro.addCommand(addTagCommand);
+            }
+
+            // Add tag to all items
+            for (String itemID : itemIDs) {
+                AddTagToItemCommand addTagToItemCommand = new AddTagToItemCommand(tag, itemID);
+                addTagsToItemsMacro.addCommand(addTagToItemCommand);
+            }
+        }
+
+        CommandManager.getInstance().executeCommand(addTagsMacro);
+        CommandManager.getInstance().executeCommand(addTagsToItemsMacro);
     }
 
     /**
-     * Adds the new tag to the data source, and adds it to the items given in the Item IDs.
-     * @param name Name of the tag to be added.
+     * Sets the visibility of the {@link ColorPalette}
+     * @param show Desired state of the visibility of the ColorPalette
      */
-    private void addTag(String name) {
-        // Build Tag, red default color until color picker is implemented.
-        Tag tag = new Tag(name, Color.valueOf(Color.RED));
-
-        // Add the tag to the database
-        AddTagCommand tagCommand = new AddTagCommand(tag);
-        CommandManager.getInstance().executeCommand(tagCommand);
-
-        // Attach the tag to the items associated with the selected Item IDs
-        MacroCommand addTagToItemMacro = new MacroCommand();
-        for (String itemID : itemIDs) {
-            addTagToItemMacro.addCommand(new AddTagToItemCommand(tag, itemID));
+    private void showColorPalette(boolean show) {
+        if (show){
+            binding.colorPalette.setVisibility(View.VISIBLE);
+        }
+        else {
+            binding.colorPalette.setVisibility(View.GONE);
         }
 
-        CommandManager.getInstance().executeCommand(addTagToItemMacro);
+    }
+
+    /**
+     * Callback for the {@link com.example.kit.ColorPalette.OnColorSplotchClickListener}
+     * Adds the provided ColorInt to the tag, then clears the Tag Field and adds the Tag to the
+     * {@link TagChipGroup}. Hides the {@link ColorPalette}.
+     */
+    @Override
+    public void onColorSplotchClick(int colorInt) {
+        underConstructionTag.setColor(Color.valueOf(colorInt));
+        binding.tagAutoCompleteField.setText("");
+        binding.tagsToAddGroup.addTag(underConstructionTag);
+        underConstructionTag = null;
+        showColorPalette(false);
     }
 }

@@ -16,7 +16,7 @@ public class Tag {
      */
     public Tag(String name) {
         this.name = name;
-        color = new Color();
+        color = Color.valueOf(Color.WHITE);
     }
 
     /**

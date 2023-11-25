@@ -64,6 +64,14 @@ public class ItemListController implements DataChangedCallback {
         CommandManager.getInstance().executeCommand(deleteItemsMacro);
     }
 
+    public HashSet<String> getItemIDsAtPositions(HashSet<Integer> positions) {
+        HashSet<String> itemIDs = new HashSet<>();
+        for (int pos : positions) {
+            itemIDs.add(itemSet.getItem(pos).findID());
+        }
+        return itemIDs;
+    }
+
     /**
      * Call back method for the {@link DataChangedCallback} called whenever the data from the
      * {@link com.example.kit.data.source.DataSource} changes. Updates the {@link ItemSet} and
