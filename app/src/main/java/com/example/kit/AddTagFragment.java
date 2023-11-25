@@ -10,28 +10,15 @@ import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.AddTagBinding;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.transition.ChangeBounds;
-import androidx.transition.TransitionManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -177,6 +164,10 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
         CommandManager.getInstance().executeCommand(addTagsToItemsMacro);
     }
 
+    /**
+     * Sets the visibility of the {@link ColorPalette}
+     * @param show Desired state of the visibility of the ColorPalette
+     */
     private void showColorPalette(boolean show) {
         if (show){
             binding.colorPalette.setVisibility(View.VISIBLE);
@@ -187,6 +178,11 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
 
     }
 
+    /**
+     * Callback for the {@link com.example.kit.ColorPalette.OnColorSplotchClickListener}
+     * Adds the provided ColorInt to the tag, then clears the Tag Field and adds the Tag to the
+     * {@link TagChipGroup}. Hides the {@link ColorPalette}.
+     */
     @Override
     public void onColorSplotchClick(int colorInt) {
         underConstructionTag.setColor(Color.valueOf(colorInt));

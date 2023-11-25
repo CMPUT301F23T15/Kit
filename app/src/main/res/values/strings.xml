@@ -13,5 +13,5 @@
     <string name="total_valuation">Total Valuation:</string>
     <string name="add_new_tag">Add New Tag</string>
     <string name="add_existing_tags">Add Existing Tags</string>
-    <string name="new_tag_hint">New Tag...</string>
+    <string name="new_tag_hint">Add Tags</string>
 </resources>
