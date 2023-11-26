@@ -7,7 +7,7 @@ import com.example.kit.data.Tag;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TestTagDataSource extends DataSource<Tag, ArrayList<Tag>> {
+public class TestTagDataSource extends AbstractTagDataSource {
 
     private final HashMap<String, Tag> tags;
 

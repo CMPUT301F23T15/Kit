@@ -1,17 +1,23 @@
 package com.example.kit;
 
-import androidx.annotation.DrawableRes;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
 
 public class CarouselImage {
-    @DrawableRes
-    private final int drawableRes;
+    private final Bitmap image;
 
-    public CarouselImage(@DrawableRes int drawableRes) {
-        this.drawableRes = drawableRes;
+    public CarouselImage(String base64String) {
+        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+        this.image = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
-    @DrawableRes
-    public int getDrawableRes() {
-        return drawableRes;
+    public CarouselImage(Bitmap image) {
+        this.image = image;
+    }
+
+    public Bitmap getImage() {
+        return image;
     }
 }

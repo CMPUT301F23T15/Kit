@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/colorSplotch1"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/colorSplotch2"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch1"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch1"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch1" />
+
+    <View
+        android:id="@+id/colorSplotch3"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch2"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch2"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch2" />
+
+    <View
+        android:id="@+id/colorSplotch4"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch3"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch3"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch3" />
+
+    <View
+        android:id="@+id/colorSplotch5"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch4"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch4"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch4" />
+
+    <View
+        android:id="@+id/colorSplotch6"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:layout_marginEnd="@dimen/content_horizontal_space"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch5"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch5" />
+
+    <View
+        android:id="@+id/colorSplotch7"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorSplotch1" />
+
+    <View
+        android:id="@+id/colorSplotch8"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch7"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch7"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch7" />
+
+    <View
+        android:id="@+id/colorSplotch9"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch8"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch10"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch8"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch8" />
+
+    <View
+        android:id="@+id/colorSplotch10"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch9"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch11"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch9"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch9" />
+
+    <View
+        android:id="@+id/colorSplotch11"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch10"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch12"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch10"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch10" />
+
+    <View
+        android:id="@+id/colorSplotch12"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:layout_marginEnd="@dimen/content_horizontal_space"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch11"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch11" />
+
+    <View
+        android:id="@+id/colorSplotch13"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch14"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorSplotch7" />
+
+    <View
+        android:id="@+id/colorSplotch14"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch13"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch15"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch13"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch13" />
+
+    <View
+        android:id="@+id/colorSplotch15"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch14"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch16"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch14"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch14" />
+
+    <View
+        android:id="@+id/colorSplotch16"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch15"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch17"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch15"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch15" />
+
+    <View
+        android:id="@+id/colorSplotch17"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch16"
+        app:layout_constraintEnd_toStartOf="@+id/colorSplotch18"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch16"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch16" />
+
+    <View
+        android:id="@+id/colorSplotch18"
+        android:layout_width="@dimen/color_splotch_size"
+        android:layout_height="@dimen/color_splotch_size"
+        android:layout_marginEnd="@dimen/content_horizontal_space"
+        android:background="@drawable/color_splotch"
+        android:backgroundTint="@color/primary1"
+        app:layout_constraintBottom_toBottomOf="@+id/colorSplotch17"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/colorSplotch17"
+        app:layout_constraintTop_toTopOf="@+id/colorSplotch17" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

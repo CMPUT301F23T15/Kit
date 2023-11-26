@@ -14,8 +14,7 @@ public class CarouselImageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(CarouselImage image) {
-//        binding.carouselImage.setImageDrawable(image.getDrawableRes());
-        Glide.with(binding.carouselImage.getContext()).load(image.getDrawableRes()).centerCrop().into(binding.carouselImage);
-        // Use Glide
+        Glide.with(binding.carouselImage.getContext())
+                .load(image.getImage()).centerCrop().into(binding.carouselImage);
     }
 }

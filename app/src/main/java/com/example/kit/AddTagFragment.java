@@ -10,18 +10,13 @@ import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.AddTagBinding;
 
 import android.app.Dialog;
-import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
@@ -31,10 +26,11 @@ import java.util.HashSet;
 /**
  * Small dialog fragment that facilitates adding tags to the database and to the selected items.
  */
-public class AddTagFragment extends DialogFragment {
+public class AddTagFragment extends DialogFragment implements ColorPalette.OnColorSplotchClickListener {
     private AddTagBinding binding;
     private final HashSet<String> itemIDs;
     private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
+    private Tag underConstructionTag;
 
     /**
      * Constructor that takes the itemIDs for the items that should have tags added to them.
@@ -60,11 +56,14 @@ public class AddTagFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(binding.getRoot());
 
-        initializeNewTagField();
-        initializeSpinner();
+        initializeTagField();
+
+        // Initialize the color palette view
+        binding.colorPalette.setColorSplotchClickListener(this);
+        showColorPalette(false);
 
         // Add the tag to the database and item.
-        builder.setPositiveButton("Add Tag", (dialog, which) -> positiveButtonClick());
+        builder.setPositiveButton("Add Tag(s)", (dialog, which) -> positiveButtonClick());
 
         // Dismiss the dialog when cancel is pressed.
         builder.setNegativeButton("Cancel",  (dialog, which) -> dialog.dismiss());
@@ -73,53 +72,61 @@ public class AddTagFragment extends DialogFragment {
     }
 
     /**
-     * Initialize the New Tag field with a listener for enter clicks on the field to add the tag
-     * to the {@link TagChipGroup}.
+     * Initialize an autocomplete field that is filled with the existing tags in the database, but
+     * also facilitates adding a new tag to both the database and the items.
      */
-    private void initializeNewTagField(){
-        binding.newTagName.setOnEditorActionListener((view, actionId, event) -> {
-            // If enter/done is pressed on the keyboard, TODO: Expand if not comprehensive
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                binding.tagsToAddGroup.addTag(new Tag(view.getText().toString()));
-                view.setText("");
-                return true;
-            }
-            return false;
+    private void initializeTagField() {
+        // Build the list of existing tag names and bind it to the dropdown
+        ArrayList<String> tagNames = new ArrayList<>();
+        ArrayList<Tag> dbTags = tagDataSource.getDataSet();
+        for (Tag tag : dbTags) {
+            tagNames.add(tag.getName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
+        binding.tagAutoCompleteField.setAdapter(adapter);
+
+        // Add existing tags if they were clicked in the drop down list
+        binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
+            Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
+            binding.tagsToAddGroup.addTag(addTag);
+            adapter.notifyDataSetChanged();
+            // Clear the field
+            binding.tagAutoCompleteField.setText("", false);
         });
-    }
 
-    /**
-     * Initialize a spinner with the names of all Tags currently in the tag data source.
-     * After a tag is selected from the spinner it is added to the {@link TagChipGroup} then removed
-     * from the list.
-     */
-    private void initializeSpinner() {
-        // Create a copy of the existing tags so we can remove tags from the list as they get selected.
-        ArrayList<Tag> existingTags = new ArrayList<>(tagDataSource.getDataSet());
-
-        // Add a dummy tag to the list that represents a hint for selection to prevent adding
-        // tags at undesired times
-        existingTags.add(0, new Tag("Select a Tag"));
-
-        TagAdapter adapter = new TagAdapter(getContext(), existingTags);
-        binding.tagSpinner.setAdapter(adapter);
-
-        // When an item from the spinner is selected, remove it from the spinner and add it to
-        // the chip group, then reset the spinner to the Hint option (index 0)
-        binding.tagSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) {
-                    Tag selectedTag = existingTags.remove(position);
-                    binding.tagsToAddGroup.addTag(selectedTag);
-                    adapter.notifyDataSetChanged();
-
-                    parent.setSelection(0);
-                }
+        // Listener for enter key pressed to add a tag
+        binding.tagAutoCompleteField.setOnEditorActionListener((v, actionId, event) -> {
+            // User hasn't finished typing or moved on yet, don't continue.
+            if ((actionId != EditorInfo.IME_ACTION_NEXT) && (actionId != EditorInfo.IME_ACTION_DONE)) {
+                return false;
+            }
+            // Field is empty, do nothing.
+            String newTagName = binding.tagAutoCompleteField.getText().toString();
+            if (newTagName.isEmpty()) {
+                return false;
             }
 
-            // Not needed
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
+            // Fetch the tag by name if it exists
+            Tag newTag = tagDataSource.getDataByID(newTagName);
+
+            // Tag doesn't exist, create open color palette and create new tag
+            if (newTag == null) {
+                underConstructionTag = new Tag(newTagName);
+                showColorPalette(true);
+
+            // Tag already exists, add it to the tag group and remove it from the drop down
+            } else {
+                tagNames.remove(newTag.getName());
+                adapter.notifyDataSetChanged();
+
+                binding.tagsToAddGroup.addTag(newTag);
+
+                // Clear the field
+                binding.tagAutoCompleteField.setText("", false);
+            }
+
+            return true;
         });
     }
 
@@ -131,7 +138,7 @@ public class AddTagFragment extends DialogFragment {
         ArrayList<Tag> tags = binding.tagsToAddGroup.getTags();
 
         // Add whatever is typed in the tag field too
-        String newTagText = binding.newTagName.getText().toString();
+        String newTagText = binding.tagAutoCompleteField.getText().toString();
         if (!newTagText.isEmpty()) {
             tags.add(new Tag(newTagText));
         }
@@ -158,41 +165,30 @@ public class AddTagFragment extends DialogFragment {
     }
 
     /**
-     * Custom Adapter for displaying Tags as options in a Spinner
+     * Sets the visibility of the {@link ColorPalette}
+     * @param show Desired state of the visibility of the ColorPalette
      */
-    private static class TagAdapter extends ArrayAdapter<Tag> {
-        public TagAdapter(Context context, ArrayList<Tag> data) {
-            super(context, androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item, data);
-            setDropDownViewResource(androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item);
+    private void showColorPalette(boolean show) {
+        if (show){
+            binding.colorPalette.setVisibility(View.VISIBLE);
+        }
+        else {
+            binding.colorPalette.setVisibility(View.GONE);
         }
 
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            TextView textView = (TextView) super.getView(position, convertView, parent);
-            String tagName;
-            try {
-                tagName = getItem(position).getName();
-            } catch (NullPointerException e) {
-                tagName = "null";
-                Log.e("Tag Spinner", "Tag at position " + position + "didn't exist?");
-            }
-            textView.setText(tagName);
-            return textView;
-        }
+    }
 
-        @Override
-        public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            TextView textView = (TextView) super.getDropDownView(position, convertView, parent);
-            String tagName;
-            try {
-                tagName = getItem(position).getName();
-            } catch (NullPointerException e) {
-                tagName = "null";
-                Log.e("Tag Spinner", "Tag at position " + position + "didn't exist?");
-            }
-            textView.setText(tagName);
-            return textView;
-        }
+    /**
+     * Callback for the {@link com.example.kit.ColorPalette.OnColorSplotchClickListener}
+     * Adds the provided ColorInt to the tag, then clears the Tag Field and adds the Tag to the
+     * {@link TagChipGroup}. Hides the {@link ColorPalette}.
+     */
+    @Override
+    public void onColorSplotchClick(int colorInt) {
+        underConstructionTag.setColor(Color.valueOf(colorInt));
+        binding.tagAutoCompleteField.setText("");
+        binding.tagsToAddGroup.addTag(underConstructionTag);
+        underConstructionTag = null;
+        showColorPalette(false);
     }
 }

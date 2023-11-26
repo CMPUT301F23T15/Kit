@@ -1,17 +1,25 @@
 package com.example.kit;
 
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.text.InputType;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -28,15 +36,19 @@ import com.example.kit.databinding.ItemEditBinding;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
 import com.google.android.material.carousel.HeroCarouselStrategy;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.MaterialDatePicker;
+
 import com.google.firebase.Timestamp;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -44,18 +56,20 @@ import java.util.Locale;
  * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
  */
 public class ItemEditFragment extends Fragment {
-
     private String itemID;
     private ItemEditBinding binding;
     private NavController navController;
     private DataSource<Tag, ArrayList<Tag>> tagDataSource;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
 
     // Image Carousel Fields
     private CarouselImageAdapter imageAdapter;
+    private ArrayList<CarouselImage> images;
 
     // Tag Dropdown Fields
     private ArrayAdapter<String> tagNameAdapter;
     private ArrayList<String> tagNames;
+    private boolean tagFieldFocused = false;
 
     /**
      * Standard fragment lifecycle, stores a reference to the NavController.
@@ -89,6 +103,8 @@ public class ItemEditFragment extends Fragment {
         initializeImageCarousel();
         initializeItemValueField();
         initializeTagField();
+        initializeDateField();
+        initializeScrollBehaviorForTagField();
         return binding.getRoot();
     }
 
@@ -101,62 +117,105 @@ public class ItemEditFragment extends Fragment {
         loadItem();
     }
 
+    private void initializeScrollBehaviorForTagField() {
+        binding.tagAutoCompleteField.setOnFocusChangeListener((v, hasFocus) -> {
+            tagFieldFocused = hasFocus;
+            int[] pos = new int[2];
+            binding.itemDisplayTagGroup.getLocationOnScreen(pos);
+            binding.scrollView3.smoothScrollTo(0, pos[1]);
+        });
+
+        ViewTreeObserver.OnGlobalLayoutListener listener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            boolean wasOpened = false;
+
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                binding.scrollView3.getWindowVisibleDisplayFrame(r);
+                int screenHeight = binding.scrollView3.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.15 && tagFieldFocused) {
+                    int[] pos = new int[2];
+                    binding.itemDisplayTagGroup.getLocationOnScreen(pos);
+                    binding.scrollView3.smoothScrollTo(0, pos[1]);
+                }
+
+                if (!wasOpened) {
+                    binding.scrollView3.getViewTreeObserver().addOnGlobalLayoutListener(this);
+                    wasOpened = true;
+                } else {
+                    binding.scrollView3.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    wasOpened = false;
+                }
+            }
+        };
+
+        binding.scrollView3.getViewTreeObserver().addOnGlobalLayoutListener(listener);
+    }
+
     /**
      * Initializes the floating action button to handle the creation or update of an item in the Firestore database.
      */
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(onClick -> {
             // Add item to the database and navigate back to the list
-            CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
-            navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
+            if(validateFields()) {
+                CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
+                navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
+            }
         });
     }
 
     private void initializeImageCarousel() {
+        images = new ArrayList<>();
         CarouselLayoutManager layoutManager
                 = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.VERTICAL);
-
         binding.imageCarousel.setLayoutManager(layoutManager);
         binding.imageCarousel.setNestedScrollingEnabled(false);
         CarouselSnapHelper snapHelper = new CarouselSnapHelper();
         snapHelper.attachToRecyclerView(binding.imageCarousel);
         imageAdapter = new CarouselImageAdapter();
+
+        ActivityResultLauncher<String> getContentLauncher = registerForActivityResult(new GetImageURIResultContract(), this::onImagePicked);
+        binding.tempButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getContentLauncher.launch("image/*");
+            }
+        });
+    }
+
+
+    private void onImagePicked(Uri imageURI) {
+        Bitmap bitmap;
+        ContentResolver contentResolver = requireContext().getContentResolver();
+        ImageDecoder.Source source = ImageDecoder.createSource(contentResolver, imageURI);
+        try {
+            bitmap = ImageDecoder.decodeBitmap(source);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        images.add(new CarouselImage(bitmap));
+        imageAdapter.submitList(images);
+        imageAdapter.notifyDataSetChanged();
     }
 
     private void initializeItemValueField() {
-        binding.itemValueDisplay.addTextChangedListener(new TextWatcher() {
-            private String current = "";
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        binding.itemValueDisplay.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String input = binding.itemValueDisplay.getText().toString();
+                if (input.isEmpty()) return;
+                input = input.replaceAll("[^\\d.]", "");
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                double parsedInput = Double.parseDouble(input);
 
-            // Taken and adapted from User Val Okafor from https://stackoverflow.com/a/27028225
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().equals(current)) {
-                    binding.itemValueDisplay.removeTextChangedListener(this);
+                String formattedValue =
+                        NumberFormat.getCurrencyInstance().format(parsedInput).substring(1);
 
-                    String replaceable = String.format("[%s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
-                    String cleanString = s.toString().replaceAll(replaceable, "");
-
-                    double parsed;
-                    try {
-                        parsed = Double.parseDouble(cleanString);
-                    } catch (NumberFormatException e) {
-                        parsed = 0.00;
-                    }
-                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
-                    formatter.setMaximumFractionDigits(0);
-                    String formatted = formatter.format(parsed).substring(1);
-
-                    current = formatted;
-                    binding.itemValueDisplay.setText(formatted);
-                    binding.itemValueDisplay.setSelection(formatted.length());
-                    binding.itemValueDisplay.addTextChangedListener(this);
+                binding.itemValueDisplay.setText(formattedValue);
             }
-        }});
+        });
     }
 
     private void initializeTagField() {
@@ -205,12 +264,88 @@ public class ItemEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets a click and focus listener for the item date display to open a date picker when it's clicked
+     */
+    private void initializeDateField() {
+        binding.itemDateDisplay.setInputType(InputType.TYPE_NULL);
 
-    private void updateCarousel() {
-        List<CarouselImage> images = new ArrayList<>();
-        images.add(new CarouselImage(R.drawable.baseline_add_24));
-        images.add(new CarouselImage(R.drawable.baseline_attach_money_24));
-        imageAdapter.submitList(images);
+        binding.itemDateDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if(hasFocus) {
+                openDatePicker();
+            }
+        });
+
+        binding.itemDateDisplay.setOnClickListener(view -> openDatePicker());
+    }
+
+    /**
+     * Validates the mandatory fields for an item prior to creation or update
+     * @return True, if all of the fields are valid, false otherwise
+     */
+    private boolean validateFields() {
+        String name, value, date;
+        if (binding.itemNameDisplay.getText() == null) {
+            name = "";
+        } else {
+            name = binding.itemNameDisplay.getText().toString();
+        }
+
+        if (binding.itemDateDisplay.getText() == null) {
+            date = "";
+        } else {
+            date = binding.itemDateDisplay.getText().toString();
+        }
+
+        if (binding.itemValueDisplay.getText() == null) {
+            value = "";
+        } else {
+            value = binding.itemValueDisplay.getText().toString();
+        }
+
+        boolean validName = true;
+        boolean validValue = true;
+        boolean validDate = true;
+
+        binding.itemNameDisplayLayout.setError(null);
+        binding.itemValueDisplayLayout.setError(null);
+        binding.itemDateDisplayLayout.setError(null);
+
+        // Test empty values
+        if (name.equals("")) {
+            binding.itemNameDisplayLayout.setError("Name is required");
+            validName = false;
+        }
+        if (value.equals("")) {
+            binding.itemValueDisplayLayout.setError("Value is required");
+            validValue = false;
+        }
+        if (date.equals("")) {
+            binding.itemDateDisplayLayout.setError("Date is required");
+            validDate = false;
+        }
+
+        return validName && validValue && validDate;
+    }
+
+    /**
+     * Opens a date picker, when the item date field is clicked, and sets the date to what the user selects
+     * Only allows dates to be selected from before the present time.
+     */
+    private void openDatePicker() {
+        CalendarConstraints.Builder constraintBuilder = new CalendarConstraints.Builder();
+        constraintBuilder.setValidator(DateValidatorPointBackward.now());
+
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Acquisition Date")
+                .setCalendarConstraints(constraintBuilder.build())
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(dateSelectionMillis -> {
+            binding.itemDateDisplay.setText(dateFormat.format(new Date(dateSelectionMillis)));
+        });
+
+        datePicker.show(getParentFragmentManager(), "Date Picker");
     }
 
     /**
@@ -221,7 +356,6 @@ public class ItemEditFragment extends Fragment {
         // Return to previous screen if we did not arrive with any arguments
         if (getArguments() == null) {
             Log.e("Navigation", "Null Arguments in the edit item fragment");
-            navController.popBackStack();
             return;
         }
 
@@ -233,21 +367,29 @@ public class ItemEditFragment extends Fragment {
         // If the item was null, return to the previous screen
         if (item == null) {
             Log.e("Item Display Error", "No item found for the bundled ID");
-            navController.popBackStack();
             return;
         }
 
         this.itemID = item.findID();
 
-        updateCarousel();
-
         // Use View Binding to populate UI elements with item data
         binding.itemNameDisplay.setText(item.getName());
 
-        // Value should get formatted appropriately by the text changed listener
-        binding.itemValueDisplay.setText(item.getValue());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
+        String value = item.getValue();
+        value = value.replaceAll("[^\\d.]", "");
+        double parsedInput;
+        try {
+            parsedInput = Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            parsedInput = 0;
+        }
+
+        String formattedValue =
+                NumberFormat.getCurrencyInstance().format(parsedInput).substring(1);
+
+        binding.itemValueDisplay.setText(formattedValue);
+
         String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
         binding.itemDateDisplay.setText(formattedDate);
 
@@ -284,19 +426,21 @@ public class ItemEditFragment extends Fragment {
 
         // Value
         if (binding.itemValueDisplay.getText() != null) {
-            String replaceable = String.format("[%s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
-            String cleanString = binding.itemValueDisplay.getText().toString().replaceAll(replaceable, "");
+            // Remove any commas, periods, and whitespace
+            String cleanString = binding.itemValueDisplay.getText().toString().replaceAll("[,.\\s]", "");
             newItem.setValue(cleanString);
         } else {
             newItem.setValue("0");
         }
 
-        // Absolutely terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
+        // Date
         try {
             Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
             newItem.setAcquisitionDate(new Timestamp(date));
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            Log.e("Item Edit Fragment", "Date parsing error. Something went very wrong to get here");
+        } catch (NullPointerException e) {
+            Log.e("Item Edit Fragment", "Date field value was null, somehow.");
         }
 
         // Description
