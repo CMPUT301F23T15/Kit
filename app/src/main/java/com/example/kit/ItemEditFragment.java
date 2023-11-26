@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -7,11 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.app.DatePickerDialog;
 import android.text.InputType;
-import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,11 +33,11 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.Timestamp;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -53,6 +53,7 @@ public class ItemEditFragment extends Fragment {
     private ArrayList<String> tagNames;
     private String itemID;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
+    private boolean tagFieldFocused = false;
 
     /**
      * Standard fragment lifecycle, stores a reference to the NavController.
@@ -86,6 +87,7 @@ public class ItemEditFragment extends Fragment {
         initializeItemValueField();
         initializeTagField();
         initializeDateField();
+        initializeScrollBehaviorForTagField();
         return binding.getRoot();
     }
 
@@ -96,6 +98,43 @@ public class ItemEditFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadItem();
+    }
+
+    private void initializeScrollBehaviorForTagField() {
+        binding.tagAutoCompleteField.setOnFocusChangeListener((v, hasFocus) -> {
+            tagFieldFocused = hasFocus;
+            int[] pos = new int[2];
+            binding.itemDisplayTagGroup.getLocationOnScreen(pos);
+            binding.scrollView3.smoothScrollTo(0, pos[1]);
+        });
+
+        ViewTreeObserver.OnGlobalLayoutListener listener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            boolean wasOpened = false;
+
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                binding.scrollView3.getWindowVisibleDisplayFrame(r);
+                int screenHeight = binding.scrollView3.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.15 && tagFieldFocused) {
+                    int[] pos = new int[2];
+                    binding.itemDisplayTagGroup.getLocationOnScreen(pos);
+                    binding.scrollView3.smoothScrollTo(0, pos[1]);
+                }
+
+                if (!wasOpened) {
+                    binding.scrollView3.getViewTreeObserver().addOnGlobalLayoutListener(this);
+                    wasOpened = true;
+                } else {
+                    binding.scrollView3.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    wasOpened = false;
+                }
+            }
+        };
+
+        binding.scrollView3.getViewTreeObserver().addOnGlobalLayoutListener(listener);
     }
 
     /**
@@ -112,39 +151,20 @@ public class ItemEditFragment extends Fragment {
     }
 
     private void initializeItemValueField() {
-        binding.itemValueDisplay.addTextChangedListener(new TextWatcher() {
-            private String current = "";
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        binding.itemValueDisplay.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String input = binding.itemValueDisplay.getText().toString();
+                if (input.isEmpty()) return;
+                input = input.replaceAll("[^\\d.]", "");
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                double parsedInput = Double.parseDouble(input);
 
-            // Taken and adapted from User Val Okafor from https://stackoverflow.com/a/27028225
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().equals(current)) {
-                    binding.itemValueDisplay.removeTextChangedListener(this);
+                String formattedValue =
+                        NumberFormat.getCurrencyInstance().format(parsedInput).substring(1);
 
-                    String replaceable = String.format("[%s,.\\s]", NumberFormat.getCurrencyInstance().getCurrency().getSymbol());
-                    String cleanString = s.toString().replaceAll(replaceable, "");
-
-                    double parsed;
-                    try {
-                        parsed = Double.parseDouble(cleanString);
-                    } catch (NumberFormatException e) {
-                        parsed = 0.00;
-                    }
-                    NumberFormat formatter = NumberFormat.getCurrencyInstance();
-                    formatter.setMaximumFractionDigits(2);
-                    String formatted = formatter.format(parsed).substring(1);
-
-                    current = formatted;
-                    binding.itemValueDisplay.setText(formatted);
-                    binding.itemValueDisplay.setSelection(formatted.length());
-                    binding.itemValueDisplay.addTextChangedListener(this);
+                binding.itemValueDisplay.setText(formattedValue);
             }
-        }});
+        });
     }
 
     private void initializeTagField() {
@@ -285,7 +305,6 @@ public class ItemEditFragment extends Fragment {
         // Return to previous screen if we did not arrive with any arguments
         if (getArguments() == null) {
             Log.e("Navigation", "Null Arguments in the edit item fragment");
-            navController.popBackStack();
             return;
         }
 
@@ -297,7 +316,6 @@ public class ItemEditFragment extends Fragment {
         // If the item was null, return to the previous screen
         if (item == null) {
             Log.e("Item Display Error", "No item found for the bundled ID");
-            navController.popBackStack();
             return;
         }
 
@@ -305,8 +323,20 @@ public class ItemEditFragment extends Fragment {
         // Use View Binding to populate UI elements with item data
         binding.itemNameDisplay.setText(item.getName());
 
-        // Value should get formatted appropriately by the text changed listener
-        binding.itemValueDisplay.setText(item.getValue());
+
+        String value = item.getValue();
+        value = value.replaceAll("[^\\d.]", "");
+        double parsedInput;
+        try {
+            parsedInput = Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            parsedInput = 0;
+        }
+
+        String formattedValue =
+                NumberFormat.getCurrencyInstance().format(parsedInput).substring(1);
+
+        binding.itemValueDisplay.setText(formattedValue);
 
         String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
         binding.itemDateDisplay.setText(formattedDate);

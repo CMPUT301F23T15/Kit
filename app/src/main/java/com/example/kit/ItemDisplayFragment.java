@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class ItemDisplayFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
         initializeConfirmButton();
+        disableInputs();
         return binding.getRoot();
     }
 
@@ -80,6 +82,29 @@ public class ItemDisplayFragment extends Fragment {
             itemId.putString("id", itemID);
             navController.navigate(R.id.editDisplayItemAction, itemId);
         });
+    }
+
+    /**
+     * Disable input and set text color back to black for all edit texts. XML disable doesn't seem
+     * to work.
+     */
+    private void disableInputs() {
+        binding.itemNameDisplay.setEnabled(false);
+        binding.itemNameDisplay.setTextColor(Color.BLACK);
+        binding.itemDescriptionDisplay.setEnabled(false);
+        binding.itemDescriptionDisplay.setTextColor(Color.BLACK);
+        binding.itemCommentDisplay.setEnabled(false);
+        binding.itemCommentDisplay.setTextColor(Color.BLACK);
+        binding.itemDateDisplay.setEnabled(false);
+        binding.itemDateDisplay.setTextColor(Color.BLACK);
+        binding.itemValueDisplay.setEnabled(false);
+        binding.itemValueDisplay.setTextColor(Color.BLACK);
+        binding.itemMakeDisplay.setEnabled(false);
+        binding.itemMakeDisplay.setTextColor(Color.BLACK);
+        binding.itemModelDisplay.setEnabled(false);
+        binding.itemModelDisplay.setTextColor(Color.BLACK);
+        binding.itemSerialNumberDisplay.setEnabled(false);
+        binding.itemSerialNumberDisplay.setTextColor(Color.BLACK);
     }
 
     /**
@@ -114,6 +139,8 @@ public class ItemDisplayFragment extends Fragment {
         binding.itemDateDisplay.setText(formattedDate);
         binding.itemDescriptionDisplay.setText(item.getDescription());
         binding.itemCommentDisplay.setText(item.getComment());
+        binding.itemMakeDisplayLayout.setVisibility(View.GONE);
+        binding.itemModelDisplayLayout.setVisibility(View.GONE);
         binding.itemMakeDisplay.setText(item.getMake());
         binding.itemModelDisplay.setText(item.getModel());
         binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
