@@ -3,43 +3,40 @@ package com.example.kit;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class CarouselImageAdapter extends ListAdapter<CarouselImage, CarouselImageViewHolder> {
-    @LayoutRes private final int itemLayoutRes = R.layout.carousel_image;
+import com.example.kit.databinding.CarouselImageBinding;
 
-    private static final DiffUtil.ItemCallback<CarouselImage> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<CarouselImage>() {
-                @Override
-                public boolean areItemsTheSame(
-                        @NonNull CarouselImage oldImage, @NonNull CarouselImage newImage) {
-                    return oldImage.equals(newImage);
-                }
+import java.util.ArrayList;
 
-                @Override
-                public boolean areContentsTheSame(
-                        @NonNull CarouselImage oldImage, @NonNull CarouselImage newImage) {
-                    return oldImage.equals(newImage);
-                }
-            };
+public class CarouselImageAdapter extends RecyclerView.Adapter<CarouselImageViewHolder> {
+
+    private final ArrayList<CarouselImage> images;
 
     public CarouselImageAdapter() {
-        super(DIFF_CALLBACK);
+        images = new ArrayList<>();
+    }
+
+    public void addImage(CarouselImage image) {
+        images.add(image);
     }
 
     @NonNull
     @Override
     public CarouselImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CarouselImageViewHolder(
-                LayoutInflater.from(parent.getContext())
-                        .inflate(itemLayoutRes, parent, false));
+        CarouselImageBinding binding =
+                CarouselImageBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new CarouselImageViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CarouselImageViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        holder.bind(images.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        return images.size();
     }
 }

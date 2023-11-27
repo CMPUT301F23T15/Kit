@@ -25,6 +25,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -179,17 +180,14 @@ public class ItemEditFragment extends Fragment {
     private void initializeImageCarousel() {
         images = new ArrayList<>();
         CarouselLayoutManager layoutManager
-                = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.VERTICAL);
+                = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.HORIZONTAL);
+
         binding.imageCarousel.setLayoutManager(layoutManager);
         binding.imageCarousel.setNestedScrollingEnabled(false);
         CarouselSnapHelper snapHelper = new CarouselSnapHelper();
         snapHelper.attachToRecyclerView(binding.imageCarousel);
         imageAdapter = new CarouselImageAdapter();
         binding.imageCarousel.setAdapter(imageAdapter);
-
-
-
-
 
         ActivityResultLauncher<String> getContentLauncher = registerForActivityResult(new GetImageURIResultContract(), this::onImagePicked);
         binding.tempButton.setOnClickListener(new View.OnClickListener() {
@@ -217,23 +215,9 @@ public class ItemEditFragment extends Fragment {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 5, outputStream);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
         bitmap = BitmapFactory.decodeStream(inputStream);
-//        Glide.with(requireContext())
-//                .asBitmap()
-//                .load(bitmap)
-//                .into(new CustomTarget<Bitmap>() {
-//                    @Override
-//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                        binding.testImageView.setImageBitmap(resource);
-//                        Log.i("image", "reasource ready");
-//                    }
-//
-//                    @Override
-//                    public void onLoadCleared(@Nullable Drawable placeholder) {
-//                    }
-//                });
 
-        images.add(new CarouselImage(bitmap));
-        imageAdapter.submitList(images);
+        imageAdapter.addImage(new CarouselImage(bitmap));
+        imageAdapter.notifyDataSetChanged();
     }
 
     private void initializeItemValueField() {

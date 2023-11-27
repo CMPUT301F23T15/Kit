@@ -6,7 +6,7 @@
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
     android:foreground="?attr/selectableItemBackgroundBorderless"
-    app:shapeAppearance="?attr/shapeAppearanceCornerExtraLarge">
+    app:shapeAppearance="?attr/shapeAppearanceCornerLarge">
 
     <ImageView
         android:id="@+id/carousel_image"
