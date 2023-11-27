@@ -1,13 +1,8 @@
 package com.example.kit;
 
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,22 +13,17 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.text.InputType;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.CommandManager;
+import com.example.kit.data.ImageUtils;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
@@ -48,11 +38,6 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 
 import com.google.firebase.Timestamp;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -189,32 +174,12 @@ public class ItemEditFragment extends Fragment {
         imageAdapter = new CarouselImageAdapter();
         binding.imageCarousel.setAdapter(imageAdapter);
 
-        ActivityResultLauncher<String> getContentLauncher = registerForActivityResult(new GetImageURIResultContract(), this::onImagePicked);
-        binding.tempButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getContentLauncher.launch("image/*");
-            }
-        });
+        registerForActivityResult(new ImageUtils.GetImageURIResultContract(), this::onImagePicked);
     }
 
 
     private void onImagePicked(Uri imageURI) {
-        Bitmap bitmap;
-        ContentResolver contentResolver = requireContext().getContentResolver();
-        try {
-            InputStream inputStream  = contentResolver.openInputStream(imageURI);
-            bitmap = BitmapFactory.decodeStream(inputStream);
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 5, outputStream);
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-        bitmap = BitmapFactory.decodeStream(inputStream);
+        Bitmap bitmap = ImageUtils.convertUriToBitmap(imageURI, requireContext());
 
         imageAdapter.addImage(new CarouselImage(bitmap));
         imageAdapter.notifyDataSetChanged();
@@ -424,6 +389,12 @@ public class ItemEditFragment extends Fragment {
             // Remove tags that are already on the item from the list of available existing tags
             tagNames.remove(tag.getName());
         }
+
+        ArrayList<String> base64Strings = item.getBase64Images();
+        for (String base64 : base64Strings) {
+            
+            imageAdapter.addImage(new CarouselImage(ImageUtils.convertBase64ToBitmap(base64)));
+        }
     }
 
     /**
@@ -506,6 +477,13 @@ public class ItemEditFragment extends Fragment {
         // Attach the existing ID to the item if we have it
         if (itemID != null && !itemID.isEmpty()) {
             newItem.attachID(itemID);
+        }
+
+        // Images
+        ArrayList<CarouselImage> itemImages = imageAdapter.getImages();
+        for (CarouselImage carouselImage : itemImages) {
+            String base64 = ImageUtils.convertBitmapToBase64(carouselImage.getImage());
+            newItem.addBase64ImageString(base64);
         }
 
         return newItem;
