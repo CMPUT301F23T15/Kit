@@ -17,10 +17,7 @@ import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
-
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import com.example.kit.util.FormatUtils;
 
 /**
  * Fragment that displays an {@link Item} for viewing purposes.
@@ -114,33 +111,25 @@ public class ItemDisplayFragment extends Fragment {
         // Return to previous screen if we didn't come with an item
         if (getArguments() == null) {
             Log.e("Navigation", "No arguments found for the transition to fragment.");
-            navController.popBackStack();
             return;
         }
 
-        String id = getArguments().getString("id");
-        this.itemID = id;
-        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(id);
+        itemID = getArguments().getString("id");
+        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
+
         // If the item was null, return to the previous screen
         if (item == null) {
             Log.e("Item Display Error", "No item found for the bundled ID");
-            navController.popBackStack();
             return;
         }
 
         // Use View Binding to populate UI elements with item data
         binding.itemNameDisplay.setText(item.getName());
         // Format value as a number, but remove the $ symbol because the new text views have icons
-        String formattedValue =
-                NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal()).substring(1);
-        binding.itemValueDisplay.setText(formattedValue);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
-        String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
-        binding.itemDateDisplay.setText(formattedDate);
+        binding.itemValueDisplay.setText(FormatUtils.formatValue(item.valueToBigDecimal(), false));
+        binding.itemDateDisplay.setText(FormatUtils.formatDateStringShort(item.getAcquisitionDate()));
         binding.itemDescriptionDisplay.setText(item.getDescription());
         binding.itemCommentDisplay.setText(item.getComment());
-        binding.itemMakeDisplayLayout.setVisibility(View.GONE);
-        binding.itemModelDisplayLayout.setVisibility(View.GONE);
         binding.itemMakeDisplay.setText(item.getMake());
         binding.itemModelDisplay.setText(item.getModel());
         binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
