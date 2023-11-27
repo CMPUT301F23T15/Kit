@@ -2,8 +2,6 @@ package com.example.kit;
 
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,19 +25,14 @@ import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemEditBinding;
+import com.example.kit.util.FormatUtils;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.Timestamp;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
@@ -52,7 +45,6 @@ public class ItemEditFragment extends Fragment {
     private ArrayAdapter<String> adapter;
     private ArrayList<String> tagNames;
     private String itemID;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.CANADA);
     private boolean tagFieldFocused = false;
 
     /**
@@ -152,16 +144,10 @@ public class ItemEditFragment extends Fragment {
 
     private void initializeItemValueField() {
         binding.itemValueDisplay.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                String input = binding.itemValueDisplay.getText().toString();
-                if (input.isEmpty()) return;
-                input = input.replaceAll("[^\\d.]", "");
-
-                double parsedInput = Double.parseDouble(input);
-
-                String formattedValue =
-                        NumberFormat.getCurrencyInstance().format(parsedInput).substring(1);
-
+            if (!hasFocus && binding.itemValueDisplay.getText() != null) {
+                // Format the value in the field whenever focus is lost
+                String valueText = binding.itemValueDisplay.getText().toString();
+                String formattedValue = FormatUtils.formatValue(valueText, false);
                 binding.itemValueDisplay.setText(formattedValue);
             }
         });
@@ -274,6 +260,12 @@ public class ItemEditFragment extends Fragment {
             validDate = false;
         }
 
+        // Check the date format
+        if (FormatUtils.parseDateString(date) == null) {
+            binding.itemDateDisplayLayout.setError("Date incorrectly formatted");
+            validDate = false;
+        }
+
         return validName && validValue && validDate;
     }
 
@@ -291,7 +283,8 @@ public class ItemEditFragment extends Fragment {
                 .build();
 
         datePicker.addOnPositiveButtonClickListener(dateSelectionMillis -> {
-            binding.itemDateDisplay.setText(dateFormat.format(new Date(dateSelectionMillis)));
+            String formattedDateString = FormatUtils.formatDateStringShort(new Date(dateSelectionMillis));
+            binding.itemDateDisplay.setText(formattedDateString);
         });
 
         datePicker.show(getParentFragmentManager(), "Date Picker");
@@ -302,18 +295,17 @@ public class ItemEditFragment extends Fragment {
      * item from the fragment's arguments.
      */
     private void loadItem() {
-        // Return to previous screen if we did not arrive with any arguments
+        // Log and display nothing if we did not have an argument
         if (getArguments() == null) {
-            Log.e("Navigation", "Null Arguments in the edit item fragment");
+            Log.i("Navigation", "Null Arguments in the edit item fragment");
             return;
         }
 
         // Retrieve the item from the bundle
-        String id = getArguments().getString("id");
-        this.itemID = id;
-        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(id);
+        itemID = getArguments().getString("id");
+        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
 
-        // If the item was null, return to the previous screen
+        // If the item was null, Log and display nothing
         if (item == null) {
             Log.e("Item Display Error", "No item found for the bundled ID");
             return;
@@ -322,25 +314,8 @@ public class ItemEditFragment extends Fragment {
         this.itemID = item.findID();
         // Use View Binding to populate UI elements with item data
         binding.itemNameDisplay.setText(item.getName());
-
-
-        String value = item.getValue();
-        value = value.replaceAll("[^\\d.]", "");
-        double parsedInput;
-        try {
-            parsedInput = Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-            parsedInput = 0;
-        }
-
-        String formattedValue =
-                NumberFormat.getCurrencyInstance().format(parsedInput).substring(1);
-
-        binding.itemValueDisplay.setText(formattedValue);
-
-        String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
-        binding.itemDateDisplay.setText(formattedDate);
-
+        binding.itemValueDisplay.setText(FormatUtils.formatValue(item.valueToBigDecimal(),false));
+        binding.itemDateDisplay.setText(FormatUtils.formatDateStringShort(item.getAcquisitionDate()));
         binding.itemDescriptionDisplay.setText(item.getDescription());
         binding.itemCommentDisplay.setText(item.getComment());
         binding.itemMakeDisplay.setText(item.getMake());
@@ -374,21 +349,16 @@ public class ItemEditFragment extends Fragment {
 
         // Value
         if (binding.itemValueDisplay.getText() != null) {
-            // Remove any commas, periods, and whitespace
-            String cleanString = binding.itemValueDisplay.getText().toString().replaceAll("[,.\\s]", "");
-            newItem.setValue(cleanString);
+            String cleanValue = FormatUtils.cleanupDirtyValueString(binding.itemValueDisplay.getText().toString());
+            newItem.setValue(cleanValue);
         } else {
             newItem.setValue("0");
         }
 
         // Date
-        try {
-            Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
-            newItem.setAcquisitionDate(new Timestamp(date));
-        } catch (ParseException e) {
-            Log.e("Item Edit Fragment", "Date parsing error. Something went very wrong to get here");
-        } catch (NullPointerException e) {
-            Log.e("Item Edit Fragment", "Date field value was null, somehow.");
+        if (binding.itemDateDisplay.getText() != null) {
+            Timestamp date = FormatUtils.parseDateString(binding.itemDateDisplay.getText().toString());
+            newItem.setAcquisitionDate(date);
         }
 
         // Description

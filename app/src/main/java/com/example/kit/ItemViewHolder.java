@@ -11,12 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.ItemListRowBinding;
+import com.example.kit.util.FormatUtils;
 
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * A RecyclerView ViewHolder for an {@link Item} to be displayed.
@@ -48,15 +45,13 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         }
 
         // Ensure the date exists before trying to display it
-        DateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.CANADA);
         if (item.getAcquisitionDate() != null) {
-            binding.itemDateRow.setText(dateFormat.format(item.getAcquisitionDate().toDate()));
+            binding.itemDateRow.setText(FormatUtils.formatDateStringLong(item.getAcquisitionDate()));
         }
 
         // Ensure the value exists before trying to display it
         if (item.getValue() != null) {
-            String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
-            binding.itemValueRow.setText(formattedValue);
+            binding.itemValueRow.setText(FormatUtils.formatValue(item.valueToBigDecimal(), true));
         }
         ArrayList<Tag> tags = item.getTags();
 
