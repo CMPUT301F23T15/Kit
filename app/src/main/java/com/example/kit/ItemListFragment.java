@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,6 +77,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     public void initializeUIInteractions(){
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
         binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+        Intent login = new Intent(getActivity(), ProfileActivity.class);
+        binding.profileButton.setOnClickListener(onClick -> startActivity(login));
     }
 
     /**

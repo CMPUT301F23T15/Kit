@@ -11,4 +11,7 @@
     <string name="item_display_comment_hint">Comment</string>
     <string name="item_display_serial_number_hint">Serial Number</string>
     <string name="total_valuation">Total Valuation:</string>
+    <string name="submit_button">Submit</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_password">Password</string>
 </resources>

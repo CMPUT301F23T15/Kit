@@ -21,6 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ProfileActivity"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.SECONDARY_HOME"/>
+
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
