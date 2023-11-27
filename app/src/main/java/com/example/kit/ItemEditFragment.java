@@ -2,8 +2,10 @@ package com.example.kit;
 
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.CommandManager;
@@ -42,7 +47,11 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 
 import com.google.firebase.Timestamp;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -176,6 +185,11 @@ public class ItemEditFragment extends Fragment {
         CarouselSnapHelper snapHelper = new CarouselSnapHelper();
         snapHelper.attachToRecyclerView(binding.imageCarousel);
         imageAdapter = new CarouselImageAdapter();
+        binding.imageCarousel.setAdapter(imageAdapter);
+
+
+
+
 
         ActivityResultLauncher<String> getContentLauncher = registerForActivityResult(new GetImageURIResultContract(), this::onImagePicked);
         binding.tempButton.setOnClickListener(new View.OnClickListener() {
@@ -190,15 +204,36 @@ public class ItemEditFragment extends Fragment {
     private void onImagePicked(Uri imageURI) {
         Bitmap bitmap;
         ContentResolver contentResolver = requireContext().getContentResolver();
-        ImageDecoder.Source source = ImageDecoder.createSource(contentResolver, imageURI);
         try {
-            bitmap = ImageDecoder.decodeBitmap(source);
+            InputStream inputStream  = contentResolver.openInputStream(imageURI);
+            bitmap = BitmapFactory.decodeStream(inputStream);
+            if (inputStream != null) {
+                inputStream.close();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 5, outputStream);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+        bitmap = BitmapFactory.decodeStream(inputStream);
+//        Glide.with(requireContext())
+//                .asBitmap()
+//                .load(bitmap)
+//                .into(new CustomTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                        binding.testImageView.setImageBitmap(resource);
+//                        Log.i("image", "reasource ready");
+//                    }
+//
+//                    @Override
+//                    public void onLoadCleared(@Nullable Drawable placeholder) {
+//                    }
+//                });
+
         images.add(new CarouselImage(bitmap));
         imageAdapter.submitList(images);
-        imageAdapter.notifyDataSetChanged();
     }
 
     private void initializeItemValueField() {
