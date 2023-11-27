@@ -1,14 +1,17 @@
 package com.example.kit;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.kit.data.FirestoreManager;
@@ -29,29 +32,23 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userAuth = FirebaseAuth.getInstance();
         binding = ProfilePageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        userAuth = FirebaseAuth.getInstance();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-        
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = binding.email.getText().toString();
                 String password = binding.password.getText().toString();
                 signIn(email, password);
-                if(!isLoggedIn()){
-                    createAccount(email, password);
-                }
+//                if(!isLoggedIn()){
+//
+//                    createAccount(email, password);
+//                }
             }
         });
-
-        return super.onCreateView(name, context, attrs);
     }
+
 
     public boolean isLoggedIn(){
         FirebaseUser user = userAuth.getCurrentUser();
@@ -62,27 +59,34 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
     public void signIn(String email, String password) {
-        userAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        Log.i("Sign In", "Signed in succesfully!");
-                        toListView();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        switch(e.getMessage()){
-                            case "The supplied auth credential is incorrect, malformed or has expired.":
-                                Log.d("Sign In", e.getMessage() + " Attempting to create account");
-                                break;
+        try {
+            userAuth.signInWithEmailAndPassword(email, password)
+                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            Log.i("Sign In", "Signed in successfully!");
+                            toListView();
                         }
-                    }
-                });
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                            builder.setMessage(R.string.createAccount)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            createAccount(email, password);
+                                        }
+                                    });
+                            builder.create().show();
+                        }
+                    });
+        } catch (Exception e) {
+            Toast.makeText(ProfileActivity.this, "Must Enter Email and Password", Toast.LENGTH_SHORT).show();
+        }
     }
     public void createAccount(String email, String password) {
-        // [START create_user_with_email]
         userAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
@@ -118,6 +122,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void toListView(){
+        Log.d("Navigation", "Navigating to the list view");
         Intent listIntent = new Intent(this, MainActivity.class);
         startActivity(listIntent);
     }

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         userAuth = FirebaseAuth.getInstance();
-        if(isLoggedIn()) {
+        if(!isLoggedIn()) {
             Intent login = new Intent(this, ProfileActivity.class);
             startActivity(login);
         } else {

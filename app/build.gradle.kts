@@ -38,7 +38,6 @@ android {
 
 dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.0")
-    implementation("androidx.annotation:annotation-jvm:1.7.0")
     compileOnly(files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"))
 
     implementation("androidx.appcompat:appcompat:1.6.1")
