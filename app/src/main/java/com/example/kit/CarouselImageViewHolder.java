@@ -8,13 +8,21 @@ import com.example.kit.databinding.CarouselImageBinding;
 
 public class CarouselImageViewHolder extends RecyclerView.ViewHolder {
     private final CarouselImageBinding binding;
+    private final boolean editMode;
+    private OnDeleteImageListener deleteImageListener;
+    private OnAddImageListener addImageListener;
 
-    public CarouselImageViewHolder(CarouselImageBinding binding) {
+    public CarouselImageViewHolder(CarouselImageBinding binding, boolean editMode) {
         super(binding.getRoot());
+        this.editMode = editMode;
         this.binding = binding;
+        this.binding.deleteButton.setOnClickListener(v -> {
+            deleteImageListener.onDeleteImageClick(getBindingAdapterPosition());
+        });
+        this.binding.carouselImagePlaceholder.setOnClickListener(v -> addImageListener.onAddImageClick());
     }
 
-    public void bind(CarouselImage image, boolean deletable) {
+    public void bind(CarouselImage image) {
         // If image is null, it is the add image placeholder
         if (image == null) {
             binding.carouselImage.setVisibility(View.GONE);
@@ -30,7 +38,25 @@ public class CarouselImageViewHolder extends RecyclerView.ViewHolder {
         }
 
         // Show the delete button if we are in delete mode
-        if (deletable) binding.deleteButton.setVisibility(View.VISIBLE);
+        if (editMode) binding.deleteButton.setVisibility(View.VISIBLE);
         else binding.deleteButton.setVisibility(View.GONE);
+    }
+
+    /* BEGIN LISTENER METHODS */
+    public void setOnDeleteImageListener(OnDeleteImageListener deleteImageListener) {
+        this.deleteImageListener = deleteImageListener;
+    }
+
+    public void setOnAddImageListener(OnAddImageListener addImageListener) {
+        this.addImageListener = addImageListener;
+    }
+
+    public interface OnDeleteImageListener {
+        void onDeleteImageClick(int position);
+    }
+    /* END LISTENER METHODS */
+
+    public interface OnAddImageListener {
+        void onAddImageClick();
     }
 }

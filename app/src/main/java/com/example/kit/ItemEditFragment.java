@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.text.InputType;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -51,7 +50,7 @@ import java.util.Date;
  * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
  * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
  */
-public class ItemEditFragment extends Fragment {
+public class ItemEditFragment extends Fragment implements CarouselImageViewHolder.OnAddImageListener {
 
     // Fragment Fields
     private String itemID;
@@ -164,26 +163,42 @@ public class ItemEditFragment extends Fragment {
     }
 
     private void initializeImageCarousel() {
+        // Create layout manager that makes the images morph and look pretty
         CarouselLayoutManager layoutManager
                 = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.HORIZONTAL);
 
-        binding.imageCarousel.setLayoutManager(layoutManager);
-        binding.imageCarousel.setNestedScrollingEnabled(false);
+        // Snap Helper snaps images into view instead of allowing free scrolling
         CarouselSnapHelper snapHelper = new CarouselSnapHelper();
-        snapHelper.attachToRecyclerView(binding.imageCarousel);
-        imageAdapter = new CarouselImageAdapter(true);
-        binding.imageCarousel.setAdapter(imageAdapter);
 
-        ActivityResultLauncher<String> getContentLauncher = registerForActivityResult(new ImageUtils.GetImageURIResultContract(), this::onImagePicked);
-        binding.floatingActionButton4.setOnClickListener(v -> getContentLauncher.launch("image/*"));
+        // Adapter for the RecyclerView, with this as a listener for when prompted to add new images
+        imageAdapter = new CarouselImageAdapter(true);
+        imageAdapter.setAddImageListener(this);
+
+        // Attach all to the RecyclerView and set properties
+        snapHelper.attachToRecyclerView(binding.imageCarousel);
+        binding.imageCarousel.setLayoutManager(layoutManager);
+        binding.imageCarousel.setAdapter(imageAdapter);
+        binding.imageCarousel.setNestedScrollingEnabled(false);
+
+        // Create a content launcher for when we want to add images from the gallery.
+        ActivityResultLauncher<String> getContentLauncher =
+                registerForActivityResult(new ImageUtils.GetImageURIResultContract(), this::onImagePicked);
+        // To use the above: getContentLauncher.launch("image/*")
     }
 
 
     private void onImagePicked(Uri imageURI) {
-        Bitmap bitmap = ImageUtils.convertUriToBitmap(imageURI, requireContext());
+        if (imageURI == null) return;
 
+        Bitmap bitmap = ImageUtils.convertUriToBitmap(imageURI, requireContext());
+        // Image adapter notifies itself of the dataset change
         imageAdapter.addImage(new CarouselImage(bitmap));
-        imageAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void onAddImageClick() {
+        // Launch interface to select between pictures from the gallery or take new photo
     }
 
     private void initializeItemValueField() {
