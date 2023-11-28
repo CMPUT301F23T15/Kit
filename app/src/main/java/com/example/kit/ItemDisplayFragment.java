@@ -12,12 +12,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
 import com.example.kit.util.FormatUtils;
+import com.google.android.material.carousel.CarouselLayoutManager;
+import com.google.android.material.carousel.CarouselSnapHelper;
+import com.google.android.material.carousel.HeroCarouselStrategy;
 
 /**
  * Fragment that displays an {@link Item} for viewing purposes.
@@ -27,6 +31,7 @@ public class ItemDisplayFragment extends Fragment {
     private ItemDisplayBinding binding;
     private NavController navController;
     private String itemID;
+    private CarouselImageAdapter imageAdapter;
 
     /**
      * Standard fragment lifecycle
@@ -56,6 +61,7 @@ public class ItemDisplayFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
         initializeConfirmButton();
+        initializeImageCarousel();
         disableInputs();
         return binding.getRoot();
     }
@@ -81,6 +87,17 @@ public class ItemDisplayFragment extends Fragment {
         });
     }
 
+    private void initializeImageCarousel() {
+        CarouselLayoutManager layoutManager
+                = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.HORIZONTAL);
+
+//        binding.imageCarousel.setLayoutManager(layoutManager);
+//        binding.imageCarousel.setNestedScrollingEnabled(false);
+//        CarouselSnapHelper snapHelper = new CarouselSnapHelper();
+//        snapHelper.attachToRecyclerView(binding.imageCarousel);
+//        imageAdapter = new CarouselImageAdapter();
+//        binding.imageCarousel.setAdapter(imageAdapter);
+    }
     /**
      * Disable input and set text color back to black for all edit texts. XML disable doesn't seem
      * to work.

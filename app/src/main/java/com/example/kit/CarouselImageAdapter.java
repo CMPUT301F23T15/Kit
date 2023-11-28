@@ -13,13 +13,27 @@ import java.util.ArrayList;
 public class CarouselImageAdapter extends RecyclerView.Adapter<CarouselImageViewHolder> {
 
     private final ArrayList<CarouselImage> images;
+    private boolean editMode = false;
 
-    public CarouselImageAdapter() {
+    public CarouselImageAdapter(boolean editMode) {
         images = new ArrayList<>();
+        if (editMode) {
+            images.add(null);
+        }
+        this.editMode = editMode;
     }
 
     public void addImage(CarouselImage image) {
-        images.add(image);
+        // Always add images before the null
+        if (editMode) {
+            if (images.size() < 2) {
+                images.add(0, image);
+            } else {
+                images.add(images.size()-2, image);
+            }
+        } else {
+            images.add(image);
+        }
     }
 
     public ArrayList<CarouselImage> getImages() {
@@ -36,7 +50,7 @@ public class CarouselImageAdapter extends RecyclerView.Adapter<CarouselImageView
 
     @Override
     public void onBindViewHolder(@NonNull CarouselImageViewHolder holder, int position) {
-        holder.bind(images.get(position));
+        holder.bind(images.get(position), editMode);
     }
 
     @Override

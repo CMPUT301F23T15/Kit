@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:ignore="SpeakableTextPresentCheck">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <ScrollView
         android:id="@+id/scrollView3"
         android:layout_width="0dp"

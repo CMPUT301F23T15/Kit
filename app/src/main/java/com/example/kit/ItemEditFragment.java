@@ -13,6 +13,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.text.InputType;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.CommandManager;
-import com.example.kit.data.ImageUtils;
+import com.example.kit.util.ImageUtils;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
@@ -169,10 +171,11 @@ public class ItemEditFragment extends Fragment {
         binding.imageCarousel.setNestedScrollingEnabled(false);
         CarouselSnapHelper snapHelper = new CarouselSnapHelper();
         snapHelper.attachToRecyclerView(binding.imageCarousel);
-        imageAdapter = new CarouselImageAdapter();
+        imageAdapter = new CarouselImageAdapter(true);
         binding.imageCarousel.setAdapter(imageAdapter);
 
-        registerForActivityResult(new ImageUtils.GetImageURIResultContract(), this::onImagePicked);
+        ActivityResultLauncher<String> getContentLauncher = registerForActivityResult(new ImageUtils.GetImageURIResultContract(), this::onImagePicked);
+        binding.floatingActionButton4.setOnClickListener(v -> getContentLauncher.launch("image/*"));
     }
 
 
