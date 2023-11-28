@@ -19,9 +19,12 @@ import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
 import com.example.kit.util.FormatUtils;
+import com.example.kit.util.ImageUtils;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
 import com.google.android.material.carousel.HeroCarouselStrategy;
+
+import java.util.ArrayList;
 
 /**
  * Fragment that displays an {@link Item} for viewing purposes.
@@ -88,15 +91,21 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     private void initializeImageCarousel() {
+        // Create layout manager that makes the images morph and look pretty
         CarouselLayoutManager layoutManager
                 = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.HORIZONTAL);
 
-//        binding.imageCarousel.setLayoutManager(layoutManager);
-//        binding.imageCarousel.setNestedScrollingEnabled(false);
-//        CarouselSnapHelper snapHelper = new CarouselSnapHelper();
-//        snapHelper.attachToRecyclerView(binding.imageCarousel);
-//        imageAdapter = new CarouselImageAdapter();
-//        binding.imageCarousel.setAdapter(imageAdapter);
+        // Snap Helper snaps images into view instead of allowing free scrolling
+        CarouselSnapHelper snapHelper = new CarouselSnapHelper();
+
+        // Adapter for the RecyclerView, not in edit mode
+        imageAdapter = new CarouselImageAdapter(false);
+
+        // Attach all to the RecyclerView and set properties
+        snapHelper.attachToRecyclerView(binding.imageCarousel);
+        binding.imageCarousel.setLayoutManager(layoutManager);
+        binding.imageCarousel.setAdapter(imageAdapter);
+        binding.imageCarousel.setNestedScrollingEnabled(false);
     }
     /**
      * Disable input and set text color back to black for all edit texts. XML disable doesn't seem
@@ -154,6 +163,10 @@ public class ItemDisplayFragment extends Fragment {
         binding.itemDisplayTagGroup.removeAllViews();
         for (Tag tag : item.getTags()) {
             binding.itemDisplayTagGroup.addTag(tag);
+        }
+
+        for (String base64 : item.getBase64Images()) {
+            imageAdapter.addImage(new CarouselImage(ImageUtils.convertBase64ToBitmap(base64)));
         }
     }
 }

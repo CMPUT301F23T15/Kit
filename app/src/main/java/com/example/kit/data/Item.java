@@ -24,7 +24,7 @@ public class Item implements Serializable {
     private String model;
     private String serialNumber;
     private final ArrayList<Tag> tags;
-    private final ArrayList<String> base64Images;
+    private ArrayList<String> base64Images;
 
     /**
      * Constructs an Item with an empty list of {@link Tag}s.
@@ -196,6 +196,10 @@ public class Item implements Serializable {
 
     public ArrayList<String> getBase64Images() {
         return base64Images;
+    }
+
+    public void setBase64Images (ArrayList<String> base64Images) {
+        this.base64Images = base64Images;
     }
 
     /**

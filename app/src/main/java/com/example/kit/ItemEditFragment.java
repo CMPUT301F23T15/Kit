@@ -171,6 +171,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         CarouselSnapHelper snapHelper = new CarouselSnapHelper();
 
         // Adapter for the RecyclerView, with this as a listener for when prompted to add new images
+        // This is the edit fragment, so we are in edit mode.
         imageAdapter = new CarouselImageAdapter(true);
         imageAdapter.setAddImageListener(this);
 
@@ -389,9 +390,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
             tagNames.remove(tag.getName());
         }
 
-        ArrayList<String> base64Strings = item.getBase64Images();
-        for (String base64 : base64Strings) {
-            
+        for (String base64 : item.getBase64Images()) {
             imageAdapter.addImage(new CarouselImage(ImageUtils.convertBase64ToBitmap(base64)));
         }
     }

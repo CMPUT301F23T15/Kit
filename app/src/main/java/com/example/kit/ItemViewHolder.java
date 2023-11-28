@@ -1,6 +1,7 @@
 package com.example.kit;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 
@@ -12,6 +13,7 @@ import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.example.kit.util.FormatUtils;
+import com.example.kit.util.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -59,6 +61,17 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         binding.itemTagGroupRow.clearTags();
         for (Tag tag : tags) {
             binding.itemTagGroupRow.addTag(tag);
+        }
+
+        if (item.getBase64Images().size() > 0) {
+            String thumbnailBase64 = item.getBase64Images().get(0);
+            Bitmap thumbnailBitmap = null;
+            if (thumbnailBase64 != null) {
+                thumbnailBitmap = ImageUtils.convertBase64ToBitmap(thumbnailBase64);
+            }
+            if (thumbnailBitmap != null) {
+                binding.itemThumbnailRow.setImageBitmap(ImageUtils.convertBase64ToBitmap());
+            }
         }
     }
 

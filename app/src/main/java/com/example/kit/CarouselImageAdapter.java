@@ -75,6 +75,9 @@ public class CarouselImageAdapter extends RecyclerView.Adapter<CarouselImageView
     }
 
     public ArrayList<CarouselImage> getImages() {
+        // Return all images except the null placeholder if we are in editmode
+        if (editMode) return new ArrayList<> (images.subList(0, images.size()-2));
+        // Otherwise return all images freely
         return images;
     }
     /* END DATA METHODS */
