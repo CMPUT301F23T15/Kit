@@ -12,7 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kit"
         android:windowSoftInputMode="adjustResize"
-        android:largeHeap = "true"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
