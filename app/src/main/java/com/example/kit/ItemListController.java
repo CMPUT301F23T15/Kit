@@ -19,6 +19,12 @@ public class ItemListController implements DataChangedCallback {
     private ItemSet itemSet;
     private ItemSetValueChangedCallback callback;
     private final DataSourceManager dataSourceManager = DataSourceManager.getInstance();
+    private String currentKeyword = "";
+    private String currentDateStart = "";
+    private String currentDateEnd = "";
+    private String currentPriceLow = "";
+    private String currentPriceHigh = "";
+
 
     /**
      * Initializes the {@link ItemSet} and attaches the controller as a {@link DataChangedCallback}
@@ -105,4 +111,32 @@ public class ItemListController implements DataChangedCallback {
      * Interface to register a callback when the value of the {@link ItemSet} changes.
      */
     public interface ItemSetValueChangedCallback { void onItemSetValueChanged(BigDecimal value); }
+
+    public void updateKeywordFilter(String keyword) {
+        this.currentKeyword = keyword;
+        applyFilters();
+    }
+
+    public void updateDateRangeFilter(String dateStart, String dateEnd) {
+        this.currentDateStart = dateStart;
+        this.currentDateEnd = dateEnd;
+        applyFilters();
+    }
+
+    public void updatePriceRangeFilter(String priceLow, String priceHigh) {
+        this.currentPriceLow = priceLow;
+        this.currentPriceHigh = priceHigh;
+        applyFilters();
+    }
+
+    // Applies all filters to the dataset
+    private void applyFilters() {
+        ItemSet filteredSet = itemSet
+                .filterByKeyword(currentKeyword)
+                .filterByDateRange(currentDateStart, currentDateEnd)
+                .filterByPriceRange(currentPriceLow, currentPriceHigh);
+        adapter.setItemSet(filteredSet);
+        adapter.notifyDataSetChanged();
+    }
+
 }
