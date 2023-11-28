@@ -90,6 +90,9 @@ public class ItemDisplayFragment extends Fragment {
         });
     }
 
+    /**
+     * Initialize the Carousel that displays the images associated with the item.
+     */
     private void initializeImageCarousel() {
         // Create layout manager that makes the images morph and look pretty
         CarouselLayoutManager layoutManager
@@ -107,6 +110,7 @@ public class ItemDisplayFragment extends Fragment {
         binding.imageCarousel.setAdapter(imageAdapter);
         binding.imageCarousel.setNestedScrollingEnabled(false);
     }
+
     /**
      * Disable input and set text color back to black for all edit texts. XML disable doesn't seem
      * to work.
@@ -131,7 +135,8 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     /**
-     * Loads an item's details into the UI components if editing an existing item. Retrieves the item from the fragment's arguments.
+     * Loads an item's details into the UI components if editing an existing item.
+     * Retrieves the item from the fragment's arguments.
      */
     private void loadItem() {
         // Return to previous screen if we didn't come with an item

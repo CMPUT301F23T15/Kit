@@ -188,16 +188,28 @@ public class Item implements Serializable {
         }
     }
 
+    /**
+     * Add a {@link android.util.Base64} string that represents an image to this item
+     * @param base64 A Base64 string for an image.
+     */
     public void addBase64ImageString(String base64) {
         if (!base64Images.contains(base64)) {
             base64Images.add(base64);
         }
     }
 
+    /**
+     * Retrieve all the {@link android.util.Base64} string representation of the images for this item
+     * @return The list of Base64 strings
+     */
     public ArrayList<String> getBase64Images() {
         return base64Images;
     }
 
+    /**
+     * Set a list of {@link android.util.Base64} string representations of images for this item.
+     * @param base64Images The list of Base64 strings.
+     */
     public void setBase64Images (ArrayList<String> base64Images) {
         this.base64Images = base64Images;
     }

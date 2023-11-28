@@ -55,22 +55,22 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         if (item.getValue() != null) {
             binding.itemValueRow.setText(FormatUtils.formatValue(item.valueToBigDecimal(), true));
         }
-        ArrayList<Tag> tags = item.getTags();
 
+        // Display Tags as chips, including a default add tag chip
+        ArrayList<Tag> tags = item.getTags();
         binding.itemTagGroupRow.enableAddChip(true);
         binding.itemTagGroupRow.clearTags();
         for (Tag tag : tags) {
             binding.itemTagGroupRow.addTag(tag);
         }
 
+        // If there is images associated with the item, display the first image as the thumbnail
         if (item.getBase64Images().size() > 0) {
             String thumbnailBase64 = item.getBase64Images().get(0);
-            Bitmap thumbnailBitmap = null;
-            if (thumbnailBase64 != null) {
-                thumbnailBitmap = ImageUtils.convertBase64ToBitmap(thumbnailBase64);
-            }
+            Bitmap thumbnailBitmap;
+            thumbnailBitmap = ImageUtils.convertBase64ToBitmap(thumbnailBase64);
             if (thumbnailBitmap != null) {
-                binding.itemThumbnailRow.setImageBitmap(ImageUtils.convertBase64ToBitmap());
+                binding.itemThumbnailRow.setImageBitmap(thumbnailBitmap);
             }
         }
     }

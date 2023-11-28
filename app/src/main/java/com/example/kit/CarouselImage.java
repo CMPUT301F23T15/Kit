@@ -1,23 +1,24 @@
 package com.example.kit;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 
-import java.util.Objects;
-
+/**
+ * Simple dataclass for representation in a {@link CarouselImageViewHolder}. Stores a bitmap image
+ */
 public class CarouselImage {
     private final Bitmap image;
 
-    public CarouselImage(String base64String) {
-        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
-        this.image = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-    }
-
+    /**
+     * Construct a CarouselImage object from a Bitmap
+     * @param image The Bitmap to store in this object
+     */
     public CarouselImage(Bitmap image) {
         this.image = image;
     }
 
+    /** Return the Bitmap image
+     * @return The Bitmap image
+     */
     public Bitmap getImage() {
         return image;
     }

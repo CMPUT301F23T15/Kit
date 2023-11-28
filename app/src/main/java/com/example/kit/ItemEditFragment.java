@@ -60,6 +60,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
 
     // Image Carousel Fields
     private CarouselImageAdapter imageAdapter;
+    ActivityResultLauncher<String> getContentLauncher;
 
     // Tag Dropdown Fields
     private ArrayAdapter<String> tagNameAdapter;
@@ -162,6 +163,10 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         });
     }
 
+    /**
+     * Initialize the Image Carousel, setting the layout and snap helpers in addition to an adapter
+     * that manages clicks within the ViewHolders for adding and deleting images.
+     */
     private void initializeImageCarousel() {
         // Create layout manager that makes the images morph and look pretty
         CarouselLayoutManager layoutManager
@@ -182,12 +187,16 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         binding.imageCarousel.setNestedScrollingEnabled(false);
 
         // Create a content launcher for when we want to add images from the gallery.
-        ActivityResultLauncher<String> getContentLauncher =
+        getContentLauncher =
                 registerForActivityResult(new ImageUtils.GetImageURIResultContract(), this::onImagePicked);
         // To use the above: getContentLauncher.launch("image/*")
     }
 
 
+    /**
+     * Callback method from selecting images on the device, converts the Uri and adds it to the list
+     * @param imageURI The Uri of the image result from the Launcher
+     */
     private void onImagePicked(Uri imageURI) {
         if (imageURI == null) return;
 
@@ -196,10 +205,13 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         imageAdapter.addImage(new CarouselImage(bitmap));
     }
 
-
+    /**
+     * Launches an interface to select between adding images from the device or taking new pictures
+     */
     @Override
     public void onAddImageClick() {
         // Launch interface to select between pictures from the gallery or take new photo
+        getContentLauncher.launch("image/*");
     }
 
     private void initializeItemValueField() {

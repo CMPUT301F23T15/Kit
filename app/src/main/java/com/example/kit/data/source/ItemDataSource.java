@@ -163,11 +163,11 @@ public class ItemDataSource extends AbstractItemDataSource {
     }
 
     /**
-     * Helper method that extracts a list of tag names from the itemSnapshot, with type checking
+     * Helper method that extracts a list of strings from the itemSnapshot, with type checking
      * to ensure the list is a string list.
      * @implNote Suppresses unchecked cast warning, because it does check the type.
      * @param itemSnapshot DocumentSnapshot representing an item.
-     * @return List of tag names if it exists, otherwise an empty list.
+     * @return List of strings if it exists, otherwise an empty list.
      */
     @SuppressWarnings("unchecked")
     private static ArrayList<String> getListField(DocumentSnapshot itemSnapshot, String field) {
