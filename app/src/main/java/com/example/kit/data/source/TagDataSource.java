@@ -30,25 +30,24 @@ public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
      * Creates a cache for the state of the database that is updated whenever the database changes.
      */
     public TagDataSource() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseAuth.AuthStateListener listener = new FirebaseAuth.AuthStateListener() {
+        tagCache = new HashMap<>();
+        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user == null){
                     tagCollection = FirestoreManager.getInstance().getCollection("SampleTags");
                 } else {
                     tagCollection = FirestoreManager.getInstance().getCollection("Users")
                             .document(user.getUid()).collection("Tags");
                 }
+                updateCollection();
             }
-        };
-        if(user == null){
-            tagCollection = FirestoreManager.getInstance().getCollection("SampleTags");
-        } else {
-            tagCollection = FirestoreManager.getInstance().getCollection("Users")
-                    .document(user.getUid()).collection("Tags");
-        }
-        tagCache = new HashMap<>();
+        });
+
+    }
+
+    private void updateCollection(){
         tagCollection.addSnapshotListener((tagSnapshots, error) -> {
             if (tagSnapshots == null) {
                 Log.e("Database", "SnapshotListener null query result");

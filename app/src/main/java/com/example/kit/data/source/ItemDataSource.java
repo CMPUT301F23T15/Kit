@@ -27,39 +27,38 @@ import java.util.List;
 public class ItemDataSource extends AbstractItemDataSource {
 
     private CollectionReference itemCollection;
-    private final HashMap<String, Item> itemCache;
+    private HashMap<String, Item> itemCache;
 
     /**
      * Constructor that establishes connection to the {@link FirestoreManager} for the Tag Collection.
      * Creates a cache for the state of the database that is updated whenever the database changes.
      */
     public ItemDataSource() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseAuth.AuthStateListener listener = new FirebaseAuth.AuthStateListener() {
+        itemCache = new HashMap<>();
+        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user == null){
+                    Log.d("Auth Change", "User has been signed out");
                     itemCollection = FirestoreManager.getInstance().getCollection("SampleItems");
                 } else {
+                    Log.d("Auth Change", "User has been changed: " + firebaseAuth.getCurrentUser().getEmail());
                     itemCollection = FirestoreManager.getInstance().getCollection("Users")
                             .document(user.getUid()).collection("Items");
                 }
+                updateCollection();
             }
-        };
-        if(user == null){
-            itemCollection = FirestoreManager.getInstance().getCollection("SampleItems");
-        } else {
-            itemCollection = FirestoreManager.getInstance().getCollection("Users")
-                    .document(user.getUid()).collection("Items");
-        }
+        });
+    }
 
-        itemCache = new HashMap<>();
+    private void updateCollection(){
+
         itemCollection.addSnapshotListener((itemSnapshots, error) -> {
             if (itemSnapshots == null) {
                 Log.e("Database", "SnapshotListener null query result");
                 return;
             }
-
             itemCache.clear();
             for (QueryDocumentSnapshot itemSnapshot: itemSnapshots) {
                 Item item = buildItem(itemSnapshot);

@@ -109,6 +109,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Log.d("Create User", "createUserWithEmail:success");
                         HashMap<String, String> userData = new HashMap<>();
                         userData.put("Email", userAuth.getCurrentUser().getEmail());
+                        userData.put("userID", userAuth.getUid());
                         FirestoreManager.getInstance().getCollection("Users").document(userAuth.getCurrentUser().getUid()).set(userData);
                         signIn(email, password);
 
@@ -125,8 +126,11 @@ public class ProfileActivity extends AppCompatActivity {
                             case "The email address is already in use by another account.":
                                 Log.i("Create User", e.getMessage());
                                 break;
-
+                            case "The email address is badly formatted.":
+                                Log.i("Create User", e.getMessage());
                         }
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                        builder.setMessage(e.getMessage()).create().show();
                     }
                 });
 
