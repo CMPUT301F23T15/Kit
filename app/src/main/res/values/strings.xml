@@ -14,5 +14,6 @@
     <string name="submit_button">Submit</string>
     <string name="profile_email">Email</string>
     <string name="profile_password">Password</string>
-    <string name="createAccount">Create New Account?</string>
+    <string name="createAccount">Do you want to create a new account?</string>
+    <string name="signOut">Sign Out</string>
 </resources>

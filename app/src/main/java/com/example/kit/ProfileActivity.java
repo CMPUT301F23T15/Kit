@@ -25,7 +25,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity {
-
     private ProfilePageBinding binding;
     private FirebaseAuth userAuth;
 
@@ -40,15 +39,31 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = binding.email.getText().toString();
                 String password = binding.password.getText().toString();
-                signIn(email, password);
-//                if(!isLoggedIn()){
-//
-//                    createAccount(email, password);
-//                }
+                if(!isLoggedIn()){
+                    signIn(email, password);
+                } else {
+                    signOut();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
             }
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(isLoggedIn()){
+            binding.email.setVisibility(View.GONE);
+            binding.password.setVisibility(View.GONE);
+            binding.button.setText(R.string.signOut);
+
+        } else {
+            binding.button.setText(R.string.submit_button);
+
+        }
+    }
 
     public boolean isLoggedIn(){
         FirebaseUser user = userAuth.getCurrentUser();

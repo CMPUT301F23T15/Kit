@@ -40,7 +40,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         // Fill in item row values
         DateFormat df = DateFormat.getDateTimeInstance();
         binding.itemNameRow.setText(item.getName());
-        binding.itemDateRow.setText(df.format(item.getAcquisitionDate().toDate()));
+        //binding.itemDateRow.setText(df.format(item.getAcquisitionDate().toDate()));
         String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
         binding.itemValueRow.setText(formattedValue);
         ArrayList<Tag> tags = item.getTags();

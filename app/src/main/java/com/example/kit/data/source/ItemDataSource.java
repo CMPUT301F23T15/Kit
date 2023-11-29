@@ -2,11 +2,15 @@ package com.example.kit.data.source;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.FirestoreManager;
 import com.example.kit.data.Tag;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -22,7 +26,7 @@ import java.util.List;
  */
 public class ItemDataSource extends AbstractItemDataSource {
 
-    private final CollectionReference itemCollection;
+    private CollectionReference itemCollection;
     private final HashMap<String, Item> itemCache;
 
     /**
@@ -30,7 +34,25 @@ public class ItemDataSource extends AbstractItemDataSource {
      * Creates a cache for the state of the database that is updated whenever the database changes.
      */
     public ItemDataSource() {
-        itemCollection = FirestoreManager.getInstance().getCollection("Items");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseAuth.AuthStateListener listener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(user == null){
+                    itemCollection = FirestoreManager.getInstance().getCollection("SampleItems");
+                } else {
+                    itemCollection = FirestoreManager.getInstance().getCollection("Users")
+                            .document(user.getUid()).collection("Items");
+                }
+            }
+        };
+        if(user == null){
+            itemCollection = FirestoreManager.getInstance().getCollection("SampleItems");
+        } else {
+            itemCollection = FirestoreManager.getInstance().getCollection("Users")
+                    .document(user.getUid()).collection("Items");
+        }
+
         itemCache = new HashMap<>();
         itemCollection.addSnapshotListener((itemSnapshots, error) -> {
             if (itemSnapshots == null) {

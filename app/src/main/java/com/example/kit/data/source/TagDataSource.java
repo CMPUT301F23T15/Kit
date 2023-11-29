@@ -3,8 +3,12 @@ package com.example.kit.data.source;
 import android.graphics.Color;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.kit.data.Tag;
 import com.example.kit.data.FirestoreManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -18,7 +22,7 @@ import java.util.HashMap;
  */
 public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
 
-    private final CollectionReference tagCollection;
+    private CollectionReference tagCollection;
     private final HashMap<String, Tag> tagCache;
 
     /**
@@ -26,7 +30,24 @@ public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
      * Creates a cache for the state of the database that is updated whenever the database changes.
      */
     public TagDataSource() {
-        tagCollection = FirestoreManager.getInstance().getCollection("Tags");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseAuth.AuthStateListener listener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(user == null){
+                    tagCollection = FirestoreManager.getInstance().getCollection("SampleTags");
+                } else {
+                    tagCollection = FirestoreManager.getInstance().getCollection("Users")
+                            .document(user.getUid()).collection("Tags");
+                }
+            }
+        };
+        if(user == null){
+            tagCollection = FirestoreManager.getInstance().getCollection("SampleTags");
+        } else {
+            tagCollection = FirestoreManager.getInstance().getCollection("Users")
+                    .document(user.getUid()).collection("Tags");
+        }
         tagCache = new HashMap<>();
         tagCollection.addSnapshotListener((tagSnapshots, error) -> {
             if (tagSnapshots == null) {
