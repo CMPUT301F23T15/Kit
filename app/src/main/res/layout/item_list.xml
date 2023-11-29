@@ -126,4 +126,17 @@
         app:layout_constraintEnd_toEndOf="@+id/delete_item_button"
         app:layout_constraintStart_toStartOf="@+id/delete_item_button" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/camera_button"
+        style="?attr/floatingActionButtonSmallStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/content_vertical_space"
+        android:clickable="true"
+        android:src="@drawable/baseline_photo_camera_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/add_tags_button"
+        app:layout_constraintEnd_toEndOf="@+id/add_tags_button"
+        app:layout_constraintStart_toStartOf="@+id/add_tags_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
