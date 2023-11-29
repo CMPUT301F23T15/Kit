@@ -1,6 +1,10 @@
 package com.example.kit;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +17,48 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.kit.databinding.ItemListBinding;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.HashSet;
+
+import android.Manifest;
+import android.content.ContentValues;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.video.Recorder;
+import androidx.camera.video.Recording;
+import androidx.camera.video.VideoCapture;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import com.android.example.CameraX.databinding.ActivityMainBinding;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import android.widget.Toast;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.core.Preview;
+import androidx.camera.core.CameraSelector;
+import android.util.Log;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
+import androidx.camera.video.FallbackStrategy;
+import androidx.camera.video.MediaStoreOutputOptions;
+import androidx.camera.video.Quality;
+import androidx.camera.video.QualitySelector;
+import androidx.camera.video.VideoRecordEvent;
+import androidx.core.content.PermissionChecker;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
@@ -77,6 +119,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
+        binding.cameraButton.setOnClickListener(onClick -> onTakePhoto());
     }
 
     /**
@@ -116,6 +159,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             binding.addItemButton.setVisibility(View.GONE);
             binding.addTagsButton.setVisibility(View.VISIBLE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
+            binding.cameraButton.setVisibility(View.VISIBLE);
         } else {            // Show add button
             binding.addItemButton.setVisibility(View.VISIBLE);
             binding.addTagsButton.setVisibility(View.GONE);
@@ -210,4 +254,27 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
     }
+
+    private void onTakePhoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            cameraLauncher.launch(takePictureIntent);
+        }
+    }
+    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // Handle the result here, similar to the previous onActivityResult logic
+                    Bundle extras = result.getData().getExtras();
+                    if (extras != null && extras.containsKey("data")) {
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        // Now you can do something with the captured image
+                        //navController.navigate(ItemListFragmentDirections.showCapturedImageAction(imageBitmap));
+                    }
+                }
+            }
+    );
+
+
 }
