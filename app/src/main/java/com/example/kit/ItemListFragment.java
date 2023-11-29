@@ -131,9 +131,10 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      * Initializes UI interactions, setting up listeners for add and delete buttons.
      */
     //TODO: Implement add and profile buttons here
-    private void initializeUIInteractions() {
-        binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
-        binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+    public void initializeUIInteractions(){
+        binding.addItemButton.setOnClickListener(onClick -> {
+            navController.navigate(R.id.newItemAction);
+        });
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
     }
