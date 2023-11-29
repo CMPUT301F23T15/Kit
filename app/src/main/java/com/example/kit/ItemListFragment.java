@@ -23,6 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import android.Manifest;
@@ -38,7 +39,9 @@ import androidx.camera.video.Recording;
 import androidx.camera.video.VideoCapture;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.android.example.CameraX.databinding.ActivityMainBinding;
+//import com.android.example.CameraX.databinding.ActivityMainBinding;
+
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import android.widget.Toast;
@@ -256,25 +259,54 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     private void onTakePhoto() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            cameraLauncher.launch(takePictureIntent);
+        checkAndRequestPermissions();
+    }
+    private static final String[] REQUIRED_PERMISSIONS = {
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            // Add other required permissions as needed
+    };
+    private void checkAndRequestPermissions() {
+        // Check if permissions are already granted
+        boolean allPermissionsGranted = true;
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                allPermissionsGranted = false;
+                break;
+            }
+        }
+
+        // If any permission is not granted, request permissions
+        if (!allPermissionsGranted) {
+            String[] permissionsToRequest = Arrays.stream(REQUIRED_PERMISSIONS)
+                    .filter(permission -> ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
+                    .toArray(String[]::new);
+            activityResultLauncher.launch(permissionsToRequest);
+        } else {
+            // All permissions are already granted, proceed with your logic
+            startCamera();
         }
     }
-    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    // Handle the result here, similar to the previous onActivityResult logic
-                    Bundle extras = result.getData().getExtras();
-                    if (extras != null && extras.containsKey("data")) {
-                        Bitmap imageBitmap = (Bitmap) extras.get("data");
-                        // Now you can do something with the captured image
-                        //navController.navigate(ItemListFragmentDirections.showCapturedImageAction(imageBitmap));
+
+    private ActivityResultLauncher<String[]> activityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+                // Handle Permission granted/rejected
+                boolean permissionGranted = true;
+                for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+                    if (Arrays.asList(REQUIRED_PERMISSIONS).contains(entry.getKey()) && !entry.getValue()) {
+                        permissionGranted = false;
                     }
                 }
-            }
-    );
+                if (!permissionGranted) {
+                    //Toast.makeText(baseContext, "Permission request denied", Toast.LENGTH_SHORT).show();
+                } else {
+                    onTakePhoto();
+                }
+            });
+
+    private void startCamera() {
+        // Add your logic to start the camera here
+    }
 
 
 }
