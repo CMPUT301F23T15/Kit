@@ -90,21 +90,17 @@ public class CarouselImageAdapter extends RecyclerView.Adapter<CarouselImageView
             if (images.size() < 2) {
                 // With less than 2 images, we must add the newest image directly at index 0
                 images.add(0, image);
-                notifyItemInserted(0);
             } else {
                 // If we have 2 or more images, we want to add the newest image in the second to last
                 // index behind the "null" image used to represent the add image button.
-                images.add(images.size()-2, image);
-
-                // Notify the adapter of the change, with an offset of -3 due to the above insertion
-                // changing the size of the array
-                notifyItemInserted(images.size()-3);
+                images.add(images.size()-1, image);
             }
         } else {
             // No add item button, freely add images at the end of the list
             images.add(image);
-            notifyItemInserted(images.size()-2);
+//            notifyItemInserted(images.size()-1);
         }
+        notifyDataSetChanged();
     }
 
     /**
@@ -113,7 +109,7 @@ public class CarouselImageAdapter extends RecyclerView.Adapter<CarouselImageView
      */
     public ArrayList<CarouselImage> getImages() {
         // Return all images except the null placeholder if we are in editmode
-        if (editMode) return new ArrayList<> (images.subList(0, images.size()-2));
+        if (editMode) return new ArrayList<> (images.subList(0, images.size()-1));
         // Otherwise return all images freely
         return images;
     }
@@ -121,7 +117,6 @@ public class CarouselImageAdapter extends RecyclerView.Adapter<CarouselImageView
 
 
     /* BEGIN LISTENER METHODS */
-
     /**
      * Callback method for the {@link com.example.kit.CarouselImageViewHolder.OnDeleteImageListener}
      * which removes the selected image from the list and notifies the adapter of the changes

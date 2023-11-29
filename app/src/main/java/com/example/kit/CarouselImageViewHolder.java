@@ -12,6 +12,7 @@ import com.example.kit.databinding.CarouselImageBinding;
  */
 public class CarouselImageViewHolder extends RecyclerView.ViewHolder {
     private final CarouselImageBinding binding;
+    private CarouselImage image;
     private final boolean editMode;
     private OnDeleteImageListener deleteImageListener;
     private OnAddImageListener addImageListener;
@@ -28,7 +29,9 @@ public class CarouselImageViewHolder extends RecyclerView.ViewHolder {
         this.binding.deleteButton.setOnClickListener(v -> {
             deleteImageListener.onDeleteImageClick(getBindingAdapterPosition());
         });
-        this.binding.carouselImagePlaceholder.setOnClickListener(v -> addImageListener.onAddImageClick());
+        this.binding.carouselImagePlaceholder.setOnClickListener(v -> {
+            addImageListener.onAddImageClick();
+        });
     }
 
     /**
@@ -37,23 +40,37 @@ public class CarouselImageViewHolder extends RecyclerView.ViewHolder {
      * @param image The image to display, or null for add image button
      */
     public void bind(CarouselImage image) {
+        this.image = image;
         // If image is null, it is the add image placeholder
         if (image == null) {
             binding.carouselImage.setVisibility(View.GONE);
-            binding.carouselImagePlaceholder.setVisibility(View.VISIBLE);
             binding.deleteButton.setVisibility(View.GONE);
+            binding.deleteButton.setClickable(false);
+            binding.carouselImagePlaceholder.setVisibility(View.VISIBLE);
+            binding.carouselImagePlaceholder.setClickable(true);
             return;
-
-        // Otherwise display image as normal
-        } else {
-            binding.carouselImage.setImageBitmap(image.getImage());
-            binding.carouselImage.setVisibility(View.VISIBLE);
-            binding.carouselImagePlaceholder.setVisibility(View.GONE);
         }
+        // Otherwise display image as normal
+        binding.carouselImage.setImageBitmap(image.getImage());
+        binding.carouselImage.setVisibility(View.VISIBLE);
+        binding.carouselImagePlaceholder.setVisibility(View.GONE);
+        binding.carouselImagePlaceholder.setClickable(false);
 
         // Show the delete button if we are in delete mode
-        if (editMode) binding.deleteButton.setVisibility(View.VISIBLE);
-        else binding.deleteButton.setVisibility(View.GONE);
+        if (editMode) {
+            binding.deleteButton.setVisibility(View.VISIBLE);
+            binding.deleteButton.setClickable(true);
+        }
+        else {
+            binding.deleteButton.setVisibility(View.GONE);
+            binding.deleteButton.setClickable(false);
+        }
+    }
+
+    public void setAllowAdd(boolean allowAdd) {
+        if (image != null) return;
+
+        binding.carouselImagePlaceholder.setClickable(allowAdd);
     }
 
     /* BEGIN LISTENER METHODS */

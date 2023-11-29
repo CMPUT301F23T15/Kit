@@ -45,6 +45,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
@@ -60,7 +61,9 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
 
     // Image Carousel Fields
     private CarouselImageAdapter imageAdapter;
-    ActivityResultLauncher<String> getContentLauncher;
+    private CarouselSnapHelper snapHelper;
+    private CarouselLayoutManager layoutManager;
+    private ActivityResultLauncher<String> getContentLauncher;
 
     // Tag Dropdown Fields
     private ArrayAdapter<String> tagNameAdapter;
@@ -169,11 +172,11 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
      */
     private void initializeImageCarousel() {
         // Create layout manager that makes the images morph and look pretty
-        CarouselLayoutManager layoutManager
+        layoutManager
                 = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.HORIZONTAL);
 
         // Snap Helper snaps images into view instead of allowing free scrolling
-        CarouselSnapHelper snapHelper = new CarouselSnapHelper();
+        snapHelper = new CarouselSnapHelper();
 
         // Adapter for the RecyclerView, with this as a listener for when prompted to add new images
         // This is the edit fragment, so we are in edit mode.
@@ -185,11 +188,44 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         binding.imageCarousel.setLayoutManager(layoutManager);
         binding.imageCarousel.setAdapter(imageAdapter);
         binding.imageCarousel.setNestedScrollingEnabled(false);
+        binding.imageCarousel.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) return;
+                updateAddButtonStatus();
+            }
+        });
+
 
         // Create a content launcher for when we want to add images from the gallery.
         getContentLauncher =
                 registerForActivityResult(new ImageUtils.GetImageURIResultContract(), this::onImagePicked);
         // To use the above: getContentLauncher.launch("image/*")
+    }
+
+    private void updateAddButtonStatus() {
+        int snapPos;
+        View snapView = snapHelper.findSnapView(layoutManager);
+        if (snapView == null) {
+            snapPos = -1;
+            return;
+        }
+
+        // Get the position of the view within the Adapter that we are snapped to
+        snapPos = Objects.requireNonNull(
+                binding.imageCarousel.findContainingViewHolder(snapView)).getBindingAdapterPosition();
+
+        int addItemButtonPos = binding.imageCarousel.getChildCount() - 1;
+        CarouselImageViewHolder addImageViewHolder =
+                (CarouselImageViewHolder) binding.imageCarousel.getChildViewHolder(
+                        binding.imageCarousel.getChildAt(addItemButtonPos));
+
+        addImageViewHolder.setAllowAdd(snapPos == addItemButtonPos);
+        for (int i = 0; i < binding.imageCarousel.getChildCount(); i++) {
+            CarouselImageViewHolder viewHolder = (CarouselImageViewHolder) binding.imageCarousel.getChildViewHolder(binding.imageCarousel.getChildAt(i));
+            viewHolder.setAllowAdd(snapPos == imageAdapter.getItemCount() - 1);
+        }
     }
 
 
@@ -211,6 +247,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
     @Override
     public void onAddImageClick() {
         // Launch interface to select between pictures from the gallery or take new photo
+//        if (snapPos != imageAdapter.getItemCount()-1) return;
         getContentLauncher.launch("image/*");
     }
 
