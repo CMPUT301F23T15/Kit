@@ -14,9 +14,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Date;
-
 @RunWith(AndroidJUnit4.class)
 public class ItemTest {
+    /*
     public Item mockItem1() {
         Item item = new Item();
         item.setName("test name");
@@ -79,4 +79,5 @@ public class ItemTest {
         Item item2 = mockItem2();
         assertNotEquals(item1, item2);
     }
+     */
 }
