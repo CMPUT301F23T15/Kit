@@ -12,11 +12,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.kit.databinding.ItemListBinding;
+import com.google.common.util.concurrent.ListenableFuture;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
@@ -42,6 +45,7 @@ import androidx.core.content.ContextCompat;
 //import com.android.example.CameraX.databinding.ActivityMainBinding;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import android.widget.Toast;
@@ -305,7 +309,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             });
 
     private void startCamera() {
-        // Add your logic to start the camera here
+        Intent cameraIntent = new Intent(requireContext(), CameraActivity.class);
+        startActivity(cameraIntent);
     }
 
 
