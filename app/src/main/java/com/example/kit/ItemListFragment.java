@@ -309,8 +309,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             });
 
     private void startCamera() {
-        Intent cameraIntent = new Intent(requireContext(), CameraActivity.class);
-        startActivity(cameraIntent);
+        Intent i = new Intent(requireContext(), CameraActivity.class);
+        startActivity(i);
     }
 
 
