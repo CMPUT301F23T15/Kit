@@ -204,24 +204,25 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         // To use the above: getContentLauncher.launch("image/*")
     }
 
+    /**
+     * Helper method to disable the AddImageButton unless it is the ViewHolder that is snapped in place
+     */
     private void updateAddButtonStatus() {
-        int snapPos;
         View snapView = snapHelper.findSnapView(layoutManager);
-        if (snapView == null) {
-            snapPos = -1;
+        if (snapView == null) return;
+
+        // Get the position of the view within the Adapter that we are snapped to
+        int snapPos;
+        try {
+            snapPos = Objects.requireNonNull(
+                    binding.imageCarousel.findContainingViewHolder(snapView)).getBindingAdapterPosition();
+        } catch (NullPointerException e){
             return;
         }
 
-        // Get the position of the view within the Adapter that we are snapped to
-        snapPos = Objects.requireNonNull(
-                binding.imageCarousel.findContainingViewHolder(snapView)).getBindingAdapterPosition();
-
-        int addItemButtonPos = binding.imageCarousel.getChildCount() - 1;
-        CarouselImageViewHolder addImageViewHolder =
-                (CarouselImageViewHolder) binding.imageCarousel.getChildViewHolder(
-                        binding.imageCarousel.getChildAt(addItemButtonPos));
-
-        addImageViewHolder.setAllowAdd(snapPos == addItemButtonPos);
+        // Loop through the children of the RecyclerView and only allow the add image button to work
+        // if it is the view that is snapped to.
+        // There has to a better way to do this, but I don't know how.
         for (int i = 0; i < binding.imageCarousel.getChildCount(); i++) {
             CarouselImageViewHolder viewHolder = (CarouselImageViewHolder) binding.imageCarousel.getChildViewHolder(binding.imageCarousel.getChildAt(i));
             viewHolder.setAllowAdd(snapPos == imageAdapter.getItemCount() - 1);
