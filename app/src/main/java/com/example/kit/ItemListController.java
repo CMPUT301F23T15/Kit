@@ -64,6 +64,11 @@ public class ItemListController implements DataChangedCallback {
         CommandManager.getInstance().executeCommand(deleteItemsMacro);
     }
 
+    /**
+     * Fetches the IDs of the items at the specified positions in the adapter
+     * @param positions Positions of items in the adapter
+     * @return The corrisponding Item IDs
+     */
     public HashSet<String> getItemIDsAtPositions(HashSet<Integer> positions) {
         HashSet<String> itemIDs = new HashSet<>();
         for (int pos : positions) {

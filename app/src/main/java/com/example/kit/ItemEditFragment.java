@@ -92,6 +92,9 @@ public class ItemEditFragment extends Fragment {
         loadItem();
     }
 
+    /**
+     * Adds behavior to scroll to make the tag chip group visible when editing the tag field
+     */
     private void initializeScrollBehaviorForTagField() {
         binding.tagAutoCompleteField.setOnFocusChangeListener((v, hasFocus) -> {
             tagFieldFocused = hasFocus;
@@ -142,6 +145,10 @@ public class ItemEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Adds input formatting to the Value field, formatting it as a currency string without the
+     * currency symbol.
+     */
     private void initializeItemValueField() {
         binding.itemValueDisplay.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus && binding.itemValueDisplay.getText() != null) {
@@ -153,15 +160,24 @@ public class ItemEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Create the list of existing tags to add to the Tag dropdown field, and provide click listeners
+     * for clicking items in the list, as well as providing function for adding new tags typed
+     * in the field.
+     */
     private void initializeTagField() {
+        // Add all existing tags to the list of tags for the dropdown
         tagNames = new ArrayList<>();
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();
         for (Tag tag : dbTags) {
             tagNames.add(tag.getName());
         }
+        // Create the adapter with the list of tag names
         adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
         binding.tagAutoCompleteField.setAdapter(adapter);
 
+        // When a Tag name is clicked, fetch the Tag from the name and remove it from the tag name
+        // list so that tags that are already on the item cannot be added to the item
         binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
             binding.itemDisplayTagGroup.addTag(addTag);
