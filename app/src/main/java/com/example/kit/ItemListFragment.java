@@ -5,11 +5,16 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,13 +24,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.kit.command.AddTagCommand;
+import com.example.kit.command.CommandManager;
 import com.example.kit.data.Filter;
+import com.example.kit.data.Tag;
 import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -120,7 +129,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         adapter.setListener(this);
 
         // Make controller aware of the adapter
-        controller.setAdapter(adapter);
+        controller.setItemAdapter(adapter);
 
         // Initialize RecyclerView with adapter and layout manager
         binding.itemList.setAdapter(adapter);
@@ -163,6 +172,66 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             }
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
+        });
+
+        // Create the tag adapter with the list of tag names
+        ArrayAdapter<String> tagAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item);
+        filterBinding.tagAutoCompleteField.setAdapter(tagAdapter);
+        controller.setTagAdapter(tagAdapter);
+
+        // When a Tag name is clicked, fetch the Tag from the name and remove it from the tag name
+        // list so that tags that are already on the item cannot be added to the item
+        filterBinding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
+            Tag addTag = controller.tagClickedAtPosition(position);
+            filterBinding.tagsFilter.addTag(addTag);
+            // Clear the field
+            filterBinding.tagAutoCompleteField.setText("", false);
+        });
+
+        // Listener for enter key pressed to add a tag that doesn't exist
+        filterBinding.tagAutoCompleteField.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
+                String newTagName = filterBinding.tagAutoCompleteField.getText().toString();
+                if (newTagName.isEmpty()) {
+                    return false;
+                }
+                Tag addTag = controller.tagFilterEntered(newTagName);
+
+                if (addTag != null) {
+                    filterBinding.tagsFilter.addTag(addTag);
+                }
+
+                // Clear the field
+                filterBinding.tagAutoCompleteField.setText("", false);
+                return true;
+            }
+            return false;
+        });
+
+        ArrayAdapter<String> makeAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item);
+        filterBinding.makeAutoCompleteField.setAdapter(makeAdapter);
+        controller.setMakeAdapter(makeAdapter);
+
+        filterBinding.makeAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
+            String make = controller.makeClickedAtPosition(position);
+            filterBinding.makesFilter.addMake(make);
+            filterBinding.makeAutoCompleteField.setText("", false);
+        });
+
+        filterBinding.makeAutoCompleteField.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
+                String newMake = filterBinding.makeAutoCompleteField.getText().toString();
+                if (newMake.isEmpty()) {
+                    return false;
+                }
+
+                filterBinding.makesFilter.addMake(newMake);
+
+                // Clear the field
+                filterBinding.makeAutoCompleteField.setText("", false);
+                return true;
+            }
+            return false;
         });
 
 

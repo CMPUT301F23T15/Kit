@@ -1,24 +1,36 @@
 package com.example.kit;
 
+import android.widget.ArrayAdapter;
+
+import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.DeleteItemCommand;
 import com.example.kit.command.MacroCommand;
 import com.example.kit.data.Filter;
 import com.example.kit.data.ItemSet;
+import com.example.kit.data.Tag;
+import com.example.kit.data.source.AbstractItemDataSource;
+import com.example.kit.data.source.AbstractTagDataSource;
 import com.example.kit.data.source.DataChangedCallback;
 import com.example.kit.data.source.DataSourceManager;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
  * Controller that handles data management and manipulation for a {@link ItemListFragment}.
  */
 public class ItemListController implements DataChangedCallback {
-    private ItemAdapter adapter;
+    private ItemAdapter itemAdapter;
     private ItemSet itemSet;
     private ItemSetValueChangedCallback callback;
-    private final DataSourceManager dataSourceManager = DataSourceManager.getInstance();
+    private final AbstractTagDataSource tagDataSource = DataSourceManager.getInstance().getTagDataSource();
+    private final AbstractItemDataSource itemDataSource = DataSourceManager.getInstance().getItemDataSource();
+    private ArrayAdapter<String> tagAdapter;
+    private ArrayList<String> tagNames;
+    private ArrayAdapter<String> makeAdapter;
+    private ArrayList<String> makes;
     private String currentKeyword = "";
     private String currentDateStart = "";
     private String currentDateEnd = "";
@@ -33,25 +45,25 @@ public class ItemListController implements DataChangedCallback {
     public ItemListController() {
         itemSet = new ItemSet();
         // Add the controller as a callback when the ItemDataSource has changes in data
-        dataSourceManager.getItemDataSource().setCallback(this);
+        itemDataSource.setCallback(this);
     }
 
     /**
      * Registers the adapter from the ListFragment
      * @param adapter Adapter for the RecyclerView on the ItemListFragment.
      */
-    public void setAdapter(ItemAdapter adapter) {
-        this.adapter = adapter;
-        updateAdapterData();
+    public void setItemAdapter(ItemAdapter adapter) {
+        this.itemAdapter = adapter;
+        updateItemAdapterData();
     }
 
     /**
      * Helper method to update the {@link ItemSet} for the adapter.
      */
-    private void updateAdapterData() {
-        adapter.setItemSet(itemSet);
+    private void updateItemAdapterData() {
+        itemAdapter.setItemSet(itemSet);
         // TODO: Find performant way to use more specific data-changed notifiers.
-        adapter.notifyDataSetChanged();
+        itemAdapter.notifyDataSetChanged();
     }
 
     public void updateDataFilter(Filter filter) {
@@ -106,10 +118,67 @@ public class ItemListController implements DataChangedCallback {
     @Override
     public void onDataChanged() {
         // Get new data and update the adapter with the new dataset
-        itemSet = dataSourceManager.getItemDataSource().getDataSet();
-        updateAdapterData();
+        itemSet = itemDataSource.getDataSet();
+        updateItemAdapterData();
         // Update the Total Valuation in the fragment
         callback.onItemSetValueChanged(itemSet.getItemSetValue());
+    }
+
+    public void setTagAdapter(ArrayAdapter<String> tagAdapter) {
+        this.tagAdapter = tagAdapter;
+        tagNames = new ArrayList<>();
+        ArrayList<Tag> dbTags = tagDataSource.getDataSet();
+        for (Tag tag : dbTags) {
+            tagNames.add(tag.getName());
+        }
+    }
+
+    public void addTagToAdapter(Tag tag) {
+        if(!tagNames.contains(tag.getName())) {
+            tagNames.add(tag.getName());
+        }
+    }
+
+    public Tag tagClickedAtPosition(int position) {
+        String tagNameAtPosition = tagNames.remove(position);
+        Tag tagAtPosition = tagDataSource.getDataByID(tagNameAtPosition);
+        tagAdapter.notifyDataSetChanged();
+        return tagAtPosition;
+    }
+
+    public Tag tagFilterEntered(String tagName) {
+        Tag tag = tagDataSource.getDataByID(tagName);
+        // Tag not found, don't add new tags from the filter screen
+        if (tag == null) return null;
+
+        // Remove the existing tag from the options in the dropdown
+        tagNames.remove(tag.getName());
+        tagAdapter.notifyDataSetChanged();
+
+        return tag;
+    }
+
+    public void setMakeAdapter(ArrayAdapter<String> makeAdapter) {
+        this.makeAdapter = makeAdapter;
+        makes = new ArrayList<>();
+        ItemSet allItems = itemDataSource.getDataSet();
+        for (int i = 0; i < allItems.getItemCount(); i++) {
+            String make = allItems.getItem(i).getMake();
+            if (make == null || make.isEmpty()) continue;
+
+            if (!makes.contains(make)) makes.add(make);
+        }
+    }
+
+    public void addMakeToAdapter(String make) {
+        if (!makes.contains(make)) {
+            makes.add(make);
+        }
+    }
+
+    public String makeClickedAtPosition(int position) {
+
+        return null;
     }
 
     /**
@@ -140,8 +209,8 @@ public class ItemListController implements DataChangedCallback {
                 .filterByKeyword(currentKeyword)
                 .filterByDateRange(currentDateStart, currentDateEnd)
                 .filterByPriceRange(currentPriceLow, currentPriceHigh);
-        adapter.setItemSet(filteredSet);
-        adapter.notifyDataSetChanged();
+        itemAdapter.setItemSet(filteredSet);
+        itemAdapter.notifyDataSetChanged();
     }
 
 }

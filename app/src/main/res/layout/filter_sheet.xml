@@ -31,205 +31,219 @@
             android:layout_height="match_parent"
             android:visibility="visible">
 
-            <ImageView
-                android:id="@+id/searchIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                app:layout_constraintBottom_toBottomOf="@+id/searchBar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/searchBar"
-                app:srcCompat="@drawable/baseline_search_24" />
-
-            <EditText
-                android:id="@+id/searchBar"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchBarLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_horizontal_space"
-                android:layout_marginTop="@dimen/activity_top_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
+                android:hint="@string/search_by_keywords"
                 android:inputType="text"
-                android:text="Name"
+                android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/searchIcon"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/dateIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                app:layout_constraintBottom_toBottomOf="@+id/dateStart"
-                app:layout_constraintEnd_toStartOf="@+id/dateStart"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/dateStart"
-                app:srcCompat="@drawable/baseline_calendar_month_24" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:startIconDrawable="@drawable/baseline_search_24">
 
-            <EditText
-                android:id="@+id/dateStart"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dateStartLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_vertical_space"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginEnd="@dimen/content_horizontal_space"
                 android:ems="10"
+                android:hint="Start Date"
                 android:inputType="date"
+                android:minHeight="48dp"
                 app:layout_constraintEnd_toStartOf="@+id/dateTo"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/dateIcon"
-                app:layout_constraintTop_toBottomOf="@+id/searchBar" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchBarLayout"
+                app:startIconDrawable="@drawable/baseline_calendar_month_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dateStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/dateTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_horizontal_space"
-                android:layout_marginEnd="@dimen/content_horizontal_space"
                 android:text="To"
-                app:layout_constraintBottom_toBottomOf="@+id/dateStart"
-                app:layout_constraintEnd_toStartOf="@+id/dateEnd"
+                app:layout_constraintBottom_toBottomOf="@+id/dateStartLayout"
+                app:layout_constraintEnd_toStartOf="@+id/dateEndLayout"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/dateStart"
-                app:layout_constraintTop_toTopOf="@+id/dateStart" />
+                app:layout_constraintStart_toEndOf="@+id/dateStartLayout"
+                app:layout_constraintTop_toTopOf="@+id/dateStartLayout" />
 
-            <EditText
-                android:id="@+id/dateEnd"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dateEndLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/content_horizontal_space"
                 android:ems="10"
+                android:hint="End Date"
                 android:inputType="date"
-                app:layout_constraintBottom_toBottomOf="@+id/dateStart"
+                android:minHeight="48dp"
+                app:layout_constraintBottom_toBottomOf="@+id/dateStartLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/dateTo"
-                app:layout_constraintTop_toTopOf="@+id/dateStart" />
+                app:layout_constraintTop_toTopOf="@+id/dateStartLayout"
+                app:startIconDrawable="@drawable/baseline_calendar_month_24">
 
-            <ImageView
-                android:id="@+id/valueIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                app:layout_constraintBottom_toBottomOf="@+id/valueLow"
-                app:layout_constraintEnd_toStartOf="@+id/valueLow"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/valueLow"
-                app:srcCompat="@drawable/baseline_attach_money_24" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dateEnd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <EditText
-                android:id="@+id/valueLow"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/valueLowLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/content_horizontal_space"
                 android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
-                android:inputType="numberDecimal"
+                android:hint="Min Value"
+                android:minHeight="48dp"
                 app:layout_constraintEnd_toStartOf="@+id/valueTo"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/valueIcon"
-                app:layout_constraintTop_toBottomOf="@+id/dateStart" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateStartLayout"
+                app:startIconDrawable="@drawable/baseline_attach_money_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/valueLow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/valueTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_horizontal_space"
-                android:layout_marginEnd="@dimen/content_horizontal_space"
                 android:text="To"
-                app:layout_constraintBottom_toBottomOf="@+id/valueLow"
-                app:layout_constraintEnd_toStartOf="@+id/valueHigh"
+                app:layout_constraintBottom_toBottomOf="@+id/valueLowLayout"
+                app:layout_constraintEnd_toStartOf="@+id/valueHighLayout"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/valueLow"
-                app:layout_constraintTop_toTopOf="@+id/valueLow" />
+                app:layout_constraintStart_toEndOf="@+id/valueLowLayout"
+                app:layout_constraintTop_toTopOf="@+id/valueLowLayout" />
 
-            <EditText
-                android:id="@+id/valueHigh"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/valueHighLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_horizontal_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
-                android:inputType="numberDecimal"
-                app:layout_constraintBottom_toBottomOf="@+id/valueLow"
+                android:hint="Max Value"
+                android:minHeight="48dp"
+                app:layout_constraintBottom_toBottomOf="@+id/valueLowLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/valueTo"
-                app:layout_constraintTop_toTopOf="@+id/valueLow" />
+                app:layout_constraintTop_toTopOf="@+id/valueLowLayout"
+                app:startIconDrawable="@drawable/baseline_attach_money_24">
 
-            <ImageView
-                android:id="@+id/tagIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_horizontal_space"
-                app:layout_constraintBottom_toBottomOf="@+id/tagSpinner"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tagSpinner"
-                app:srcCompat="@drawable/baseline_label_24" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/valueHigh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
 
-            <Spinner
-                android:id="@+id/tagSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_horizontal_space"
-                android:layout_marginTop="@dimen/content_vertical_space"
-                app:layout_constraintStart_toEndOf="@+id/tagIcon"
-                app:layout_constraintTop_toBottomOf="@+id/valueLow" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/tagChipGroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/content_vertical_space"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tagSpinner"
-                app:layout_constraintTop_toBottomOf="@+id/tagSpinner">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip3"
-                    style="@style/tag_chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.chip.ChipGroup>
-
-            <ImageView
-                android:id="@+id/makeIcon"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tagFieldLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
-                app:layout_constraintBottom_toBottomOf="@+id/makeSelector"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/makeSelector"
-                app:srcCompat="@drawable/baseline_business_center_24" />
-
-            <Spinner
-                android:id="@+id/makeSelector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_horizontal_space"
                 android:layout_marginTop="@dimen/content_vertical_space"
-                app:layout_constraintStart_toEndOf="@+id/makeIcon"
-                app:layout_constraintTop_toBottomOf="@+id/tagChipGroup" />
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:hint="Tag Filter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/valueLowLayout"
+                app:startIconDrawable="@drawable/baseline_label_24_grey">
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/makeChipGroup"
+                <AutoCompleteTextView
+                    android:id="@+id/tagAutoCompleteField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true">
+
+                </AutoCompleteTextView>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.example.kit.TagChipGroup
+                android:id="@+id/tagsFilter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/content_horizontal_space"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="128dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/makeSelector"
-                app:layout_constraintTop_toBottomOf="@+id/makeSelector">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tagFieldLayout" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/makeFieldLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:hint="Make Filter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tagsFilter"
+                app:startIconDrawable="@drawable/baseline_work_outline_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/makeAutoCompleteField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true">
+
+                </AutoCompleteTextView>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.example.kit.MakeChipGroup
+                android:id="@+id/makesFilter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/makeFieldLayout" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

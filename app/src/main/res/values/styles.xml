@@ -19,4 +19,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">20sp</item>
     </style>
+    <style name="makeChip" parent="tag_chip">
+        item
+    </style>
 </resources>
