@@ -74,7 +74,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      */
     //TODO: Implement add and profile buttons here
     public void initializeUIInteractions(){
-        binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+        binding.addItemButton.setOnClickListener(onClick -> {
+            navController.navigate(R.id.newItemAction);
+        });
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
     }
