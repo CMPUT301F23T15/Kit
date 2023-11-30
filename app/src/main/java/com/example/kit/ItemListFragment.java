@@ -229,71 +229,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             return false;
         });
 
-
-
-        filterBinding.searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-                controller.updateKeywordFilter(s.toString());
-            }
-        });
-
-        filterBinding.dateStart.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                updateDateFilter();
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-        });
-
-        filterBinding.dateEnd.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                updateDateFilter();
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-        });
-
-
-
-
-        filterBinding.valueLow.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                updatePriceFilter();
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-        });
-        filterBinding.valueHigh.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                updatePriceFilter();
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-        });
-
-
-
-
         filterBinding.searchBar.addTextChangedListener(new FilterFieldChangedListener());
         filterBinding.dateStart.addTextChangedListener(new FilterFieldChangedListener());
         filterBinding.dateEnd.addTextChangedListener(new FilterFieldChangedListener());
@@ -302,6 +237,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     private void updateFilter() {
+        controller.updateKeywordFilter(filterBinding.searchBar.getText().toString());
+        updatePriceFilter();
+        updateDateFilter();
         Filter filter = new Filter();
 
         controller.updateDataFilter(filter);
