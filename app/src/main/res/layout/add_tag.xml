@@ -1,22 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tagFragmentConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/TagSearch"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tagFieldLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Search Tags"/>
-    <EditText
-        android:id="@+id/TagName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Add Custom Tag"/>
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_top_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:hint="@string/new_tag_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/baseline_label_24_grey">
 
-</LinearLayout>
+        <AutoCompleteTextView
+            android:id="@+id/tagAutoCompleteField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true">
+
+        </AutoCompleteTextView>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.example.kit.ColorPalette
+        android:id="@+id/colorPalette"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/content_vertical_space"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tagFieldLayout" />
+
+    <com.example.kit.TagChipGroup
+        android:id="@+id/tagsToAddGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/content_horizontal_space"
+        android:layout_marginTop="@dimen/content_vertical_space"
+        android:layout_marginEnd="@dimen/content_horizontal_space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorPalette">
+
+    </com.example.kit.TagChipGroup>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

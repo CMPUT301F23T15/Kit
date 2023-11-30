@@ -97,6 +97,7 @@
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -111,5 +112,18 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_tags_button"
+        style="?attr/floatingActionButtonSmallStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/content_vertical_space"
+        android:clickable="true"
+        android:src="@drawable/baseline_label_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/delete_item_button"
+        app:layout_constraintEnd_toEndOf="@+id/delete_item_button"
+        app:layout_constraintStart_toStartOf="@+id/delete_item_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

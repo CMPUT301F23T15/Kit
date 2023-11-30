@@ -1,9 +1,15 @@
 package com.example.kit;
 
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.text.InputType;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,32 +18,34 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.kit.command.AddItemCommand;
+import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.CommandManager;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
-import com.example.kit.databinding.ItemDisplayBinding;
 import com.example.kit.databinding.ItemEditBinding;
-import com.google.android.material.chip.Chip;
+import com.example.kit.util.FormatUtils;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.Timestamp;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
  * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
  */
 public class ItemEditFragment extends Fragment {
-
     private ItemEditBinding binding;
     private NavController navController;
+    private DataSource<Tag, ArrayList<Tag>> tagDataSource;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> tagNames;
     private String itemID;
+    private boolean tagFieldFocused = false;
 
     /**
      * Standard fragment lifecycle, stores a reference to the NavController.
@@ -48,6 +56,7 @@ public class ItemEditFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         navController = NavHostFragment.findNavController(this);
+        tagDataSource = DataSourceManager.getInstance().getTagDataSource();
     }
 
     /**
@@ -67,6 +76,10 @@ public class ItemEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemEditBinding.inflate(inflater, container, false);
         initializeConfirmButton();
+        initializeItemValueField();
+        initializeTagField();
+        initializeDateField();
+        initializeScrollBehaviorForTagField();
         return binding.getRoot();
     }
 
@@ -80,48 +93,256 @@ public class ItemEditFragment extends Fragment {
     }
 
     /**
+     * Adds behavior to scroll to make the tag chip group visible when editing the tag field
+     */
+    private void initializeScrollBehaviorForTagField() {
+        binding.tagAutoCompleteField.setOnFocusChangeListener((v, hasFocus) -> {
+            tagFieldFocused = hasFocus;
+            int[] pos = new int[2];
+            binding.itemDisplayTagGroup.getLocationOnScreen(pos);
+            binding.scrollView3.smoothScrollTo(0, pos[1]);
+        });
+
+        ViewTreeObserver.OnGlobalLayoutListener listener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            boolean wasOpened = false;
+
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                binding.scrollView3.getWindowVisibleDisplayFrame(r);
+                int screenHeight = binding.scrollView3.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.15 && tagFieldFocused) {
+                    int[] pos = new int[2];
+                    binding.itemDisplayTagGroup.getLocationOnScreen(pos);
+                    binding.scrollView3.smoothScrollTo(0, pos[1]);
+                }
+
+                if (!wasOpened) {
+                    binding.scrollView3.getViewTreeObserver().addOnGlobalLayoutListener(this);
+                    wasOpened = true;
+                } else {
+                    binding.scrollView3.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    wasOpened = false;
+                }
+            }
+        };
+
+        binding.scrollView3.getViewTreeObserver().addOnGlobalLayoutListener(listener);
+    }
+
+    /**
      * Initializes the floating action button to handle the creation or update of an item in the Firestore database.
      */
     private void initializeConfirmButton() {
         binding.floatingActionButton.setOnClickListener(onClick -> {
             // Add item to the database and navigate back to the list
-            CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
-            navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
+            if(validateFields()) {
+                CommandManager.getInstance().executeCommand(new AddItemCommand(buildItem()));
+                navController.navigate(ItemEditFragmentDirections.itemCreatedAction());
+            }
         });
     }
 
     /**
-     * Loads an item's details into the UI components if editing an existing item. Retrieves the item from the fragment's arguments.
+     * Adds input formatting to the Value field, formatting it as a currency string without the
+     * currency symbol.
+     */
+    private void initializeItemValueField() {
+        binding.itemValueDisplay.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && binding.itemValueDisplay.getText() != null) {
+                // Format the value in the field whenever focus is lost
+                String valueText = binding.itemValueDisplay.getText().toString();
+                String formattedValue = FormatUtils.formatValue(valueText, false);
+                binding.itemValueDisplay.setText(formattedValue);
+            }
+        });
+    }
+
+    /**
+     * Create the list of existing tags to add to the Tag dropdown field, and provide click listeners
+     * for clicking items in the list, as well as providing function for adding new tags typed
+     * in the field.
+     */
+    private void initializeTagField() {
+        // Add all existing tags to the list of tags for the dropdown
+        tagNames = new ArrayList<>();
+        ArrayList<Tag> dbTags = tagDataSource.getDataSet();
+        for (Tag tag : dbTags) {
+            tagNames.add(tag.getName());
+        }
+        // Create the adapter with the list of tag names
+        adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
+        binding.tagAutoCompleteField.setAdapter(adapter);
+
+        // When a Tag name is clicked, fetch the Tag from the name and remove it from the tag name
+        // list so that tags that are already on the item cannot be added to the item
+        binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
+            Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
+            binding.itemDisplayTagGroup.addTag(addTag);
+            adapter.notifyDataSetChanged();
+            // Clear the field
+            binding.tagAutoCompleteField.setText("", false);
+        });
+
+        // Listener for enter key pressed to add a tag that doesn't exist
+        binding.tagAutoCompleteField.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
+                String newTagName = binding.tagAutoCompleteField.getText().toString();
+                if (newTagName.isEmpty()) {
+                    return false;
+                }
+
+                // Check if the tag already exists, if not create a new Tag
+                Tag newTag = tagDataSource.getDataByID(newTagName);
+                if (newTag == null) {
+                    newTag = new Tag(newTagName);
+                    CommandManager.getInstance().executeCommand(new AddTagCommand(newTag));
+                } else {
+                    // Remove the existing tag from the options in the dropdown
+                    tagNames.remove(newTag.getName());
+                    adapter.notifyDataSetChanged();
+                }
+
+                binding.itemDisplayTagGroup.addTag(newTag);
+
+                // Clear the field
+                binding.tagAutoCompleteField.setText("", false);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Sets a click and focus listener for the item date display to open a date picker when it's clicked
+     */
+    private void initializeDateField() {
+        binding.itemDateDisplay.setInputType(InputType.TYPE_NULL);
+
+        binding.itemDateDisplay.setOnFocusChangeListener((view, hasFocus) -> {
+            if(hasFocus) {
+                openDatePicker();
+            }
+        });
+
+        binding.itemDateDisplay.setOnClickListener(view -> openDatePicker());
+    }
+
+    /**
+     * Validates the mandatory fields for an item prior to creation or update
+     * @return True, if all of the fields are valid, false otherwise
+     */
+    private boolean validateFields() {
+        String name, value, date;
+        if (binding.itemNameDisplay.getText() == null) {
+            name = "";
+        } else {
+            name = binding.itemNameDisplay.getText().toString();
+        }
+
+        if (binding.itemDateDisplay.getText() == null) {
+            date = "";
+        } else {
+            date = binding.itemDateDisplay.getText().toString();
+        }
+
+        if (binding.itemValueDisplay.getText() == null) {
+            value = "";
+        } else {
+            value = binding.itemValueDisplay.getText().toString();
+        }
+
+        boolean validName = true;
+        boolean validValue = true;
+        boolean validDate = true;
+
+        binding.itemNameDisplayLayout.setError(null);
+        binding.itemValueDisplayLayout.setError(null);
+        binding.itemDateDisplayLayout.setError(null);
+
+        // Test empty values
+        if (name.equals("")) {
+            binding.itemNameDisplayLayout.setError("Name is required");
+            validName = false;
+        }
+        if (value.equals("")) {
+            binding.itemValueDisplayLayout.setError("Value is required");
+            validValue = false;
+        }
+        if (date.equals("")) {
+            binding.itemDateDisplayLayout.setError("Date is required");
+            validDate = false;
+        }
+
+        // Check the date format
+        if (FormatUtils.parseDateString(date) == null) {
+            binding.itemDateDisplayLayout.setError("Date incorrectly formatted");
+            validDate = false;
+        }
+
+        return validName && validValue && validDate;
+    }
+
+    /**
+     * Opens a date picker, when the item date field is clicked, and sets the date to what the user selects
+     * Only allows dates to be selected from before the present time.
+     */
+    private void openDatePicker() {
+        CalendarConstraints.Builder constraintBuilder = new CalendarConstraints.Builder();
+        constraintBuilder.setValidator(DateValidatorPointBackward.now());
+
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Acquisition Date")
+                .setCalendarConstraints(constraintBuilder.build())
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(dateSelectionMillis -> {
+            String formattedDateString = FormatUtils.formatDateStringShort(new Date(dateSelectionMillis));
+            binding.itemDateDisplay.setText(formattedDateString);
+        });
+
+        datePicker.show(getParentFragmentManager(), "Date Picker");
+    }
+
+    /**
+     * Loads an item's details into the UI components if editing an existing item. Retrieves the
+     * item from the fragment's arguments.
      */
     private void loadItem() {
-        // Retrieve the item from the bundle
+        // Log and display nothing if we did not have an argument
         if (getArguments() == null) {
-            // bad stuff
+            Log.i("Navigation", "Null Arguments in the edit item fragment");
             return;
         }
-        String id = getArguments().getString("id");
-        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(id);
-        if (item != null) {
-            this.itemID = item.findID();
-            // Use View Binding to populate UI elements with item data
-            binding.itemNameDisplay.setText(item.getName());
-            binding.itemValueDisplay.setText(item.getValue());
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-            String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
-            binding.itemDateDisplay.setText(formattedDate);
-            binding.itemDescriptionDisplay.setText(item.getDescription());
-            binding.itemCommentDisplay.setText(item.getComment());
-            binding.itemMakeDisplay.setText(item.getMake());
-            binding.itemModelDisplay.setText(item.getModel());
-            binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
 
-            binding.itemDisplayTagGroup.removeAllViews();
-            for (Tag tag : item.getTags()) {
-                Chip chip = new Chip(getContext());
-                chip.setText(tag.getName());
-                chip.setBackgroundColor(tag.getColor().toArgb());
-                binding.itemDisplayTagGroup.addView(chip);
-            }
+        // Retrieve the item from the bundle
+        itemID = getArguments().getString("id");
+        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
+
+        // If the item was null, Log and display nothing
+        if (item == null) {
+            Log.e("Item Display Error", "No item found for the bundled ID");
+            return;
+        }
+
+        this.itemID = item.findID();
+        // Use View Binding to populate UI elements with item data
+        binding.itemNameDisplay.setText(item.getName());
+        binding.itemValueDisplay.setText(FormatUtils.formatValue(item.valueToBigDecimal(),false));
+        binding.itemDateDisplay.setText(FormatUtils.formatDateStringShort(item.getAcquisitionDate()));
+        binding.itemDescriptionDisplay.setText(item.getDescription());
+        binding.itemCommentDisplay.setText(item.getComment());
+        binding.itemMakeDisplay.setText(item.getMake());
+        binding.itemModelDisplay.setText(item.getModel());
+        binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
+
+        binding.itemDisplayTagGroup.removeAllViews();
+        for (Tag tag : item.getTags()) {
+            binding.itemDisplayTagGroup.addTag(tag);
+            // Remove tags that are already on the item from the list of available existing tags
+            tagNames.remove(tag.getName());
         }
     }
 
@@ -134,31 +355,70 @@ public class ItemEditFragment extends Fragment {
      */
     private Item buildItem() {
         Item newItem = new Item();
-        DataSource<Tag, ArrayList<Tag>> tagDataSource = DataSourceManager.getInstance().getTagDataSource();
-        newItem.setName(binding.itemNameDisplay.getText().toString());
-        newItem.setValue(binding.itemValueDisplay.getText().toString());
-        // Absolutely terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
-        try {
-            Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
-            newItem.setAcquisitionDate(new Timestamp(date));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        newItem.setDescription(binding.itemDescriptionDisplay.getText().toString());
-        newItem.setComment(binding.itemCommentDisplay.getText().toString());
-        newItem.setMake(binding.itemMakeDisplay.getText().toString());
-        newItem.setModel(binding.itemModelDisplay.getText().toString());
-        newItem.setSerialNumber(binding.itemSerialNumberDisplay.getText().toString());
 
-        // Tags are sort of 1 indexed because the first tag is the add new tag button
-        int numTags = binding.itemDisplayTagGroup.getChildCount();
-        for (int i = 1; i < numTags; i++) {
-            Chip chip = (Chip) binding.itemDisplayTagGroup.getChildAt(i);
-            if (!chip.getText().toString().isEmpty()) {
-                newItem.addTag(tagDataSource.getDataByID(chip.getText().toString()));
-            }
+        // Name
+        if (binding.itemNameDisplay.getText() != null) {
+            newItem.setName(binding.itemNameDisplay.getText().toString());
+        } else {
+            newItem.setName("");
         }
 
+        // Value
+        if (binding.itemValueDisplay.getText() != null) {
+            String cleanValue = FormatUtils.cleanupDirtyValueString(binding.itemValueDisplay.getText().toString());
+            newItem.setValue(cleanValue);
+        } else {
+            newItem.setValue("0");
+        }
+
+        // Date
+        if (binding.itemDateDisplay.getText() != null) {
+            Timestamp date = FormatUtils.parseDateString(binding.itemDateDisplay.getText().toString());
+            newItem.setAcquisitionDate(date);
+        }
+
+        // Description
+        if (binding.itemDescriptionDisplay.getText() != null) {
+            newItem.setDescription(binding.itemDescriptionDisplay.getText().toString());
+        } else {
+            newItem.setDescription("");
+        }
+
+        // Comment
+        if (binding.itemCommentDisplay.getText() != null) {
+            newItem.setComment(binding.itemCommentDisplay.getText().toString());
+        } else {
+            newItem.setComment("");
+        }
+
+        // Make
+        if (binding.itemMakeDisplay.getText() != null) {
+            newItem.setMake(binding.itemMakeDisplay.getText().toString());
+        } else {
+            newItem.setMake("");
+        }
+
+        // Model
+        if (binding.itemModelDisplay.getText() != null) {
+            newItem.setModel(binding.itemModelDisplay.getText().toString());
+        } else {
+            newItem.setModel("");
+        }
+
+        // Serial Number
+        if (binding.itemSerialNumberDisplay.getText() != null) {
+            newItem.setSerialNumber(binding.itemSerialNumberDisplay.getText().toString());
+        } else {
+            newItem.setSerialNumber("");
+        }
+
+        // Tags
+        ArrayList<Tag> tags = binding.itemDisplayTagGroup.getTags();
+        for (Tag tag : tags) {
+            newItem.addTag(tag);
+        }
+
+        // Attach the existing ID to the item if we have it
         if (itemID != null && !itemID.isEmpty()) {
             newItem.attachID(itemID);
         }

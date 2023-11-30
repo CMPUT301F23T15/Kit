@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.View;
 
@@ -10,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.ItemListRowBinding;
-import com.google.android.material.chip.Chip;
+import com.example.kit.util.FormatUtils;
 
-import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -36,31 +35,30 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * Displays an {@link Item} within the ViewHolder, binding the data.
      * @param item The {@link Item} to be displayed
      */
+    @SuppressLint("SetTextI18n")
     public void displayItem(@NonNull Item item){
-        // Fill in item row values
-        DateFormat df = DateFormat.getDateTimeInstance();
-        binding.itemNameRow.setText(item.getName());
-        binding.itemDateRow.setText(df.format(item.getAcquisitionDate().toDate()));
-        String formattedValue = NumberFormat.getCurrencyInstance().format(item.valueToBigDecimal());
-        binding.itemValueRow.setText(formattedValue);
+        // If the item has no name for some reason, display an em
+        if (item.getName() == null) {
+            binding.itemNameRow.setText("ERROR: ITEM MISSING NAME");
+        } else {
+            binding.itemNameRow.setText(item.getName());
+        }
+
+        // Ensure the date exists before trying to display it
+        if (item.getAcquisitionDate() != null) {
+            binding.itemDateRow.setText(FormatUtils.formatDateStringLong(item.getAcquisitionDate()));
+        }
+
+        // Ensure the value exists before trying to display it
+        if (item.getValue() != null) {
+            binding.itemValueRow.setText(FormatUtils.formatValue(item.valueToBigDecimal(), true));
+        }
         ArrayList<Tag> tags = item.getTags();
 
-        // Populate chips with tags
-        // Leave first "+" chip blank as button to add new tag
-        int num_chips = binding.itemTagGroupRow.getChildCount();
-        for(int i = 1; i < num_chips; i++) {
-            Chip chip = (Chip) binding.itemTagGroupRow.getChildAt(i);
-
-            // Hide the unused chips
-            if(i > tags.size()) {
-                chip.setText("");
-                chip.setVisibility(View.GONE);
-                continue;
-            }
-
-            chip.setText(tags.get(i-1).getName());
-            chip.setBackgroundColor(tags.get(i-1).getColor().toArgb());
-            chip.setVisibility(View.VISIBLE);
+        binding.itemTagGroupRow.enableAddChip(true);
+        binding.itemTagGroupRow.clearTags();
+        for (Tag tag : tags) {
+            binding.itemTagGroupRow.addTag(tag);
         }
     }
 
@@ -71,7 +69,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * @param holder The holder itself
      * @param position The position of the holder within the adapter.
      */
-    public void setupListeners(SelectListener listener, ItemViewHolder holder, int position){
+    public void setupListeners(SelectListener listener, ItemViewHolder holder, int position) {
         // Click listener for the entire item
         binding.itemCardView.setOnClickListener(onClick -> {
             ItemAdapter adapter = (ItemAdapter) getBindingAdapter();
@@ -89,14 +87,13 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             return true;
         });
 
-        // Click listener for the tags
-        binding.addTagChip.setOnClickListener(onAddTagClick -> {
+        // Click listener for the add tag chip
+        binding.itemTagGroupRow.getChildAt(0).setOnClickListener(onAddTagClick -> {
             ItemAdapter adapter = (ItemAdapter) getBindingAdapter();
             if (adapter == null) {
                 Log.e("RecyclerView", "Adapter invalid for click on ViewHolder: " + holder + "Position: " + position);
                 return;
             }
-
             listener.onAddTagClick(adapter.getItem(position).findID());
         });
     }

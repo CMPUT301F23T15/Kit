@@ -29,7 +29,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     private NavController navController;
     private ItemListController controller;
     private ItemAdapter adapter;
-    private boolean inDeleteMode = false;
+    private boolean inMultiSelectMode = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,20 +75,24 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      */
     //TODO: Implement add and profile buttons here
     public void initializeUIInteractions(){
+        binding.addItemButton.setOnClickListener(onClick -> {
+            navController.navigate(R.id.newItemAction);
+        });
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
         binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
         Intent login = new Intent(getActivity(), ProfileActivity.class);
         binding.profileButton.setOnClickListener(onClick -> startActivity(login));
+        binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
     }
 
     /**
-     * Handles item click events. Opens item details if not in delete mode.
+     * Handles item click events. Opens item details if not in multiselect mode.
      * @param id The ID for the Item that was clicked.
      */
     @Override
     public void onItemClick(String id) {
         // Disable transition in delete mode
-        if (inDeleteMode) return;
+        if (inMultiSelectMode) return;
 
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
@@ -105,20 +109,22 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      */
     @Override
     public void onItemLongClick() {
-        toggleDeleteMode();
+        toggleMultiSelectMode();
     }
 
     /**
-     * Toggles the UI mode between normal and deletion mode, showing or hiding checkboxes and buttons accordingly.
+     * Toggles the UI mode between normal and multiselect mode, showing or hiding checkboxes and buttons accordingly.
      */
-    private void toggleDeleteMode() {
-        inDeleteMode = !inDeleteMode;
+    private void toggleMultiSelectMode() {
+        inMultiSelectMode = !inMultiSelectMode;
 
-        if (inDeleteMode) { // Show delete button
+        if (inMultiSelectMode) { // Show delete button
             binding.addItemButton.setVisibility(View.GONE);
+            binding.addTagsButton.setVisibility(View.VISIBLE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
         } else {            // Show add button
             binding.addItemButton.setVisibility(View.VISIBLE);
+            binding.addTagsButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.GONE);
         }
 
@@ -138,7 +144,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                 continue;
             }
 
-            if(inDeleteMode) {
+            if(inMultiSelectMode) {
                 itemViewHolder.showCheckbox();
             } else {
                 itemViewHolder.hideCheckbox();
@@ -151,7 +157,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      */
     public void onDelete(){
         controller.deleteCheckedItems(checkedItems());
-        toggleDeleteMode();
+        toggleMultiSelectMode();
         // TODO: Show SnackBar with option to undo
     }
 
@@ -177,23 +183,27 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     /**
-     * Handles the event for adding a tag to an item.
+     * Opens the {@link AddTagFragment} dialog to add tags to the item clicked on
      */
     @Override
     public void onAddTagClick(String itemID) {
         HashSet<String> itemIDs = new HashSet<>();
         itemIDs.add(itemID);
 
-        // Below lines demonstrate adding tags to multiple items but I think this is a very jank
-        // way to do it, but I think it is a good idea to only use the item IDs.
-//        HashSet<Integer> chkd = checkedItems();
-//        for (int pos : chkd) {
-//            itemIDs.add(adapter.getItem(pos).findID());
-//        }
-
-        Log.v("Tag Adding", "Tag add click!");
+        Log.i("Tag Dialog", "Adding tags to a single item.");
         AddTagFragment dialogFragment = new AddTagFragment(itemIDs);
         dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
+    }
+
+    /**
+     * Opens the {@link AddTagFragment} dialog to add tags to all the checked items.
+     */
+    private void onAddTagMultipleItems() {
+        Log.i("Tag Dialog", "Adding tags to checked items.");
+        AddTagFragment dialogFragment =
+                new AddTagFragment(controller.getItemIDsAtPositions(checkedItems()));
+        dialogFragment.show(getChildFragmentManager(), "tag_input_dialog");
+        toggleMultiSelectMode();
     }
 
     /**
