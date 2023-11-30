@@ -2,11 +2,15 @@ package com.example.kit.data.source;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.FirestoreManager;
 import com.example.kit.data.Tag;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -22,22 +26,41 @@ import java.util.List;
  */
 public class ItemDataSource extends AbstractItemDataSource {
 
-    private final CollectionReference itemCollection;
-    private final HashMap<String, Item> itemCache;
+    private CollectionReference itemCollection;
+    private HashMap<String, Item> itemCache;
 
     /**
      * Constructor that establishes connection to the {@link FirestoreManager} for the Tag Collection.
      * Creates a cache for the state of the database that is updated whenever the database changes.
+     * Creates an authentication state listener that updates the collection based on the user
      */
     public ItemDataSource() {
-        itemCollection = FirestoreManager.getInstance().getCollection("Items");
         itemCache = new HashMap<>();
+        FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            // Dictates itemCollection if user is logged in or not
+            if(user == null){
+                Log.d("Auth Change", "User has been signed out");
+                itemCollection = FirestoreManager.getInstance().getCollection("SampleItems");
+            } else {
+                Log.d("Auth Change", "User has been changed: " + firebaseAuth.getCurrentUser().getEmail());
+                itemCollection = FirestoreManager.getInstance().getCollection("Users")
+                        .document(user.getUid()).collection("Items");
+            }
+            updateCollection();
+        });
+    }
+
+    /**
+     * Updates internal collection reference and resets the cache and updates the snapshot listener
+     * This also calls {@link #onDataChanged(), onDataChanged}
+     */
+    private void updateCollection() {
         itemCollection.addSnapshotListener((itemSnapshots, error) -> {
             if (itemSnapshots == null) {
                 Log.e("Database", "SnapshotListener null query result");
                 return;
             }
-
             itemCache.clear();
             for (QueryDocumentSnapshot itemSnapshot: itemSnapshots) {
                 Item item = buildItem(itemSnapshot);
