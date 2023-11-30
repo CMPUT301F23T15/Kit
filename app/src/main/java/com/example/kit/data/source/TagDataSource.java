@@ -32,21 +32,17 @@ public class TagDataSource extends AbstractTagDataSource {
      */
     public TagDataSource() {
         tagCache = new HashMap<>();
-        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                // Dictates itemCollection if user is logged in or not
-                if(user == null){
-                    tagCollection = FirestoreManager.getInstance().getCollection("SampleTags");
-                } else {
-                    tagCollection = FirestoreManager.getInstance().getCollection("Users")
-                            .document(user.getUid()).collection("Tags");
-                }
-                updateCollection();
+        FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            // Dictates itemCollection if user is logged in or not
+            if(user == null){
+                tagCollection = FirestoreManager.getInstance().getCollection("SampleTags");
+            } else {
+                tagCollection = FirestoreManager.getInstance().getCollection("Users")
+                        .document(user.getUid()).collection("Tags");
             }
+            updateCollection();
         });
-
     }
 
     /**
@@ -59,7 +55,6 @@ public class TagDataSource extends AbstractTagDataSource {
                 Log.e("Database", "SnapshotListener null query result");
                 return;
             }
-
             tagCache.clear();
             for (QueryDocumentSnapshot tagSnapshot: tagSnapshots) {
                 Tag tag = buildTag(tagSnapshot);

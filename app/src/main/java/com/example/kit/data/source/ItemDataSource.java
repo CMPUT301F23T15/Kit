@@ -36,21 +36,18 @@ public class ItemDataSource extends AbstractItemDataSource {
      */
     public ItemDataSource() {
         itemCache = new HashMap<>();
-        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                // Dictates itemCollection if user is logged in or not
-                if(user == null){
-                    Log.d("Auth Change", "User has been signed out");
-                    itemCollection = FirestoreManager.getInstance().getCollection("SampleItems");
-                } else {
-                    Log.d("Auth Change", "User has been changed: " + firebaseAuth.getCurrentUser().getEmail());
-                    itemCollection = FirestoreManager.getInstance().getCollection("Users")
-                            .document(user.getUid()).collection("Items");
-                }
-                updateCollection();
+        FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            // Dictates itemCollection if user is logged in or not
+            if(user == null){
+                Log.d("Auth Change", "User has been signed out");
+                itemCollection = FirestoreManager.getInstance().getCollection("SampleItems");
+            } else {
+                Log.d("Auth Change", "User has been changed: " + firebaseAuth.getCurrentUser().getEmail());
+                itemCollection = FirestoreManager.getInstance().getCollection("Users")
+                        .document(user.getUid()).collection("Items");
             }
+            updateCollection();
         });
     }
 
@@ -58,8 +55,7 @@ public class ItemDataSource extends AbstractItemDataSource {
      * Updates internal collection reference and resets the cache and updates the snapshot listener
      * This also calls {@link #onDataChanged(), onDataChanged}
      */
-    private void updateCollection(){
-
+    private void updateCollection() {
         itemCollection.addSnapshotListener((itemSnapshots, error) -> {
             if (itemSnapshots == null) {
                 Log.e("Database", "SnapshotListener null query result");
