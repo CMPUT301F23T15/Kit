@@ -1,10 +1,8 @@
 package com.example.kit;
 
-import android.app.Activity;
+
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +10,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
+
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.kit.databinding.ItemListBinding;
-import com.google.common.util.concurrent.ListenableFuture;
+
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -30,42 +28,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.MediaStore;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.video.Recorder;
-import androidx.camera.video.Recording;
-import androidx.camera.video.VideoCapture;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-//import com.android.example.CameraX.databinding.ActivityMainBinding;
-
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import android.widget.Toast;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.core.Preview;
-import androidx.camera.core.CameraSelector;
-import android.util.Log;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
-import androidx.camera.video.FallbackStrategy;
-import androidx.camera.video.MediaStoreOutputOptions;
-import androidx.camera.video.Quality;
-import androidx.camera.video.QualitySelector;
-import androidx.camera.video.VideoRecordEvent;
-import androidx.core.content.PermissionChecker;
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
@@ -307,7 +272,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                     }
                 }
                 if (!permissionGranted) {
-                    //Toast.makeText(baseContext, "Permission request denied", Toast.LENGTH_SHORT).show();
+                    //to be done
                 } else {
                     onTakePhoto();
                 }
