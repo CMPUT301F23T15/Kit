@@ -1,5 +1,7 @@
 package com.example.kit.data;
 
+import com.example.kit.util.FormatUtils;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -93,24 +95,19 @@ public class ItemSet {
 
     public ItemSet filterByDateRange(String lowerDateString, String upperDateString) {
         ItemSet filteredSet = new ItemSet();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-        try {
-            Date lowerDate = lowerDateString.isEmpty() ? null : dateFormat.parse(lowerDateString);
-            Date upperDate = upperDateString.isEmpty() ? null : dateFormat.parse(upperDateString);
+        Date lowerDate = FormatUtils.parseDateString(lowerDateString);
+        Date upperDate = FormatUtils.parseDateString(upperDateString);
 
-            filteredSet.items.addAll(
-                    this.items.stream()
-                            .filter(item -> {
-                                Date acquisitionDate = item.getAcquisitionDate().toDate();
-                                return (lowerDate == null || acquisitionDate.equals(lowerDate) || acquisitionDate.after(lowerDate)) &&
-                                        (upperDate == null || acquisitionDate.equals(upperDate) || acquisitionDate.before(upperDate));
-                            })
-                            .collect(Collectors.toList())
-            );
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        filteredSet.items.addAll(
+                this.items.stream()
+                        .filter(item -> {
+                            Date acquisitionDate = item.getAcquisitionDate().toDate();
+                            return (lowerDate == null || acquisitionDate.equals(lowerDate) || acquisitionDate.after(lowerDate)) &&
+                                    (upperDate == null || acquisitionDate.equals(upperDate) || acquisitionDate.before(upperDate));
+                        })
+                        .collect(Collectors.toList())
+        );
 
         return filteredSet;
     }

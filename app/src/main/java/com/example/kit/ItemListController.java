@@ -233,6 +233,9 @@ public class ItemListController implements DataChangedCallback {
                 .filterByPriceRange(currentPriceLow, currentPriceHigh);
         itemAdapter.setItemSet(filteredSet);
         itemAdapter.notifyDataSetChanged();
+        if (callback != null) {
+            callback.onItemSetValueChanged(filteredSet.getItemSetValue());
+        }
     }
 
 }

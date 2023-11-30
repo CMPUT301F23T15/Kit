@@ -3,6 +3,7 @@ package com.example.kit;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -30,11 +32,18 @@ import com.example.kit.data.Filter;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
+import com.example.kit.util.FormatUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 
 /**
@@ -234,6 +243,65 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         filterBinding.dateEnd.addTextChangedListener(new FilterFieldChangedListener());
         filterBinding.valueLow.addTextChangedListener(new FilterFieldChangedListener());
         filterBinding.valueHigh.addTextChangedListener(new FilterFieldChangedListener());
+
+        filterBinding.dateEnd.setInputType(InputType.TYPE_NULL);
+        filterBinding.dateEnd.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) openDatePicker();
+        });
+        filterBinding.dateEnd.setOnClickListener(v -> openDatePicker());
+
+        filterBinding.dateStart.setInputType(InputType.TYPE_NULL);
+        filterBinding.dateStart.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) openDatePicker();
+        });
+        filterBinding.dateStart.setOnClickListener(v -> openDatePicker());
+
+        filterBinding.valueLow.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus &&  filterBinding.valueLow.getText() != null) {
+                // Format the value in the field whenever focus is lost
+                String valueText =  filterBinding.valueLow.getText().toString();
+                String formattedValue = FormatUtils.formatValue(valueText, false);
+                filterBinding.valueLow.setText(formattedValue);
+            }
+        });
+
+        filterBinding.valueHigh.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && filterBinding.valueHigh.getText() != null) {
+                // Format the value in the field whenever focus is lost
+                String valueText = filterBinding.valueHigh.getText().toString();
+                String formattedValue = FormatUtils.formatValue(valueText, false);
+                filterBinding.valueHigh.setText(formattedValue);
+            }
+        });
+
+        filterBinding.dateEndLayout.setEndIconOnClickListener(v -> {
+            filterBinding.dateStart.setText("");
+            filterBinding.dateEnd.setText("");
+            filterBinding.dateEnd.clearFocus();
+        });
+    }
+
+    private void openDatePicker() {
+        CalendarConstraints.Builder constraintBuilder = new CalendarConstraints.Builder();
+        constraintBuilder.setValidator(DateValidatorPointBackward.now());
+        constraintBuilder.setEnd(MaterialDatePicker.thisMonthInUtcMilliseconds());
+        LocalDate earliestDate = LocalDate.of(2010, 1, 1);
+        constraintBuilder.setStart(earliestDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli());
+
+        MaterialDatePicker<Pair<Long, Long>> datePicker = MaterialDatePicker.Builder.dateRangePicker()
+                .setTitleText("Select Date Filter Range")
+                .setCalendarConstraints(constraintBuilder.build())
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(dateMillisPair -> {
+            long twelveHourTimezoneOffset = 43200000L; // i hate it too
+            String formattedStartDate = FormatUtils.formatDateStringShort(new Date(dateMillisPair.first + twelveHourTimezoneOffset));
+            String formattedEndDate = FormatUtils.formatDateStringShort(new Date(dateMillisPair.second + twelveHourTimezoneOffset));
+            filterBinding.dateStart.setText(formattedStartDate);
+            filterBinding.dateEnd.setText(formattedEndDate);
+        });
+
+        datePicker.show(getParentFragmentManager(), "Date Picker");
     }
 
     private void updateFilter() {
@@ -428,7 +496,10 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
     private void updatePriceFilter() {
         String lowerPrice = filterBinding.valueLow.getText().toString();
+        lowerPrice = FormatUtils.cleanupDirtyValueString(lowerPrice);
         String upperPrice = filterBinding.valueHigh.getText().toString();
+        upperPrice = FormatUtils.cleanupDirtyValueString(upperPrice);
+
         controller.updatePriceRangeFilter(lowerPrice, upperPrice);
     }
 }

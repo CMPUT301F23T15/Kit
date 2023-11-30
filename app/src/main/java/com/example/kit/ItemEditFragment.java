@@ -366,6 +366,7 @@ public class ItemEditFragment extends Fragment {
         // Value
         if (binding.itemValueDisplay.getText() != null) {
             String cleanValue = FormatUtils.cleanupDirtyValueString(binding.itemValueDisplay.getText().toString());
+            if (cleanValue.isEmpty()) cleanValue = "0";
             newItem.setValue(cleanValue);
         } else {
             newItem.setValue("0");
@@ -373,7 +374,7 @@ public class ItemEditFragment extends Fragment {
 
         // Date
         if (binding.itemDateDisplay.getText() != null) {
-            Timestamp date = FormatUtils.parseDateString(binding.itemDateDisplay.getText().toString());
+            Timestamp date = FormatUtils.parseDateStringToTimestamp(binding.itemDateDisplay.getText().toString());
             newItem.setAcquisitionDate(date);
         }
 
