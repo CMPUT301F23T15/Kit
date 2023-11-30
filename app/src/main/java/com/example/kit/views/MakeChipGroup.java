@@ -36,7 +36,6 @@ public class MakeChipGroup extends ChipGroup {
     }
 
     public void addMake(String make) {
-        makes.add(make);
         Chip chip = new Chip(new ContextThemeWrapper(context, R.style.tag_chip));
         ChipDrawable drawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.tag_chip);
         chip.setChipDrawable(drawable);
@@ -45,16 +44,16 @@ public class MakeChipGroup extends ChipGroup {
         chip.setPadding(0,0,0,0);
         chip.setChipMinHeightResource(R.dimen.tag_height);
         chip.setCloseIconVisible(true);
-        chip.setOnCloseIconClickListener(v -> {
-            String chipMake = ((Chip) v).getText().toString();
-            removeMake(chipMake);
-        });
+        chip.setOnCloseIconClickListener(this::removeMake);
 
         addView(chip);
+        makes.add(make);
     }
 
-    public void removeMake(String make) {
-        makes.remove(make);
+    private void removeMake(View v) {
+        String chipMake = ((Chip) v).getText().toString();
+        makes.remove(chipMake);
+        removeView(v);
     }
 
     public ArrayList<String> getMakes() {
