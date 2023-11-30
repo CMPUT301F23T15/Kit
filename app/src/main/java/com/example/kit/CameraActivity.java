@@ -16,7 +16,8 @@ import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
-import com.example.kit.databinding.CameraBinding; // replace with your actual binding class
+import com.example.kit.databinding.CameraBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.Locale;
@@ -26,7 +27,7 @@ import java.text.SimpleDateFormat;
 public class CameraActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraActivity";
-    private CameraBinding viewBinding; // replace with your actual binding class
+    private CameraBinding viewBinding;
     private ImageCapture imageCapture;
 
     @Override
@@ -40,6 +41,8 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(viewBinding.getRoot());
 
         startCamera();
+        FloatingActionButton captureButton = findViewById(R.id.image_capture_button);
+        captureButton.setOnClickListener(v -> takePhoto());
     }
 
     private void startCamera() {
@@ -59,10 +62,10 @@ public class CameraActivity extends AppCompatActivity {
                 CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
                 try {
-                    // Unbind use cases before rebinding
+
                     cameraProvider.unbindAll();
 
-                    // Bind use cases to camera
+
                     cameraProvider.bindToLifecycle(
                             this, cameraSelector, preview, imageCapture);
 
@@ -77,7 +80,7 @@ public class CameraActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
     private void takePhoto() {
-        Log.d("Capture", "reached");
+
         // Get a stable reference of the modifiable image capture use case
         ImageCapture imageCapture = this.imageCapture;
         if (imageCapture == null) return;
@@ -107,12 +110,12 @@ public class CameraActivity extends AppCompatActivity {
                 new ImageCapture.OnImageSavedCallback() {
                     @Override
                     public void onError( @NonNull ImageCaptureException exc) {
-                        Log.e(TAG, "Photo capture failed: " + exc.getMessage(), exc);
+                        Log.e(TAG, "Photo capture failed", exc);
                     }
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults output) {
-                        String msg = "Photo capture succeeded: " + output.getSavedUri();
+                        String msg = "Photo capture succeeded";
                         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                         Log.d(TAG, msg);
                     }
