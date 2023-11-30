@@ -45,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method returns the true if a user is logged in, otherwise returns false
+     * @return State of logged in user
+     */
     private boolean isLoggedIn(){
         FirebaseUser user = userAuth.getCurrentUser();
         if (user != null){

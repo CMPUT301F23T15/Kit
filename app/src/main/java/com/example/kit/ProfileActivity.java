@@ -42,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if(!isLoggedIn()){
                     signIn(email, password);
                 } else {
-                    signOut();
+                    userAuth.signOut();
                     Intent intent = getIntent();
                     finish();
                     startActivity(intent);
@@ -51,6 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    // When activity starts determines if a user is logged in, changing what is visible
     @Override
     protected void onStart() {
         super.onStart();
@@ -65,6 +66,10 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method returns the true if a user is logged in, otherwise returns false
+     * @return State of logged in user
+     */
     public boolean isLoggedIn(){
         FirebaseUser user = userAuth.getCurrentUser();
         if (user != null){
@@ -73,6 +78,13 @@ public class ProfileActivity extends AppCompatActivity {
             return false;
         }
     }
+
+    /**
+     * This method signs a user in, or if the user does not exist
+     * it will prompt the user to make a new account
+     * @param email String representing an email
+     * @param password String representing the users password
+     */
     public void signIn(String email, String password) {
         try {
             userAuth.signInWithEmailAndPassword(email, password)
@@ -101,6 +113,13 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(ProfileActivity.this, "Must Enter Email and Password", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * Creates a firebase user, and creates a document for the user inside
+     * the database
+     * @param email String in an email format
+     * @param password Password, must be greater than 6 characters
+     */
     public void createAccount(String email, String password) {
         userAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -136,10 +155,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    public void signOut(){
-        userAuth.signOut();
-    }
-
+    /**
+     * Navigates to the main activity, which will open the list view (if logged in properly)
+     */
     private void toListView(){
         Log.d("Navigation", "Navigating to the list view");
         Intent listIntent = new Intent(this, MainActivity.class);

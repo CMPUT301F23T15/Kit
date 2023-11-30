@@ -32,6 +32,7 @@ public class ItemDataSource extends AbstractItemDataSource {
     /**
      * Constructor that establishes connection to the {@link FirestoreManager} for the Tag Collection.
      * Creates a cache for the state of the database that is updated whenever the database changes.
+     * Creates an authentication state listener that updates the collection based on the user
      */
     public ItemDataSource() {
         itemCache = new HashMap<>();
@@ -39,6 +40,7 @@ public class ItemDataSource extends AbstractItemDataSource {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                // Dictates itemCollection if user is logged in or not
                 if(user == null){
                     Log.d("Auth Change", "User has been signed out");
                     itemCollection = FirestoreManager.getInstance().getCollection("SampleItems");
@@ -52,6 +54,10 @@ public class ItemDataSource extends AbstractItemDataSource {
         });
     }
 
+    /**
+     * Updates internal collection reference and resets the cache and updates the snapshot listener
+     * This also calls {@link #onDataChanged(), onDataChanged}
+     */
     private void updateCollection(){
 
         itemCollection.addSnapshotListener((itemSnapshots, error) -> {

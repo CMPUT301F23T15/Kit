@@ -28,6 +28,7 @@ public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
     /**
      * Constructor that establishes connection to the {@link FirestoreManager} for the Tag Collection.
      * Creates a cache for the state of the database that is updated whenever the database changes.
+     * Creates an authentication state listener that updates the collection based on the user
      */
     public TagDataSource() {
         tagCache = new HashMap<>();
@@ -35,6 +36,7 @@ public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                // Dictates itemCollection if user is logged in or not
                 if(user == null){
                     tagCollection = FirestoreManager.getInstance().getCollection("SampleTags");
                 } else {
@@ -47,6 +49,10 @@ public class TagDataSource extends DataSource<Tag, ArrayList<Tag>> {
 
     }
 
+    /**
+     * Updates internal collection reference and resets the cache and updates the snapshot listener
+     * This also calls {@link #onDataChanged(), onDataChanged}
+     */
     private void updateCollection(){
         tagCollection.addSnapshotListener((tagSnapshots, error) -> {
             if (tagSnapshots == null) {
