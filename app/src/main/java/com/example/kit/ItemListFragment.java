@@ -263,6 +263,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
 
     private void onTakePhoto() {
+        Log.d("takephoto", "reached");
         checkAndRequestPermissions();
     }
     private static final String[] REQUIRED_PERMISSIONS = {
@@ -272,11 +273,14 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     };
     private void checkAndRequestPermissions() {
         // Check if permissions are already granted
+
         boolean allPermissionsGranted = true;
         for (String permission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
                 allPermissionsGranted = false;
-                break;
+                Log.d("cr1", "reached");
+                //break;
+                startCamera();
             }
         }
 
@@ -288,6 +292,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             activityResultLauncher.launch(permissionsToRequest);
         } else {
             // All permissions are already granted, proceed with your logic
+            Log.d("cr2", "reached");
             startCamera();
         }
     }
