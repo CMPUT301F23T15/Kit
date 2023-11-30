@@ -13,6 +13,8 @@ import android.util.Base64;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 
+import com.example.kit.R;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -92,6 +94,20 @@ public class ImageUtils {
         bitmap.compress(Bitmap.CompressFormat.JPEG, JPEG_QUALITY, outputStream);
         byte[] byteArray = outputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    // From https://stackoverflow.com/a/69580381 by dotrinh DM and sankettt
+    public static Bitmap cropBitmapToThumbnail(Bitmap src) {
+        Bitmap bitmapRes;
+        int imageWidth = src.getWidth();
+        int imageHeight = src.getHeight();
+
+        float newWidth = R.dimen.item_thumbnail_size;
+        float scaleFactor = newWidth / imageWidth;
+        int newHeight = (int) (imageHeight * scaleFactor);
+        bitmapRes = Bitmap.createScaledBitmap(src, (int) newWidth, newHeight, true);
+        bitmapRes = Bitmap.createBitmap(bitmapRes, 0, 0, (int) newWidth,R.dimen.item_thumbnail_size);
+        return bitmapRes;
     }
 
     /**
