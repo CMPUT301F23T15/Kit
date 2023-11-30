@@ -174,10 +174,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
 
-        // Create the tag adapter with the list of tag names
-        ArrayAdapter<String> tagAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item);
-        filterBinding.tagAutoCompleteField.setAdapter(tagAdapter);
-        controller.setTagAdapter(tagAdapter);
+        filterBinding.tagAutoCompleteField.setAdapter(controller.createTagAdapter(requireContext()));
 
         // When a Tag name is clicked, fetch the Tag from the name and remove it from the tag name
         // list so that tags that are already on the item cannot be added to the item
@@ -208,9 +205,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             return false;
         });
 
-        ArrayAdapter<String> makeAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item);
-        filterBinding.makeAutoCompleteField.setAdapter(makeAdapter);
-        controller.setMakeAdapter(makeAdapter);
+        filterBinding.makeAutoCompleteField.setAdapter(controller.createMakeAdapter(requireContext()));
 
         filterBinding.makeAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             String make = controller.makeClickedAtPosition(position);

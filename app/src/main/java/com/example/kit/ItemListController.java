@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.content.Context;
 import android.widget.ArrayAdapter;
 
 import com.example.kit.command.AddTagCommand;
@@ -30,7 +31,7 @@ public class ItemListController implements DataChangedCallback {
     private ArrayAdapter<String> tagAdapter;
     private ArrayList<String> tagNames;
     private ArrayAdapter<String> makeAdapter;
-    private ArrayList<String> makes;
+    private final ArrayList<String> makes;
     private String currentKeyword = "";
     private String currentDateStart = "";
     private String currentDateEnd = "";
@@ -44,8 +45,11 @@ public class ItemListController implements DataChangedCallback {
      */
     public ItemListController() {
         itemSet = new ItemSet();
+        tagNames = new ArrayList<>();
+        makes = new ArrayList<>();
         // Add the controller as a callback when the ItemDataSource has changes in data
         itemDataSource.setCallback(this);
+        tagDataSource.setCallback(this);
     }
 
     /**
@@ -122,15 +126,31 @@ public class ItemListController implements DataChangedCallback {
         updateItemAdapterData();
         // Update the Total Valuation in the fragment
         callback.onItemSetValueChanged(itemSet.getItemSetValue());
-    }
 
-    public void setTagAdapter(ArrayAdapter<String> tagAdapter) {
-        this.tagAdapter = tagAdapter;
-        tagNames = new ArrayList<>();
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();
+        tagNames.clear();
         for (Tag tag : dbTags) {
             tagNames.add(tag.getName());
         }
+
+        ItemSet dbItems = itemDataSource.getDataSet();
+        makes.clear();
+        for (int i = 0; i < dbItems.getItemCount(); i++) {
+            String make = dbItems.getItem(i).getMake();
+            if (make == null || make.isEmpty()) continue;
+
+            if (!makes.contains(make)) makes.add(make);
+        }
+    }
+
+    public ArrayAdapter<String> createTagAdapter(Context context) {
+        ArrayList<Tag> dbTags = tagDataSource.getDataSet();
+        tagNames.clear();
+        for (Tag tag : dbTags) {
+            tagNames.add(tag.getName());
+        }
+        tagAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, tagNames);
+        return tagAdapter;
     }
 
     public void addTagToAdapter(Tag tag) {
@@ -158,16 +178,17 @@ public class ItemListController implements DataChangedCallback {
         return tag;
     }
 
-    public void setMakeAdapter(ArrayAdapter<String> makeAdapter) {
-        this.makeAdapter = makeAdapter;
-        makes = new ArrayList<>();
-        ItemSet allItems = itemDataSource.getDataSet();
-        for (int i = 0; i < allItems.getItemCount(); i++) {
-            String make = allItems.getItem(i).getMake();
+    public ArrayAdapter<String> createMakeAdapter(Context context) {
+        ItemSet dbItems = itemDataSource.getDataSet();
+        makes.clear();
+        for (int i = 0; i < dbItems.getItemCount(); i++) {
+            String make = dbItems.getItem(i).getMake();
             if (make == null || make.isEmpty()) continue;
 
             if (!makes.contains(make)) makes.add(make);
         }
+        makeAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, makes);
+        return makeAdapter;
     }
 
     public void addMakeToAdapter(String make) {
@@ -177,8 +198,9 @@ public class ItemListController implements DataChangedCallback {
     }
 
     public String makeClickedAtPosition(int position) {
-
-        return null;
+        String makeAtPosition = makes.remove(position);
+        makeAdapter.notifyDataSetChanged();
+        return makeAtPosition;
     }
 
     /**
