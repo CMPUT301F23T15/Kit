@@ -8,6 +8,8 @@ import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.AddTagBinding;
+import com.example.kit.views.ColorPalette;
+import com.example.kit.views.TagChipGroup;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -179,7 +181,7 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
     }
 
     /**
-     * Callback for the {@link com.example.kit.ColorPalette.OnColorSplotchClickListener}
+     * Callback for the {@link ColorPalette.OnColorSplotchClickListener}
      * Adds the provided ColorInt to the tag, then clears the Tag Field and adds the Tag to the
      * {@link TagChipGroup}. Hides the {@link ColorPalette}.
      */

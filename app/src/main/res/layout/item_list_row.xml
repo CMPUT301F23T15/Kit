@@ -56,7 +56,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/itemName_row" />
 
 
-            <com.example.kit.TagChipGroup
+            <com.example.kit.views.TagChipGroup
                 android:id="@+id/itemTagGroupRow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

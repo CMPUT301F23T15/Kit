@@ -245,7 +245,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.example.kit.TagChipGroup
+            <com.example.kit.views.TagChipGroup
                 android:id="@+id/itemDisplayTagGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -6,16 +6,12 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,13 +22,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.kit.command.AddTagCommand;
-import com.example.kit.command.CommandManager;
 import com.example.kit.data.Filter;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
 import com.example.kit.util.FormatUtils;
+import com.example.kit.views.TriStateSortButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
@@ -42,7 +37,6 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -190,6 +184,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         filterBinding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             Tag addTag = controller.tagClickedAtPosition(position);
             filterBinding.tagsFilter.addTag(addTag);
+//            if (!filterBinding.tagsFilter.isEmpty()) {
+//                filterBinding.tagsFilter.setVisibility(View.VISIBLE);
+//            }
             // Clear the field
             filterBinding.tagAutoCompleteField.setText("", false);
         });
@@ -205,6 +202,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
                 if (addTag != null) {
                     filterBinding.tagsFilter.addTag(addTag);
+//                    if (!filterBinding.tagsFilter.isEmpty()) {
+//                        filterBinding.tagsFilter.setVisibility(View.VISIBLE);
+//                    }
                 }
 
                 // Clear the field
@@ -219,6 +219,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         filterBinding.makeAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             String make = controller.makeClickedAtPosition(position);
             filterBinding.makesFilter.addMake(make);
+//            if (!filterBinding.makesFilter.isEmpty()) {
+//                filterBinding.makesFilter.setVisibility(View.VISIBLE);
+//            }
             filterBinding.makeAutoCompleteField.setText("", false);
         });
 
@@ -230,6 +233,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                 }
 
                 filterBinding.makesFilter.addMake(newMake);
+//                if (!filterBinding.makesFilter.isEmpty()) {
+//                    filterBinding.makesFilter.setVisibility(View.VISIBLE);
+//                }
 
                 // Clear the field
                 filterBinding.makeAutoCompleteField.setText("", false);
@@ -279,9 +285,32 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             filterBinding.dateEnd.setText("");
             filterBinding.dateEnd.clearFocus();
         });
+
+        filterBinding.dateSortButton.setOnClickListener(v -> {
+            TriStateSortButton.BUTTON_STATE state = filterBinding.dateSortButton.getCurrentState();
+            // do something with the state
+        });
+
+        filterBinding.valueSortButton.setOnClickListener(v -> {
+            TriStateSortButton.BUTTON_STATE state = filterBinding.valueSortButton.getCurrentState();
+            // do something with the state
+        });
+
+        filterBinding.makeSortButton.setOnClickListener(v -> {
+            TriStateSortButton.BUTTON_STATE state = filterBinding.makeSortButton.getCurrentState();
+            // do something with the state
+        });
+
+        filterBinding.tagSortButton.setOnClickListener(v -> {
+            TriStateSortButton.BUTTON_STATE state = filterBinding.tagSortButton.getCurrentState();
+            // do something with the state
+        });
+
     }
 
     private void openDatePicker() {
+        // Open date range picker limited to 2010 to present to reduce lag on opening. Unfortunately
+        // the date range picker from google is laggy and it is a known issue.
         CalendarConstraints.Builder constraintBuilder = new CalendarConstraints.Builder();
         constraintBuilder.setValidator(DateValidatorPointBackward.now());
         constraintBuilder.setEnd(MaterialDatePicker.thisMonthInUtcMilliseconds());

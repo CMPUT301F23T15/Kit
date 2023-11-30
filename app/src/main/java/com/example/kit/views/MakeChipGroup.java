@@ -1,4 +1,4 @@
-package com.example.kit;
+package com.example.kit.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 
+import com.example.kit.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
@@ -63,5 +64,9 @@ public class MakeChipGroup extends ChipGroup {
     public void clear() {
         removeAllViews();
         makes.clear();
+    }
+
+    public boolean isEmpty() {
+        return makes.isEmpty();
     }
 }

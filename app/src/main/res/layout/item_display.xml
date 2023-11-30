@@ -233,7 +233,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/itemSerialNumberDisplayLayout"
                 app:srcCompat="@drawable/baseline_label_24_grey" />
 
-            <com.example.kit.TagChipGroup
+            <com.example.kit.views.TagChipGroup
                 android:id="@+id/itemDisplayTagGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
