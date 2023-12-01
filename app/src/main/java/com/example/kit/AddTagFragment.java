@@ -28,10 +28,12 @@ import java.util.HashSet;
 /**
  * Small dialog fragment that facilitates adding tags to the database and to the selected items.
  */
-public class AddTagFragment extends DialogFragment implements ColorPalette.OnColorSplotchClickListener {
+public class AddTagFragment extends DialogFragment implements ColorPalette.OnColorSplotchClickListener, TagChipGroup.OnTagChipCloseListener {
     private AddTagBinding binding;
     private final HashSet<String> itemIDs;
     private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
+    private ArrayList<String> tagNames;
+    private ArrayAdapter<String> adapter;
     private Tag underConstructionTag;
 
     /**
@@ -60,6 +62,9 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
 
         initializeTagField();
 
+        binding.tagsToAddGroup.setInEditMode(true);
+        binding.tagsToAddGroup.setChipCloseListener(this);
+
         // Initialize the color palette view
         binding.colorPalette.setColorSplotchClickListener(this);
         showColorPalette(false);
@@ -79,13 +84,13 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
      */
     private void initializeTagField() {
         // Build the list of existing tag names and bind it to the dropdown
-        ArrayList<String> tagNames = new ArrayList<>();
+        tagNames = new ArrayList<>();
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();
         for (Tag tag : dbTags) {
             tagNames.add(tag.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
+        adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
         binding.tagAutoCompleteField.setAdapter(adapter);
 
         // Add existing tags if they were clicked in the drop down list
@@ -192,5 +197,10 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
         binding.tagsToAddGroup.addTag(underConstructionTag);
         underConstructionTag = null;
         showColorPalette(false);
+    }
+
+    @Override
+    public void onTagChipClosed(Tag tag) {
+        tagNames.add(tag.getName());
     }
 }
