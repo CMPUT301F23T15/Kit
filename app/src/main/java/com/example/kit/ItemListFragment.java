@@ -288,22 +288,46 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         filterBinding.dateSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.dateSortButton.getCurrentState();
+            filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             // do something with the state
         });
 
         filterBinding.valueSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.valueSortButton.getCurrentState();
+            filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             // do something with the state
         });
 
         filterBinding.makeSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.makeSortButton.getCurrentState();
+            filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             // do something with the state
         });
 
         filterBinding.tagSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.tagSortButton.getCurrentState();
+            filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             // do something with the state
+        });
+
+        filterBinding.searchSortButton.setOnClickListener(v -> {
+            TriStateSortButton.BUTTON_STATE state = filterBinding.searchSortButton.getCurrentState();
+            filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
+            filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
         });
 
     }

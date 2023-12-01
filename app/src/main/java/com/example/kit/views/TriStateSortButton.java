@@ -82,4 +82,8 @@ public class TriStateSortButton extends AppCompatImageButton {
         return currentState;
     }
 
+    public void setCurrentState(BUTTON_STATE state) {
+        this.currentState = state;
+        updateIcon();
+    }
 }
