@@ -70,9 +70,10 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             Bitmap thumbnailBitmap;
             thumbnailBitmap = ImageUtils.convertBase64ToBitmap(thumbnailBase64);
             if (thumbnailBitmap != null) {
-                Bitmap croppedThumbnail = ImageUtils.cropBitmapToThumbnail(thumbnailBitmap);
+                Bitmap croppedThumbnail = ImageUtils.cropBitmapToThumbnail(thumbnailBitmap, itemView.getContext());
                 binding.itemThumbnailRow.setImageBitmap(croppedThumbnail);
             }
+//            binding.itemThumbnailRow.setImageBitmap(thumbnailBitmap);
         }
     }
 

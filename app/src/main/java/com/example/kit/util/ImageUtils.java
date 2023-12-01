@@ -97,16 +97,19 @@ public class ImageUtils {
     }
 
     // From https://stackoverflow.com/a/69580381 by dotrinh DM and sankettt
-    public static Bitmap cropBitmapToThumbnail(Bitmap src) {
+    public static Bitmap cropBitmapToThumbnail(Bitmap src, Context context) {
         Bitmap bitmapRes;
         int imageWidth = src.getWidth();
         int imageHeight = src.getHeight();
 
-        float newWidth = R.dimen.item_thumbnail_size;
+        float newWidth = context.getResources().getDimension(R.dimen.item_thumbnail_size);
         float scaleFactor = newWidth / imageWidth;
         int newHeight = (int) (imageHeight * scaleFactor);
         bitmapRes = Bitmap.createScaledBitmap(src, (int) newWidth, newHeight, true);
-        bitmapRes = Bitmap.createBitmap(bitmapRes, 0, 0, (int) newWidth,R.dimen.item_thumbnail_size);
+        int scaledH = bitmapRes.getHeight();
+        int scaledW = bitmapRes.getWidth();
+        int dimen = Math.min(scaledW, scaledH);
+        bitmapRes = Bitmap.createBitmap(bitmapRes, 0, 0, dimen, dimen);
         return bitmapRes;
     }
 
