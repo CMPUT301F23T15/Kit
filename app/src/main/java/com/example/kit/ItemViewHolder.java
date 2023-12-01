@@ -31,6 +31,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public ItemViewHolder(@NonNull ItemListRowBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
+        binding.itemThumbnailRow.setClipToOutline(true);
     }
 
     /**
@@ -73,7 +74,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
                 Bitmap croppedThumbnail = ImageUtils.cropBitmapToThumbnail(thumbnailBitmap, itemView.getContext());
                 binding.itemThumbnailRow.setImageBitmap(croppedThumbnail);
             }
-//            binding.itemThumbnailRow.setImageBitmap(thumbnailBitmap);
         }
     }
 
