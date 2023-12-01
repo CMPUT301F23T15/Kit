@@ -1,6 +1,7 @@
 package com.example.kit;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -148,6 +149,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             navController.navigate(R.id.newItemAction);
         });
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
+        binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+        Intent login = new Intent(getActivity(), ProfileActivity.class);
+        binding.profileButton.setOnClickListener(onClick -> startActivity(login));
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
     }
 
