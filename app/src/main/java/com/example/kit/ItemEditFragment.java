@@ -191,6 +191,9 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         binding.imageCarousel.setLayoutManager(layoutManager);
         binding.imageCarousel.setAdapter(imageAdapter);
         binding.imageCarousel.setNestedScrollingEnabled(false);
+
+        // Update the add button's enabled/disabled status whenever the carousel is settled on an
+        // image
         binding.imageCarousel.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -255,6 +258,10 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         getContentLauncher.launch("image/*");
     }
 
+    /**
+     * Adds input formatting to the Value field, formatting it as a currency string without the
+     * currency symbol.
+     */
     private void initializeItemValueField() {
         binding.itemValueDisplay.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus && binding.itemValueDisplay.getText() != null) {

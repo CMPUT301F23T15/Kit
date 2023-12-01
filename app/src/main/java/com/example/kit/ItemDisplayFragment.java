@@ -24,8 +24,6 @@ import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
 import com.google.android.material.carousel.HeroCarouselStrategy;
 
-import java.util.ArrayList;
-
 /**
  * Fragment that displays an {@link Item} for viewing purposes.
  */

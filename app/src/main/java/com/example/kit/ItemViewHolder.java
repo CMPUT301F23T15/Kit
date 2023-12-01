@@ -70,6 +70,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             String thumbnailBase64 = item.getBase64Images().get(0);
             Bitmap thumbnailBitmap;
             thumbnailBitmap = ImageUtils.convertBase64ToBitmap(thumbnailBase64);
+            // Crop the image to a square
             if (thumbnailBitmap != null) {
                 Bitmap croppedThumbnail = ImageUtils.cropBitmapToThumbnail(thumbnailBitmap, itemView.getContext());
                 binding.itemThumbnailRow.setImageBitmap(croppedThumbnail);
