@@ -116,6 +116,9 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         loadItem();
     }
 
+    /**
+     * Adds behavior to scroll to make the tag chip group visible when editing the tag field
+     */
     private void initializeScrollBehaviorForTagField() {
         binding.tagAutoCompleteField.setOnFocusChangeListener((v, hasFocus) -> {
             tagFieldFocused = hasFocus;
@@ -263,15 +266,25 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         });
     }
 
+    /**
+     * Create the list of existing tags to add to the Tag dropdown field, and provide click listeners
+     * for clicking items in the list, as well as providing function for adding new tags typed
+     * in the field.
+     */
     private void initializeTagField() {
+        // Add all existing tags to the list of tags for the dropdown
         tagNames = new ArrayList<>();
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();
         for (Tag tag : dbTags) {
             tagNames.add(tag.getName());
         }
+
         tagNameAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
         binding.tagAutoCompleteField.setAdapter(tagNameAdapter);
 
+
+        // When a Tag name is clicked, fetch the Tag from the name and remove it from the tag name
+        // list so that tags that are already on the item cannot be added to the item
         binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
             binding.itemDisplayTagGroup.addTag(addTag);
