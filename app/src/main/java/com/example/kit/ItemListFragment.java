@@ -28,6 +28,8 @@ import com.example.kit.data.Tag;
 import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
 import com.example.kit.util.FormatUtils;
+import com.example.kit.views.MakeChipGroup;
+import com.example.kit.views.TagChipGroup;
 import com.example.kit.views.TriStateSortButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -45,7 +47,9 @@ import java.util.HashSet;
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed. Controlled by {@link ItemListController}
  */
-public class ItemListFragment extends Fragment implements SelectListener, ItemListController.ItemSetValueChangedCallback {
+public class ItemListFragment extends Fragment
+        implements SelectListener,
+        ItemListController.ItemSetValueChangedCallback {
 
     // Item List Fields
     private ItemListBinding binding;
@@ -181,6 +185,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
 
+        filterBinding.tagsFilter.setInEditMode(true);
+        filterBinding.tagsFilter.setChipCloseListener(controller);
         filterBinding.tagAutoCompleteField.setAdapter(controller.createTagAdapter(requireContext()));
 
         // When a Tag name is clicked, fetch the Tag from the name and remove it from the tag name
@@ -218,6 +224,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             return false;
         });
 
+        filterBinding.makesFilter.setChipCloseListener(controller);
         filterBinding.makeAutoCompleteField.setAdapter(controller.createMakeAdapter(requireContext()));
 
         filterBinding.makeAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {

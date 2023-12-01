@@ -26,6 +26,7 @@ import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemEditBinding;
 import com.example.kit.util.FormatUtils;
+import com.example.kit.views.TagChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -166,6 +167,8 @@ public class ItemEditFragment extends Fragment {
      * in the field.
      */
     private void initializeTagField() {
+        binding.itemDisplayTagGroup.setInEditMode(true);
+
         // Add all existing tags to the list of tags for the dropdown
         tagNames = new ArrayList<>();
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class TagChipGroup extends ChipGroup {
     private final Context context;
     private OnTagChipCloseListener listener;
+    private boolean inEditMode;
 
     private boolean addChipEnabled = false;
     private Chip addChip;
@@ -56,6 +57,7 @@ public class TagChipGroup extends ChipGroup {
     }
 
     public void setInEditMode(boolean inEditMode) {
+        this.inEditMode = inEditMode;
         for (Chip chip : chips) {
             chip.setCloseIconVisible(inEditMode);
         }
@@ -107,10 +109,8 @@ public class TagChipGroup extends ChipGroup {
         chip.setText(tag.getName());
         chip.setPadding(0,0,0,0);
         chip.setChipMinHeightResource(R.dimen.tag_height);
-        chip.setOnCloseIconClickListener(v -> {
-            if (listener == null) return;
-            removeChip(v);
-        });
+        chip.setCloseIconVisible(inEditMode);
+        chip.setOnCloseIconClickListener(this::removeChip);
         addView(chip);
         chips.add(chip);
     }
@@ -121,7 +121,9 @@ public class TagChipGroup extends ChipGroup {
         for (Tag tag : tags) {
             if (tagName.equals(tag.getName())) {
                 tags.remove(tag);
-                listener.onTagChipClosed(tag);
+                if (listener != null) {
+                    listener.onTagChipClosed(tag);
+                }
                 break;
             }
         }

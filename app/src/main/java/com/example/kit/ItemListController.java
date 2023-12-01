@@ -14,6 +14,8 @@ import com.example.kit.data.source.AbstractItemDataSource;
 import com.example.kit.data.source.AbstractTagDataSource;
 import com.example.kit.data.source.DataChangedCallback;
 import com.example.kit.data.source.DataSourceManager;
+import com.example.kit.views.MakeChipGroup;
+import com.example.kit.views.TagChipGroup;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,7 +24,9 @@ import java.util.HashSet;
 /**
  * Controller that handles data management and manipulation for a {@link ItemListFragment}.
  */
-public class ItemListController implements DataChangedCallback {
+public class ItemListController implements DataChangedCallback,
+        TagChipGroup.OnTagChipCloseListener,
+        MakeChipGroup.OnMakeChipCloseListener {
     private ItemAdapter itemAdapter;
     private ItemSet itemSet;
     private ItemSetValueChangedCallback callback;
@@ -153,12 +157,6 @@ public class ItemListController implements DataChangedCallback {
         return tagAdapter;
     }
 
-    public void addTagToAdapter(Tag tag) {
-        if(!tagNames.contains(tag.getName())) {
-            tagNames.add(tag.getName());
-        }
-    }
-
     public Tag tagClickedAtPosition(int position) {
         String tagNameAtPosition = tagNames.remove(position);
         Tag tagAtPosition = tagDataSource.getDataByID(tagNameAtPosition);
@@ -191,16 +189,24 @@ public class ItemListController implements DataChangedCallback {
         return makeAdapter;
     }
 
-    public void addMakeToAdapter(String make) {
-        if (!makes.contains(make)) {
-            makes.add(make);
-        }
-    }
-
     public String makeClickedAtPosition(int position) {
         String makeAtPosition = makes.remove(position);
         makeAdapter.notifyDataSetChanged();
         return makeAtPosition;
+    }
+
+    @Override
+    public void onMakeChipClosed(String makeName) {
+        if (!makes.contains(makeName)) {
+            makes.add(makeName);
+        }
+    }
+
+    @Override
+    public void onTagChipClosed(Tag tag) {
+        if(!tagNames.contains(tag.getName())) {
+            tagNames.add(tag.getName());
+        }
     }
 
     /**
