@@ -3,8 +3,12 @@ package com.example.kit.data.source;
 import android.graphics.Color;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.kit.data.Tag;
 import com.example.kit.data.FirestoreManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -18,22 +22,39 @@ import java.util.HashMap;
  */
 public class TagDataSource extends AbstractTagDataSource {
 
-    private final CollectionReference tagCollection;
+    private CollectionReference tagCollection;
     private final HashMap<String, Tag> tagCache;
 
     /**
      * Constructor that establishes connection to the {@link FirestoreManager} for the Tag Collection.
      * Creates a cache for the state of the database that is updated whenever the database changes.
+     * Creates an authentication state listener that updates the collection based on the user
      */
     public TagDataSource() {
-        tagCollection = FirestoreManager.getInstance().getCollection("Tags");
         tagCache = new HashMap<>();
+        FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            // Dictates itemCollection if user is logged in or not
+            if(user == null){
+                tagCollection = FirestoreManager.getInstance().getCollection("SampleTags");
+            } else {
+                tagCollection = FirestoreManager.getInstance().getCollection("Users")
+                        .document(user.getUid()).collection("Tags");
+            }
+            updateCollection();
+        });
+    }
+
+    /**
+     * Updates internal collection reference and resets the cache and updates the snapshot listener
+     * This also calls {@link #onDataChanged(), onDataChanged}
+     */
+    private void updateCollection(){
         tagCollection.addSnapshotListener((tagSnapshots, error) -> {
             if (tagSnapshots == null) {
                 Log.e("Database", "SnapshotListener null query result");
                 return;
             }
-
             tagCache.clear();
             for (QueryDocumentSnapshot tagSnapshot: tagSnapshots) {
                 Tag tag = buildTag(tagSnapshot);
