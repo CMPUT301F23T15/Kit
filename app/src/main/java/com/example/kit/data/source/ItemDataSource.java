@@ -16,7 +16,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -145,8 +144,9 @@ public class ItemDataSource extends AbstractItemDataSource {
         for (Tag tag : item.getTags()) {
             tagNames.add(tag.getName());
         }
-
         packedItem.put("tags", tagNames);
+
+        packedItem.put("images", item.getBase64Images());
 
         return packedItem;
     }
@@ -169,7 +169,7 @@ public class ItemDataSource extends AbstractItemDataSource {
         item.setSerialNumber((String) itemSnapshot.get("serialNumber"));
 
         // Add Tag objects from the Tag DataSource
-        List<String> tagNames = getTagList(itemSnapshot);
+        ArrayList<String> tagNames = getListField(itemSnapshot, "tags");
         for (String tagName : tagNames) {
             Tag tag = tagDataSource.getDataByID(tagName);
             if (tag == null) {
@@ -180,25 +180,27 @@ public class ItemDataSource extends AbstractItemDataSource {
             item.addTag(tag);
         }
 
+        item.setBase64Images(getListField(itemSnapshot, "images"));
+
         return item;
     }
 
     /**
-     * Helper method that extracts a list of tag names from the itemSnapshot, with type checking
+     * Helper method that extracts a list of strings from the itemSnapshot, with type checking
      * to ensure the list is a string list.
      * @implNote Suppresses unchecked cast warning, because it does check the type.
      * @param itemSnapshot DocumentSnapshot representing an item.
-     * @return List of tag names if it exists, otherwise an empty list.
+     * @return List of strings if it exists, otherwise an empty list.
      */
     @SuppressWarnings("unchecked")
-    private static List<String> getTagList(DocumentSnapshot itemSnapshot) {
-        Object fieldValue = itemSnapshot.get("tags");
+    private static ArrayList<String> getListField(DocumentSnapshot itemSnapshot, String field) {
+        Object fieldValue = itemSnapshot.get(field);
         if (fieldValue instanceof List<?>) {
             List<?> list = (List<?>) fieldValue;
             if (!list.isEmpty() && list.get(0) instanceof String) {
-                return (List<String>) fieldValue;
+                return new ArrayList<>((List<String>) fieldValue);
             }
         }
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 }

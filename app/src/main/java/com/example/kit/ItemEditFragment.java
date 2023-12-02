@@ -1,6 +1,8 @@
 package com.example.kit;
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,40 +13,61 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.text.InputType;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.CommandManager;
+import com.example.kit.util.ImageUtils;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemEditBinding;
+
+import com.google.android.material.carousel.CarouselLayoutManager;
+import com.google.android.material.carousel.CarouselSnapHelper;
+import com.google.android.material.carousel.HeroCarouselStrategy;
+
 import com.example.kit.util.FormatUtils;
+
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
+
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
  * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
  */
-public class ItemEditFragment extends Fragment {
+public class ItemEditFragment extends Fragment implements CarouselImageViewHolder.OnAddImageListener {
+
+    // Fragment Fields
+    private String itemID;
     private ItemEditBinding binding;
     private NavController navController;
     private DataSource<Tag, ArrayList<Tag>> tagDataSource;
-    private ArrayAdapter<String> adapter;
+
+    // Image Carousel Fields
+    private CarouselImageAdapter imageAdapter;
+    private CarouselSnapHelper snapHelper;
+    private CarouselLayoutManager layoutManager;
+    private ActivityResultLauncher<String> getContentLauncher;
+
+    // Tag Dropdown Fields
+    private ArrayAdapter<String> tagNameAdapter;
     private ArrayList<String> tagNames;
-    private String itemID;
     private boolean tagFieldFocused = false;
 
     /**
@@ -76,6 +99,7 @@ public class ItemEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemEditBinding.inflate(inflater, container, false);
         initializeConfirmButton();
+        initializeImageCarousel();
         initializeItemValueField();
         initializeTagField();
         initializeDateField();
@@ -146,6 +170,95 @@ public class ItemEditFragment extends Fragment {
     }
 
     /**
+     * Initialize the Image Carousel, setting the layout and snap helpers in addition to an adapter
+     * that manages clicks within the ViewHolders for adding and deleting images.
+     */
+    private void initializeImageCarousel() {
+        // Create layout manager that makes the images morph and look pretty
+        layoutManager
+                = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.HORIZONTAL);
+
+        // Snap Helper snaps images into view instead of allowing free scrolling
+        snapHelper = new CarouselSnapHelper();
+
+        // Adapter for the RecyclerView, with this as a listener for when prompted to add new images
+        // This is the edit fragment, so we are in edit mode.
+        imageAdapter = new CarouselImageAdapter(true);
+        imageAdapter.setAddImageListener(this);
+
+        // Attach all to the RecyclerView and set properties
+        snapHelper.attachToRecyclerView(binding.imageCarousel);
+        binding.imageCarousel.setLayoutManager(layoutManager);
+        binding.imageCarousel.setAdapter(imageAdapter);
+        binding.imageCarousel.setNestedScrollingEnabled(false);
+
+        // Update the add button's enabled/disabled status whenever the carousel is settled on an
+        // image
+        binding.imageCarousel.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) return;
+                updateAddButtonStatus();
+            }
+        });
+
+
+        // Create a content launcher for when we want to add images from the gallery.
+        getContentLauncher =
+                registerForActivityResult(new ImageUtils.GetImageURIResultContract(), this::onImagePicked);
+        // To use the above: getContentLauncher.launch("image/*")
+    }
+
+    /**
+     * Helper method to disable the AddImageButton unless it is the ViewHolder that is snapped in place
+     */
+    private void updateAddButtonStatus() {
+        View snapView = snapHelper.findSnapView(layoutManager);
+        if (snapView == null) return;
+
+        // Get the position of the view within the Adapter that we are snapped to
+        int snapPos;
+        try {
+            snapPos = Objects.requireNonNull(
+                    binding.imageCarousel.findContainingViewHolder(snapView)).getBindingAdapterPosition();
+        } catch (NullPointerException e){
+            return;
+        }
+
+        // Loop through the children of the RecyclerView and only allow the add image button to work
+        // if it is the view that is snapped to.
+        // There has to a better way to do this, but I don't know how.
+        for (int i = 0; i < binding.imageCarousel.getChildCount(); i++) {
+            CarouselImageViewHolder viewHolder = (CarouselImageViewHolder) binding.imageCarousel.getChildViewHolder(binding.imageCarousel.getChildAt(i));
+            viewHolder.setAllowAdd(snapPos == imageAdapter.getItemCount() - 1);
+        }
+    }
+
+
+    /**
+     * Callback method from selecting images on the device, converts the Uri and adds it to the list
+     * @param imageURI The Uri of the image result from the Launcher
+     */
+    private void onImagePicked(Uri imageURI) {
+        if (imageURI == null) return;
+
+        Bitmap bitmap = ImageUtils.convertUriToBitmap(imageURI, requireContext());
+        // Image adapter notifies itself of the dataset change
+        imageAdapter.addImage(new CarouselImage(bitmap));
+    }
+
+    /**
+     * Launches an interface to select between adding images from the device or taking new pictures
+     */
+    @Override
+    public void onAddImageClick() {
+        // Launch interface to select between pictures from the gallery or take new photo
+//        if (snapPos != imageAdapter.getItemCount()-1) return;
+        getContentLauncher.launch("image/*");
+    }
+
+    /**
      * Adds input formatting to the Value field, formatting it as a currency string without the
      * currency symbol.
      */
@@ -172,16 +285,17 @@ public class ItemEditFragment extends Fragment {
         for (Tag tag : dbTags) {
             tagNames.add(tag.getName());
         }
-        // Create the adapter with the list of tag names
-        adapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
-        binding.tagAutoCompleteField.setAdapter(adapter);
+
+        tagNameAdapter = new ArrayAdapter<>(requireContext(), R.layout.dropdown_item, tagNames);
+        binding.tagAutoCompleteField.setAdapter(tagNameAdapter);
+
 
         // When a Tag name is clicked, fetch the Tag from the name and remove it from the tag name
         // list so that tags that are already on the item cannot be added to the item
         binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
             binding.itemDisplayTagGroup.addTag(addTag);
-            adapter.notifyDataSetChanged();
+            tagNameAdapter.notifyDataSetChanged();
             // Clear the field
             binding.tagAutoCompleteField.setText("", false);
         });
@@ -202,7 +316,7 @@ public class ItemEditFragment extends Fragment {
                 } else {
                     // Remove the existing tag from the options in the dropdown
                     tagNames.remove(newTag.getName());
-                    adapter.notifyDataSetChanged();
+                    tagNameAdapter.notifyDataSetChanged();
                 }
 
                 binding.itemDisplayTagGroup.addTag(newTag);
@@ -328,6 +442,7 @@ public class ItemEditFragment extends Fragment {
         }
 
         this.itemID = item.findID();
+
         // Use View Binding to populate UI elements with item data
         binding.itemNameDisplay.setText(item.getName());
         binding.itemValueDisplay.setText(FormatUtils.formatValue(item.valueToBigDecimal(),false));
@@ -343,6 +458,10 @@ public class ItemEditFragment extends Fragment {
             binding.itemDisplayTagGroup.addTag(tag);
             // Remove tags that are already on the item from the list of available existing tags
             tagNames.remove(tag.getName());
+        }
+
+        for (String base64 : item.getBase64Images()) {
+            imageAdapter.addImage(new CarouselImage(ImageUtils.convertBase64ToBitmap(base64)));
         }
     }
 
@@ -421,6 +540,13 @@ public class ItemEditFragment extends Fragment {
         // Attach the existing ID to the item if we have it
         if (itemID != null && !itemID.isEmpty()) {
             newItem.attachID(itemID);
+        }
+
+        // Images
+        ArrayList<CarouselImage> itemImages = imageAdapter.getImages();
+        for (CarouselImage carouselImage : itemImages) {
+            String base64 = ImageUtils.convertBitmapToBase64(carouselImage.getImage());
+            newItem.addBase64ImageString(base64);
         }
 
         return newItem;
