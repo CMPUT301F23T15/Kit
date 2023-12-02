@@ -19,4 +19,5 @@
     <string name="add_new_tag">Add New Tag</string>
     <string name="add_existing_tags">Add Existing Tags</string>
     <string name="new_tag_hint">Add Tags</string>
+    <string name="tag_frag_hint">Tags</string>
 </resources>
