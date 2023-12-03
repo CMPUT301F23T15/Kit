@@ -274,7 +274,7 @@ public class ItemListController implements DataChangedCallback,
 
         switch (sortAttribute) {
             case "keyword":
-                comparator = Comparator.comparing(Item::getName);
+                comparator = Comparator.comparing(Item::getDescription);
                 break;
             case "date":
                 comparator = Comparator.comparing(Item::getAcquisitionDate);
