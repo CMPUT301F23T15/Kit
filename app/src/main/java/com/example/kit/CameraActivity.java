@@ -1,10 +1,13 @@
 package com.example.kit;
 
+import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Surface;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,10 +16,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
 import com.example.kit.databinding.CameraBinding;
+import com.example.kit.util.ImageUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -80,6 +85,7 @@ public class CameraActivity extends AppCompatActivity {
 
         }, ContextCompat.getMainExecutor(this));
     }
+
     //Part you might want to edit - Saves to gallery at the moment
     private void takePhoto() {
 
@@ -105,6 +111,8 @@ public class CameraActivity extends AppCompatActivity {
                 contentValues)
                 .build();
 
+        imageCapture.setTargetRotation(Surface.ROTATION_0);
+
         // Set up image capture listener, which is triggered after the photo has been taken
         imageCapture.takePicture(
                 outputOptions,
@@ -117,9 +125,10 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults output) {
-                        String msg = "Photo capture succeeded";
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, msg);
+                        output.
+                        Intent data = new Intent(Intent.ACTION_SEND, output.getSavedUri());
+                        setResult(Activity.RESULT_OK, data);
+                        finish();
                     }
                 }
         );

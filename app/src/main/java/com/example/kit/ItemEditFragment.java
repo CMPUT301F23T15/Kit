@@ -1,5 +1,9 @@
 package com.example.kit;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -13,9 +17,13 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.text.InputType;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -24,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.CommandManager;
+import com.example.kit.databinding.ImageSourceChoiceBinding;
 import com.example.kit.util.ImageUtils;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
@@ -31,6 +40,7 @@ import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemEditBinding;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
 import com.google.android.material.carousel.HeroCarouselStrategy;
@@ -44,8 +54,11 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
+import java.util.zip.Inflater;
 
 /**
  * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
@@ -246,6 +259,14 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         Bitmap bitmap = ImageUtils.convertUriToBitmap(imageURI, requireContext());
         // Image adapter notifies itself of the dataset change
         imageAdapter.addImage(new CarouselImage(bitmap));
+        if (imageAdapter.getItemCount() < 2) {
+            binding.imageCarousel.scrollToPosition(imageAdapter.getItemCount()-1);
+            binding.imageCarousel.smoothScrollToPosition(0);
+        } else {
+            binding.imageCarousel.scrollToPosition(imageAdapter.getItemCount()-1);
+            binding.imageCarousel.smoothScrollToPosition(imageAdapter.getItemCount()-2);
+        }
+
     }
 
     /**
@@ -253,9 +274,81 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
      */
     @Override
     public void onAddImageClick() {
-        // Launch interface to select between pictures from the gallery or take new photo
-//        if (snapPos != imageAdapter.getItemCount()-1) return;
-        getContentLauncher.launch("image/*");
+        ImageSourceModal dialog = new ImageSourceModal();
+        dialog.setGalleryButtonListener(v -> getContentLauncher.launch("image/*"));
+        dialog.setCameraButtonListener(v -> onTakePhoto());
+        dialog.show(requireActivity().getSupportFragmentManager(), dialog.getTag());
+    }
+
+
+
+    private void onTakePhoto() {
+        Log.d("takephoto", "reached");
+        checkAndRequestPermissions();
+    }
+    private static final String[] REQUIRED_PERMISSIONS = {
+            android.Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            // Add other required permissions as needed
+    };
+    //Checks Permissions and then calls start camera
+    private void checkAndRequestPermissions() {
+        // Check if permissions are already granted
+
+        boolean allPermissionsGranted = true;
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                allPermissionsGranted = false;
+                Log.d("cr1", "reached");
+                //break;
+                startCamera();
+            }
+        }
+
+        // If any permission is not granted, request permissions
+        if (!allPermissionsGranted) {
+            String[] permissionsToRequest = Arrays.stream(REQUIRED_PERMISSIONS)
+                    .filter(permission -> ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
+                    .toArray(String[]::new);
+            activityResultLauncher.launch(permissionsToRequest);
+        } else {
+            // All permissions are already granted, proceed with your logic
+            Log.d("cr2", "reached");
+            startCamera();
+        }
+    }
+
+    private final ActivityResultLauncher<String[]> activityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+                // Handle Permission granted/rejected
+                boolean permissionGranted = true;
+                for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+                    if (Arrays.asList(REQUIRED_PERMISSIONS).contains(entry.getKey()) && !entry.getValue()) {
+                        permissionGranted = false;
+                    }
+                }
+                if (!permissionGranted) {
+                    //to be done
+                } else {
+                    onTakePhoto();
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // There are no request codes
+                    Intent data = result.getData();
+                    onImagePicked(data.getData());
+                }
+            });
+
+    //Opens new activity
+
+    private void startCamera() {
+        Intent i = new Intent(requireContext(), CameraActivity.class);
+        someActivityResultLauncher.launch(i);
     }
 
     /**

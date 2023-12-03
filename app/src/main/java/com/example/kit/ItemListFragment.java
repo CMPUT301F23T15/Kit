@@ -96,8 +96,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         Intent login = new Intent(getActivity(), ProfileActivity.class);
         binding.profileButton.setOnClickListener(onClick -> startActivity(login));
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
-        //Camera button
-        binding.cameraButton.setOnClickListener(onClick -> onTakePhoto());
     }
 
     /**
@@ -232,66 +230,4 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
     }
-
-
-    private void onTakePhoto() {
-        Log.d("takephoto", "reached");
-        checkAndRequestPermissions();
-    }
-    private static final String[] REQUIRED_PERMISSIONS = {
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-            // Add other required permissions as needed
-    };
-    //Checks Permissions and then calls start camera
-    private void checkAndRequestPermissions() {
-        // Check if permissions are already granted
-
-        boolean allPermissionsGranted = true;
-        for (String permission : REQUIRED_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-                allPermissionsGranted = false;
-                Log.d("cr1", "reached");
-                //break;
-                startCamera();
-            }
-        }
-
-        // If any permission is not granted, request permissions
-        if (!allPermissionsGranted) {
-            String[] permissionsToRequest = Arrays.stream(REQUIRED_PERMISSIONS)
-                    .filter(permission -> ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
-                    .toArray(String[]::new);
-            activityResultLauncher.launch(permissionsToRequest);
-        } else {
-            // All permissions are already granted, proceed with your logic
-            Log.d("cr2", "reached");
-            startCamera();
-        }
-    }
-
-    private ActivityResultLauncher<String[]> activityResultLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
-                // Handle Permission granted/rejected
-                boolean permissionGranted = true;
-                for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
-                    if (Arrays.asList(REQUIRED_PERMISSIONS).contains(entry.getKey()) && !entry.getValue()) {
-                        permissionGranted = false;
-                    }
-                }
-                if (!permissionGranted) {
-                    //to be done
-                } else {
-                    onTakePhoto();
-                }
-            });
-
-    //Opens new activity
-
-    private void startCamera() {
-        Intent i = new Intent(requireContext(), CameraActivity.class);
-        startActivity(i);
-    }
-
-
 }
