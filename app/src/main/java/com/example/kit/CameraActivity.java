@@ -125,7 +125,6 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults output) {
-                        output.
                         Intent data = new Intent(Intent.ACTION_SEND, output.getSavedUri());
                         setResult(Activity.RESULT_OK, data);
                         finish();
