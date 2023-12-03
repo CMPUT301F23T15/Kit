@@ -11,7 +11,13 @@
     <string name="item_display_comment_hint">Comment</string>
     <string name="item_display_serial_number_hint">Serial Number</string>
     <string name="total_valuation">Total Valuation:</string>
+    <string name="submit_button">Submit</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_password">Password</string>
+    <string name="createAccount">Do you want to create a new account?</string>
+    <string name="signOut">Sign Out</string>
     <string name="add_new_tag">Add New Tag</string>
     <string name="add_existing_tags">Add Existing Tags</string>
     <string name="new_tag_hint">Add Tags</string>
+    <string name="tag_frag_hint">Tags</string>
 </resources>

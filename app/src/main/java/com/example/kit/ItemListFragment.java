@@ -88,8 +88,13 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
      */
     //TODO: Implement add and profile buttons here
     public void initializeUIInteractions(){
-        binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+        binding.addItemButton.setOnClickListener(onClick -> {
+            navController.navigate(R.id.newItemAction);
+        });
         binding.deleteItemButton.setOnClickListener(onClick -> onDelete());
+        binding.addItemButton.setOnClickListener(onClick -> navController.navigate(ItemListFragmentDirections.newItemAction()));
+        Intent login = new Intent(getActivity(), ProfileActivity.class);
+        binding.profileButton.setOnClickListener(onClick -> startActivity(login));
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
         binding.cameraButton.setOnClickListener(onClick -> onTakePhoto());
     }

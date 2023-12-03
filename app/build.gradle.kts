@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.kit"
-        minSdk = 26
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-auth:22.3.0")
     compileOnly(files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"))
 
     implementation("androidx.camera:camera-core:1.2.2")
