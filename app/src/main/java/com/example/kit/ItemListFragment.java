@@ -96,6 +96,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         Intent login = new Intent(getActivity(), ProfileActivity.class);
         binding.profileButton.setOnClickListener(onClick -> startActivity(login));
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
+        //Camera button
         binding.cameraButton.setOnClickListener(onClick -> onTakePhoto());
     }
 
@@ -232,6 +233,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         binding.itemSetTotalValue.setText(formattedValue);
     }
 
+
     private void onTakePhoto() {
         Log.d("takephoto", "reached");
         checkAndRequestPermissions();
@@ -241,6 +243,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             Manifest.permission.WRITE_EXTERNAL_STORAGE
             // Add other required permissions as needed
     };
+    //Checks Permissions and then calls start camera
     private void checkAndRequestPermissions() {
         // Check if permissions are already granted
 
@@ -282,6 +285,8 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                     onTakePhoto();
                 }
             });
+
+    //Opens new activity
 
     private void startCamera() {
         Intent i = new Intent(requireContext(), CameraActivity.class);
