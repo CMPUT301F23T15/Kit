@@ -45,6 +45,7 @@ public class CameraActivity extends AppCompatActivity {
         captureButton.setOnClickListener(v -> takePhoto());
     }
 
+    //Main Camera Functionality
     private void startCamera() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
@@ -79,6 +80,7 @@ public class CameraActivity extends AppCompatActivity {
 
         }, ContextCompat.getMainExecutor(this));
     }
+    //Part you might want to edit - Saves to gallery at the moment
     private void takePhoto() {
 
         // Get a stable reference of the modifiable image capture use case
@@ -93,7 +95,7 @@ public class CameraActivity extends AppCompatActivity {
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
+            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Kit");
         }
 
         // Create output options object which contains file + metadata
