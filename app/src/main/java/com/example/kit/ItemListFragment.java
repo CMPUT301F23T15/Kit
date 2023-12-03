@@ -174,6 +174,9 @@ public class ItemListFragment extends Fragment
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
     }
 
+    /**
+     * Initializes the filter sheet used for filtering the items in the RecyclerView.
+     */
     private void initializeFilterSheet() {
         BottomSheetBehavior<ConstraintLayout> filterSheetBehavior = BottomSheetBehavior.from(filterBinding.getRoot());
         filterSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -389,7 +392,9 @@ public class ItemListFragment extends Fragment
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
         });
     }
-
+    /**
+     * Opens a date picker for selecting a date range for filtering items.
+     */
     private void openDatePicker() {
         // Open date range picker limited to 2010 to present to reduce lag on opening. Unfortunately
         // the date range picker from google is laggy and it is a known issue.
@@ -416,7 +421,9 @@ public class ItemListFragment extends Fragment
 
         datePicker.show(getParentFragmentManager(), "Date Picker");
     }
-
+    /**
+     * Updates the current filter settings based on the user's input in the filter sheet.
+     */
     private void updateFilter() {
         controller.updateKeywordFilter(filterBinding.searchBar.getText().toString());
         updatePriceFilter();
@@ -425,10 +432,14 @@ public class ItemListFragment extends Fragment
 
         controller.updateDataFilter(filter);
     }
-
+    /**
+     * Sets the layout for the filter sheet when it is expanded.
+     */
     private void setExpandedFilterLayout() {
     }
-
+    /**
+     * Sets the layout for the filter sheet when it is collapsed.
+     */
     private void setCollapsedFilterLayout() {
     }
 
@@ -584,13 +595,17 @@ public class ItemListFragment extends Fragment
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
     }
-
+    /**
+     * Updates the date filter for the item list based on user input.
+     */
     private void updateDateFilter() {
         String lowerDate = filterBinding.dateStart.getText().toString();
         String upperDate = filterBinding.dateEnd.getText().toString();
         controller.updateDateRangeFilter(lowerDate, upperDate);
     }
-
+    /**
+     * Updates the price filter for the item list based on user input.
+     */
     private void updatePriceFilter() {
         String lowerPrice = filterBinding.valueLow.getText().toString();
         lowerPrice = FormatUtils.cleanupDirtyValueString(lowerPrice);
@@ -599,7 +614,9 @@ public class ItemListFragment extends Fragment
 
         controller.updatePriceRangeFilter(lowerPrice, upperPrice);
     }
-
+    /**
+     * Internal class used to listen to changes in filter fields and update the filters accordingly.
+     */
     private class FilterFieldChangedListener implements TextWatcher {
 
         @Override

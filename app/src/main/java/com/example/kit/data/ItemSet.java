@@ -79,7 +79,13 @@ public class ItemSet {
         }
         return totalValue;
     }
-
+    /**
+     * Filters the current set of {@link Item}s based on a keyword.
+     * Both the item name and description are checked against the keyword..
+     *
+     * @param keyword The keyword to filter the items by.
+     * @return An {@link ItemSet} containing items that match the keyword.
+     */
     public ItemSet filterByKeyword(String keyword) {
         ItemSet filteredSet = new ItemSet();
         String trimmedKeyword = keyword.trim();
@@ -98,6 +104,14 @@ public class ItemSet {
                 source.trim().toLowerCase().contains(toFind.toLowerCase());
     }
 
+    /**
+     * Filters the current set of {@link Item}s based on a specified date range.
+     * Items with an acquisition date within the specified range are included in the result.
+     *
+     * @param lowerDateString The lower bound of the date range in string format.
+     * @param upperDateString The upper bound of the date range in string format.
+     * @return An {@link ItemSet} containing items within the specified date range.
+     */
     public ItemSet filterByDateRange(String lowerDateString, String upperDateString) {
         ItemSet filteredSet = new ItemSet();
 
@@ -116,7 +130,14 @@ public class ItemSet {
 
         return filteredSet;
     }
-
+    /**
+     * Filters the current set of {@link Item}s based on a specified price range.
+     * Items with a value within the specified range are included in the result.
+     *
+     * @param lowerPriceString The lower bound of the price range as a string.
+     * @param upperPriceString The upper bound of the price range as a string.
+     * @return An {@link ItemSet} containing items within the specified price range.
+     */
     public ItemSet filterByPriceRange(String lowerPriceString, String upperPriceString) {
         ItemSet filteredSet = new ItemSet();
         BigDecimal lowerPrice = new BigDecimal(lowerPriceString.isEmpty() ? "0" : lowerPriceString);
@@ -134,7 +155,13 @@ public class ItemSet {
 
         return filteredSet;
     }
-
+    /**
+     * Filters the current set of {@link Item}s based on a set of tags.
+     * Only items containing all specified tags are included in the result.
+     *
+     * @param tags An ArrayList of {@link Tag} objects to filter the items by.
+     * @return An {@link ItemSet} containing items that match all the provided tags.
+     */
     public ItemSet filterByTags(ArrayList<Tag> tags) {
         if (tags == null || tags.isEmpty()) return this;
         ItemSet filteredSet = new ItemSet();
@@ -144,7 +171,13 @@ public class ItemSet {
 
         return filteredSet;
     }
-
+    /**
+     * Filters the current set of {@link Item}s based on a list of makes.
+     * Only items whose make matches one of the specified makes are included in the result.
+     *
+     * @param makes An ArrayList of strings representing the makes to filter the items by.
+     * @return An {@link ItemSet} containing items that match any of the provided makes.
+     */
     public ItemSet filterByMakes(ArrayList<String> makes) {
         if (makes == null || makes.isEmpty()) return this;
         ItemSet filteredSet = new ItemSet();
@@ -155,13 +188,16 @@ public class ItemSet {
         return filteredSet;
     }
 
-
     public void sortItems(Comparator<Item> comparator) {
         if (comparator != null) {
             Collections.sort(items, comparator);
         }
     }
-
+    /**
+     * Retrieves the list of {@link Item}s in the ItemSet.
+     *
+     * @return An ArrayList of {@link Item}s currently in the ItemSet.
+     */
     public ArrayList<Item> getItems() {
         return items;
     }

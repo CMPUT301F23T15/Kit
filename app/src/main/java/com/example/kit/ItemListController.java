@@ -155,7 +155,12 @@ public class ItemListController implements DataChangedCallback,
 
 //        applyFilters();
     }
-
+    /**
+     * Creates and returns an adapter for tags.
+     *
+     * @param context The current context.
+     * @return An ArrayAdapter for tags.
+     */
     public ArrayAdapter<String> createTagAdapter(Context context) {
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();
         tagNames.clear();
@@ -165,14 +170,24 @@ public class ItemListController implements DataChangedCallback,
         tagAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, tagNames);
         return tagAdapter;
     }
-
+    /**
+     * Handles the click event on a tag at a specific position.
+     *
+     * @param position The position of the clicked tag.
+     * @return The {@link Tag} at the specified position.
+     */
     public Tag tagClickedAtPosition(int position) {
         String tagNameAtPosition = tagNames.remove(position);
         Tag tagAtPosition = tagDataSource.getDataByID(tagNameAtPosition);
         tagAdapter.notifyDataSetChanged();
         return tagAtPosition;
     }
-
+    /**
+     * Handles the event when a new tag filter is entered.
+     *
+     * @param tagName The name of the entered tag.
+     * @return The {@link Tag} that matches the entered name.
+     */
     public Tag tagFilterEntered(String tagName) {
         Tag tag = tagDataSource.getDataByID(tagName);
         // Tag not found, don't add new tags from the filter screen
@@ -184,7 +199,12 @@ public class ItemListController implements DataChangedCallback,
 
         return tag;
     }
-
+    /**
+     * Creates and returns an adapter for makes.
+     *
+     * @param context The current context.
+     * @return An ArrayAdapter for makes.
+     */
     public ArrayAdapter<String> createMakeAdapter(Context context) {
         ItemSet dbItems = itemDataSource.getDataSet();
         makes.clear();
@@ -197,13 +217,22 @@ public class ItemListController implements DataChangedCallback,
         makeAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, makes);
         return makeAdapter;
     }
-
+    /**
+     * Handles the click event on a make at a specific position.
+     *
+     * @param position The position of the clicked make.
+     * @return The make at the specified position.
+     */
     public String makeClickedAtPosition(int position) {
         String makeAtPosition = makes.remove(position);
         makeAdapter.notifyDataSetChanged();
         return makeAtPosition;
     }
-
+    /**
+     * Callback method when a make chip is closed.
+     *
+     * @param makeName The name of the make associated with the closed chip.
+     */
     @Override
     public void onMakeChipClosed(String makeName) {
         if (!makes.contains(makeName)) {
@@ -212,7 +241,11 @@ public class ItemListController implements DataChangedCallback,
         makeFilters.remove(makeName);
         applyFilters();
     }
-
+    /**
+     * Callback method when a tag chip is closed.
+     *
+     * @param tag The {@link Tag} associated with the closed chip.
+     */
     @Override
     public void onTagChipClosed(Tag tag) {
         if(!tagNames.contains(tag.getName())) {
@@ -226,34 +259,58 @@ public class ItemListController implements DataChangedCallback,
      * Interface to register a callback when the value of the {@link ItemSet} changes.
      */
     public interface ItemSetValueChangedCallback { void onItemSetValueChanged(BigDecimal value); }
-
+    /**
+     * Updates the keyword filter for the item list.
+     *
+     * @param keyword The keyword to filter by.
+     */
     public void updateKeywordFilter(String keyword) {
         this.currentKeyword = keyword;
         applyFilters();
     }
-
+    /**
+     * Updates the date range filter for the item list.
+     *
+     * @param dateStart The start date of the range.
+     * @param dateEnd The end date of the range.
+     */
     public void updateDateRangeFilter(String dateStart, String dateEnd) {
         this.currentDateStart = dateStart;
         this.currentDateEnd = dateEnd;
         applyFilters();
     }
-
+    /**
+     * Updates the price range filter for the item list.
+     *
+     * @param priceLow The lower bound of the price range.
+     * @param priceHigh The upper bound of the price range.
+     */
     public void updatePriceRangeFilter(String priceLow, String priceHigh) {
         this.currentPriceLow = priceLow;
         this.currentPriceHigh = priceHigh;
         applyFilters();
     }
-
+    /**
+     * Updates the tag filter for the item list.
+     *
+     * @param tagFilters The list of {@link Tag} to filter by.
+     */
     public void updateTagFilter(ArrayList<Tag> tagFilters) {
         this.tagFilters = tagFilters;
         applyFilters();
     }
-
+    /**
+     * Updates the make filter for the item list.
+     *
+     * @param makeFilters The list of makes to filter by.
+     */
     public void updateMakeFilter(ArrayList<String> makeFilters) {
         this.makeFilters = makeFilters;
         applyFilters();
     }
-
+    /**
+     * Applies the current set of filters to the item list.
+     */
     private void applyFilters() {
         ItemSet filteredSet = itemSet
                 .filterByKeyword(currentKeyword)
@@ -268,7 +325,12 @@ public class ItemListController implements DataChangedCallback,
             callback.onItemSetValueChanged(filteredSet.getItemSetValue());
         }
     }
-
+    /**
+     * Sorts the items in the list based on the specified sort state and attribute.
+     *
+     * @param state The sorting state.
+     * @param sortAttribute The attribute to sort by.
+     */
     public void sortItems(TriStateSortButton.BUTTON_STATE state, String sortAttribute) {
         Comparator<Item> comparator = null;
 
@@ -307,7 +369,13 @@ public class ItemListController implements DataChangedCallback,
 
         itemAdapter.notifyDataSetChanged();
     }
-
+    /**
+     * Compares two lists of {@link Tag} lexicographically.
+     *
+     * @param list1 The first list of tags.
+     * @param list2 The second list of tags.
+     * @return An integer representing the comparison result.
+     */
     private int lexicographicalCompare(List<Tag> list1, List<Tag> list2) {
         int minLength = Math.min(list1.size(), list2.size());
 
