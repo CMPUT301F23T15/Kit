@@ -2,8 +2,10 @@ package com.example.kit;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -18,7 +20,6 @@ import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-
 import android.util.Log;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,8 +46,8 @@ public class MainActivityTest {
         onView(withId(R.id.itemNameDisplay)).perform(ViewActions.typeText("JUnit Test Item"));
         onView(withId(R.id.itemNameDisplay)).perform(closeSoftKeyboard());
 
-        onView(withId(R.id.itemDateDisplay)).perform(ViewActions.typeText("10/10/1010"));
-        onView(withId(R.id.itemDateDisplay)).perform(closeSoftKeyboard());
+        onView(withId(R.id.itemDateDisplay)).perform(replaceText("02/12/2023"));
+        //onView(withId(R.id.itemDateDisplay)).perform(closeSoftKeyboard());
 
         onView(withId(R.id.itemValueDisplay)).perform(ViewActions.typeText("500"));
         onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
