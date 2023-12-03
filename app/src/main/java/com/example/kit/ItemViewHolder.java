@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.ChangeBounds;
 import androidx.transition.TransitionManager;
 
-
+import com.example.kit.command.CommandManager;
+import com.example.kit.command.RemoveTagFromItemCommand;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.example.kit.util.FormatUtils;
+import com.example.kit.views.TagChipGroup;
 import com.example.kit.util.ImageUtils;
 
 import java.util.ArrayList;
@@ -26,8 +28,9 @@ import java.util.ArrayList;
  * A RecyclerView ViewHolder for an {@link Item} to be displayed.
  * Shows the Name, Value, Acquisition Date, and {@link  Tag}s of the item.
  */
-public class ItemViewHolder extends RecyclerView.ViewHolder {
+public class ItemViewHolder extends RecyclerView.ViewHolder implements TagChipGroup.OnTagChipCloseListener {
     private final ItemListRowBinding binding;
+    private String itemID;
     private static final int TRANSITION_TIME = 125;
 
     /**
@@ -45,7 +48,9 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      * @param item The {@link Item} to be displayed
      */
     @SuppressLint("SetTextI18n")
-    public void displayItem(@NonNull Item item){
+    public void displayItem(@NonNull Item item) {
+        this.itemID = item.findID();
+
         // If the item has no name for some reason, display an em
         if (item.getName() == null) {
             binding.itemNameRow.setText("ERROR: ITEM MISSING NAME");
@@ -70,6 +75,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         for (Tag tag : tags) {
             binding.itemTagGroupRow.addTag(tag);
         }
+
+        binding.itemTagGroupRow.setChipCloseListener(this);
 
         // If there is images associated with the item, display the first image as the thumbnail
         if (item.getBase64Images().size() > 0) {
@@ -133,6 +140,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         changeBounds.setDuration(TRANSITION_TIME);
         TransitionManager.beginDelayedTransition(binding.rowConstraintLayout, changeBounds);
         binding.checkBox.setVisibility(View.VISIBLE);
+
+        binding.itemTagGroupRow.setInEditMode(true);
     }
 
     /**
@@ -149,6 +158,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         TransitionManager.beginDelayedTransition(binding.rowConstraintLayout, changeBounds);
         binding.checkBox.setChecked(false);
         binding.checkBox.setVisibility(View.GONE);
+
+        binding.itemTagGroupRow.setInEditMode(false);
     }
 
     /**
@@ -157,5 +168,11 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      */
     public boolean isChecked() {
         return binding.checkBox.isChecked();
+    }
+
+    @Override
+    public void onTagChipClosed(Tag tag) {
+        RemoveTagFromItemCommand command = new RemoveTagFromItemCommand(tag, itemID);
+        CommandManager.getInstance().executeCommand(command);
     }
 }

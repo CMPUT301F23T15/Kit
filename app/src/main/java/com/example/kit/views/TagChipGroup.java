@@ -20,12 +20,14 @@ import java.util.ArrayList;
  */
 public class TagChipGroup extends ChipGroup {
     private final Context context;
+    private OnTagChipCloseListener listener;
+    private boolean inEditMode;
 
     private boolean addChipEnabled = false;
     private Chip addChip;
 
     private final ArrayList<Tag> tags;
-    private final ArrayList<View> chips;
+    private final ArrayList<Chip> chips;
 
     /**
      * Calls super, then creates the Add Tag Chip
@@ -52,6 +54,26 @@ public class TagChipGroup extends ChipGroup {
 
         tags = new ArrayList<>();
         chips = new ArrayList<>();
+    }
+
+    public void setInEditMode(boolean inEditMode) {
+        this.inEditMode = inEditMode;
+        for (Chip chip : chips) {
+            chip.setCloseIconVisible(inEditMode);
+        }
+    }
+
+    /**
+     * Enables or disables the visibility of the Add Tag Chip.
+     * @param enable Displays the Add Tag chip if true.
+     */
+    public void enableAddChip(boolean enable) {
+        addChipEnabled = enable;
+        if (addChipEnabled) {
+            addChip.setVisibility(View.VISIBLE);
+        } else {
+            addChip.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -87,21 +109,30 @@ public class TagChipGroup extends ChipGroup {
         chip.setText(tag.getName());
         chip.setPadding(0,0,0,0);
         chip.setChipMinHeightResource(R.dimen.tag_height);
+        chip.setCloseIconVisible(inEditMode);
+        chip.setOnCloseIconClickListener(this::removeChip);
         addView(chip);
         chips.add(chip);
     }
 
-    /**
-     * Enables or disables the visibility of the Add Tag Chip.
-     * @param enable Displays the Add Tag chip if true.
-     */
-    public void enableAddChip(boolean enable) {
-        addChipEnabled = enable;
-        if (addChipEnabled) {
-            addChip.setVisibility(View.VISIBLE);
-        } else {
-            addChip.setVisibility(View.GONE);
+    private void removeChip(View v) {
+        Chip chip = (Chip) v;
+        String tagName = chip.getText().toString();
+        for (Tag tag : tags) {
+            if (tagName.equals(tag.getName())) {
+                tags.remove(tag);
+                if (listener != null) {
+                    listener.onTagChipClosed(tag);
+                }
+                break;
+            }
         }
+        chips.remove(chip);
+        removeView(chip);
+    }
+
+    public boolean isEmpty() {
+        return chips.isEmpty();
     }
 
     /**
@@ -125,8 +156,14 @@ public class TagChipGroup extends ChipGroup {
         return tags;
     }
 
-    public boolean isEmpty() {
-        return chips.isEmpty();
+
+
+    public void setChipCloseListener(OnTagChipCloseListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnTagChipCloseListener {
+        void onTagChipClosed(Tag tag);
     }
 }
 
