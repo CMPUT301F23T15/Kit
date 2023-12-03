@@ -5,11 +5,14 @@ import com.example.kit.command.AddTagToItemCommand;
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.MacroCommand;
 import com.example.kit.data.Tag;
+import com.example.kit.data.source.AbstractItemDataSource;
 import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.AddTagBinding;
 import com.example.kit.views.ColorPalette;
 import com.example.kit.views.TagChipGroup;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -19,7 +22,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
     private final DataSource<Tag, ArrayList<Tag>> tagDataSource;
     private ArrayList<String> tagNames;
     private ArrayAdapter<String> adapter;
+    private final AbstractItemDataSource itemDataSource;
     private Tag underConstructionTag;
 
     /**
@@ -43,6 +46,7 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
     public AddTagFragment(HashSet<String> itemIDs) {
         this.itemIDs = itemIDs;
         tagDataSource = DataSourceManager.getInstance().getTagDataSource();
+        itemDataSource = DataSourceManager.getInstance().getItemDataSource();
     }
 
     /**
@@ -57,7 +61,16 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Inflate binding and set view of dialog to the root of binding
         binding = AddTagBinding.inflate(getLayoutInflater());
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+
+        if (itemIDs.size() == 1) {
+            String itemID = itemIDs.iterator().next();
+            String itemName = itemDataSource.getDataByID(itemID).getName();
+            builder.setTitle("Add Tags to " + itemName);
+        } else {
+            builder.setTitle("Add Tags to Selected Items");
+        }
+
         builder.setView(binding.getRoot());
 
         initializeTagField();
@@ -95,11 +108,14 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
 
         // Add existing tags if they were clicked in the drop down list
         binding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
-            Tag addTag = tagDataSource.getDataByID(tagNames.remove(position));
+            String clickedTagName = adapter.getItem(position);
+            adapter.remove(clickedTagName);
+            Tag addTag = tagDataSource.getDataByID(clickedTagName);
             binding.tagsToAddGroup.addTag(addTag);
             adapter.notifyDataSetChanged();
+
             // Clear the field
-            binding.tagAutoCompleteField.setText("", false);
+            binding.tagAutoCompleteField.setText("", true);
         });
 
         // Listener for enter key pressed to add a tag
@@ -124,13 +140,13 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
 
             // Tag already exists, add it to the tag group and remove it from the drop down
             } else {
-                tagNames.remove(newTag.getName());
+                adapter.remove(newTagName);
                 adapter.notifyDataSetChanged();
 
                 binding.tagsToAddGroup.addTag(newTag);
 
                 // Clear the field
-                binding.tagAutoCompleteField.setText("", false);
+                binding.tagAutoCompleteField.setText("", true);
             }
 
             return true;
@@ -177,9 +193,11 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
      */
     private void showColorPalette(boolean show) {
         if (show){
+            binding.tagColorHeader.setVisibility(View.VISIBLE);
             binding.colorPalette.setVisibility(View.VISIBLE);
         }
         else {
+            binding.tagColorHeader.setVisibility(View.GONE);
             binding.colorPalette.setVisibility(View.GONE);
         }
 
