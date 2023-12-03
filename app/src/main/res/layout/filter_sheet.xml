@@ -176,6 +176,7 @@
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toEndOf="@+id/valueSortButton"
                 app:layout_constraintTop_toBottomOf="@+id/dateStartLayout"
+                app:endIconMode="clear_text"
                 app:startIconDrawable="@drawable/baseline_attach_money_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -214,6 +215,7 @@
                 app:layout_constraintStart_toEndOf="@+id/valueTo"
                 app:layout_constraintTop_toTopOf="@+id/valueLowLayout"
                 app:layout_constraintVertical_bias="0.0"
+                app:endIconMode="clear_text"
                 app:startIconDrawable="@drawable/baseline_attach_money_24">
 
                 <com.google.android.material.textfield.TextInputEditText

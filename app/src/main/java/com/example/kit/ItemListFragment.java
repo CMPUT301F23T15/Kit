@@ -36,6 +36,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -287,26 +288,54 @@ public class ItemListFragment extends Fragment
 
         filterBinding.dateStart.setInputType(InputType.TYPE_NULL);
         filterBinding.dateStart.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) openDatePicker();
+            if (hasFocus) {
+                filterBinding.dateEndLayout.requestFocus();
+            }
         });
-        filterBinding.dateStart.setOnClickListener(v -> openDatePicker());
+        filterBinding.dateStart.setOnClickListener(v -> {
+            filterBinding.dateEndLayout.requestFocus();
+        });
 
+        View.OnFocusChangeListener valueLowFocusListener = filterBinding.valueLow.getOnFocusChangeListener();
         filterBinding.valueLow.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus &&  filterBinding.valueLow.getText() != null) {
                 // Format the value in the field whenever focus is lost
-                String valueText =  filterBinding.valueLow.getText().toString();
+                String valueText = filterBinding.valueLow.getText().toString();
                 String formattedValue = FormatUtils.formatValue(valueText, false);
-                filterBinding.valueLow.setText(formattedValue);
+                if (formattedValue.equals("0.00")) {
+                    filterBinding.valueLow.setText("");
+                } else {
+                    filterBinding.valueLow.setText(formattedValue);
+                }
             }
+
+            if (valueLowFocusListener != null) valueLowFocusListener.onFocusChange(v, hasFocus);
         });
 
+        View.OnFocusChangeListener valueHighFocusListener = filterBinding.valueHigh.getOnFocusChangeListener();
         filterBinding.valueHigh.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus && filterBinding.valueHigh.getText() != null) {
                 // Format the value in the field whenever focus is lost
                 String valueText = filterBinding.valueHigh.getText().toString();
+
                 String formattedValue = FormatUtils.formatValue(valueText, false);
-                filterBinding.valueHigh.setText(formattedValue);
+                if (formattedValue.equals("0.00")) {
+                    filterBinding.valueHigh.setText("");
+                } else {
+                    filterBinding.valueHigh.setText(formattedValue);
+                }
             }
+            if (valueHighFocusListener != null) valueHighFocusListener.onFocusChange(v, hasFocus);
+        });
+
+        filterBinding.searchBarLayout.setEndIconOnClickListener(v -> {
+            filterBinding.searchBar.setText("");
+            filterBinding.searchBarLayout.clearFocus();
+        });
+
+        filterBinding.valueHighLayout.setEndIconOnClickListener(v -> {
+            filterBinding.valueHigh.setText("");
+            filterBinding.valueHighLayout.clearFocus();
         });
 
         filterBinding.dateEndLayout.setEndIconOnClickListener(v -> {
@@ -381,6 +410,8 @@ public class ItemListFragment extends Fragment
             String formattedEndDate = FormatUtils.formatDateStringShort(new Date(dateMillisPair.second + twelveHourTimezoneOffset));
             filterBinding.dateStart.setText(formattedStartDate);
             filterBinding.dateEnd.setText(formattedEndDate);
+            filterBinding.dateEndLayout.setEndIconVisible(true);
+            filterBinding.dateEndLayout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
         });
 
         datePicker.show(getParentFragmentManager(), "Date Picker");
@@ -464,8 +495,6 @@ public class ItemListFragment extends Fragment
             binding.addTagsButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.GONE);
         }
-
-
 
         toggleViewHolderCheckBoxes();
     }
