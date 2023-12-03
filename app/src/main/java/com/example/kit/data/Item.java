@@ -24,17 +24,14 @@ public class Item implements Serializable {
     private String model;
     private String serialNumber;
     private final ArrayList<Tag> tags;
-    private ArrayList<Image> images; // Placeholder, may store locally with something like a path to the directory?
-                                    // Looking into FireStore and images, we can use a cloud solution and then have
-                                    // FireStore manage it (kinda)
-
-    // TODO: Images
+    private ArrayList<String> base64Images;
 
     /**
      * Constructs an Item with an empty list of {@link Tag}s.
      */
     public Item() {
         tags = new ArrayList<>();
+        base64Images = new ArrayList<>();
     }
 
     /**
@@ -189,6 +186,32 @@ public class Item implements Serializable {
         if (!tags.contains(tag)) {
             tags.add(tag);
         }
+    }
+
+    /**
+     * Add a {@link android.util.Base64} string that represents an image to this item
+     * @param base64 A Base64 string for an image.
+     */
+    public void addBase64ImageString(String base64) {
+        if (!base64Images.contains(base64)) {
+            base64Images.add(base64);
+        }
+    }
+
+    /**
+     * Retrieve all the {@link android.util.Base64} string representation of the images for this item
+     * @return The list of Base64 strings
+     */
+    public ArrayList<String> getBase64Images() {
+        return base64Images;
+    }
+
+    /**
+     * Set a list of {@link android.util.Base64} string representations of images for this item.
+     * @param base64Images The list of Base64 strings.
+     */
+    public void setBase64Images (ArrayList<String> base64Images) {
+        this.base64Images = base64Images;
     }
 
     /**

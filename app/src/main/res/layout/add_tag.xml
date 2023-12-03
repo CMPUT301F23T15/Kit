@@ -15,7 +15,7 @@
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_top_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:hint="@string/new_tag_hint"
+        android:hint="@string/tag_frag_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,15 +31,30 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <TextView
+        android:id="@+id/tagColorHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_vertical_space"
+        android:text="Choose Tag Color"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toStartOf="@+id/tagFieldLayout"
+        app:layout_constraintTop_toBottomOf="@+id/tagFieldLayout" />
+
     <com.example.kit.views.ColorPalette
         android:id="@+id/colorPalette"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/content_vertical_space"
-        android:visibility="invisible"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/tagsToAddGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tagFieldLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tagColorHeader" />
 
     <com.example.kit.views.TagChipGroup
         android:id="@+id/tagsToAddGroup"
