@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Controller that handles data management and manipulation for a {@link ItemListFragment}.
@@ -44,6 +45,8 @@ public class ItemListController implements DataChangedCallback,
     private String currentDateEnd = "";
     private String currentPriceLow = "";
     private String currentPriceHigh = "";
+    private ArrayList<Tag> tagFilters;
+    private ArrayList<String> makeFilters;
 
 
 
@@ -149,6 +152,8 @@ public class ItemListController implements DataChangedCallback,
 
             if (!makes.contains(make)) makes.add(make);
         }
+
+//        applyFilters();
     }
 
     public ArrayAdapter<String> createTagAdapter(Context context) {
@@ -204,6 +209,8 @@ public class ItemListController implements DataChangedCallback,
         if (!makes.contains(makeName)) {
             makes.add(makeName);
         }
+        makeFilters.remove(makeName);
+        applyFilters();
     }
 
     @Override
@@ -211,6 +218,8 @@ public class ItemListController implements DataChangedCallback,
         if(!tagNames.contains(tag.getName())) {
             tagNames.add(tag.getName());
         }
+        tagFilters.remove(tag);
+        applyFilters();
     }
 
     /**
@@ -235,12 +244,23 @@ public class ItemListController implements DataChangedCallback,
         applyFilters();
     }
 
+    public void updateTagFilter(ArrayList<Tag> tagFilters) {
+        this.tagFilters = tagFilters;
+        applyFilters();
+    }
+
+    public void updateMakeFilter(ArrayList<String> makeFilters) {
+        this.makeFilters = makeFilters;
+        applyFilters();
+    }
 
     private void applyFilters() {
         ItemSet filteredSet = itemSet
                 .filterByKeyword(currentKeyword)
                 .filterByDateRange(currentDateStart, currentDateEnd)
-                .filterByPriceRange(currentPriceLow, currentPriceHigh);
+                .filterByPriceRange(currentPriceLow, currentPriceHigh)
+                .filterByTags(tagFilters)
+                .filterByMakes(makeFilters);
 
         itemAdapter.setItemSet(filteredSet);
         itemAdapter.notifyDataSetChanged();
@@ -260,10 +280,17 @@ public class ItemListController implements DataChangedCallback,
                 comparator = Comparator.comparing(Item::getAcquisitionDate);
                 break;
             case "price":
-                comparator = Comparator.comparing(item -> item.getValue());
+                comparator = Comparator.comparing(Item::getValue);
                 break;
             case "tag":
-                comparator = Comparator.comparing(item -> item.getTags().toString());
+                comparator = (item1, item2) -> {
+                    if (item1.getTags().isEmpty() && item2.getTags().isEmpty()) return 0;
+                    if (item1.getTags().isEmpty()) return -1;
+                    if (item2.getTags().isEmpty()) return 1;
+
+                    return lexicographicalCompare(item1.getTags(), item2.getTags());
+                };
+
                 break;
             case "make":
                 comparator = Comparator.comparing(Item::getMake);
@@ -275,14 +302,24 @@ public class ItemListController implements DataChangedCallback,
                 comparator = comparator.reversed();
             }
 
-            Collections.sort(itemSet.getItems(), comparator);
+            itemSet.getItems().sort(comparator);
         }
 
         itemAdapter.notifyDataSetChanged();
-
-
     }
 
+    private int lexicographicalCompare(List<Tag> list1, List<Tag> list2) {
+        int minLength = Math.min(list1.size(), list2.size());
 
+        // Compare element by element
+        for (int i = 0; i < minLength; i++) {
+            int comparison = list2.get(i).toString().compareTo(list1.get(i).toString());
+            if (comparison != 0) {
+                return comparison;
+            }
+        }
 
+        // If the common elements are equal, the longer list comes later
+        return Integer.compare(list1.size(), list2.size());
+    }
 }

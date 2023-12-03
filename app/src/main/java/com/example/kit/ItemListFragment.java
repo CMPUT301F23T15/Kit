@@ -134,6 +134,12 @@ public class ItemListFragment extends Fragment
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        controller.onDataChanged();
+    }
+
     /**
      * Initialize the RecyclerView of the fragment, setting the Adapter and registering this Fragment
      * as a listener for clicks.
@@ -202,6 +208,7 @@ public class ItemListFragment extends Fragment
         filterBinding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             Tag addTag = controller.tagClickedAtPosition(position);
             filterBinding.tagsFilter.addTag(addTag);
+            controller.updateTagFilter(filterBinding.tagsFilter.getTags());
 //            if (!filterBinding.tagsFilter.isEmpty()) {
 //                filterBinding.tagsFilter.setVisibility(View.VISIBLE);
 //            }
@@ -225,6 +232,7 @@ public class ItemListFragment extends Fragment
 //                    }
                 }
 
+                controller.updateTagFilter(filterBinding.tagsFilter.getTags());
                 // Clear the field
                 filterBinding.tagAutoCompleteField.setText("", false);
                 return true;
@@ -241,6 +249,7 @@ public class ItemListFragment extends Fragment
 //            if (!filterBinding.makesFilter.isEmpty()) {
 //                filterBinding.makesFilter.setVisibility(View.VISIBLE);
 //            }
+            controller.updateMakeFilter(filterBinding.makesFilter.getMakes());
             filterBinding.makeAutoCompleteField.setText("", false);
         });
 
@@ -256,6 +265,7 @@ public class ItemListFragment extends Fragment
 //                    filterBinding.makesFilter.setVisibility(View.VISIBLE);
 //                }
 
+                controller.updateMakeFilter(filterBinding.makesFilter.getMakes());
                 // Clear the field
                 filterBinding.makeAutoCompleteField.setText("", false);
                 return true;
@@ -312,7 +322,6 @@ public class ItemListFragment extends Fragment
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
-            // do something with the state
         });
 
         filterBinding.valueSortButton.setOnClickListener(v -> {
@@ -322,7 +331,6 @@ public class ItemListFragment extends Fragment
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
-            // do something with the state
         });
 
         filterBinding.makeSortButton.setOnClickListener(v -> {
@@ -332,7 +340,6 @@ public class ItemListFragment extends Fragment
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
-            // do something with the state
         });
 
         filterBinding.tagSortButton.setOnClickListener(v -> {
@@ -342,7 +349,6 @@ public class ItemListFragment extends Fragment
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
-            // do something with the state
         });
 
         filterBinding.searchSortButton.setOnClickListener(v -> {
@@ -353,10 +359,7 @@ public class ItemListFragment extends Fragment
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
         });
-
-
     }
-
 
     private void openDatePicker() {
         // Open date range picker limited to 2010 to present to reduce lag on opening. Unfortunately
@@ -553,20 +556,6 @@ public class ItemListFragment extends Fragment
         binding.itemSetTotalValue.setText(formattedValue);
     }
 
-    private class FilterFieldChangedListener implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            updateFilter();
-        }
-    }
-
     private void updateDateFilter() {
         String lowerDate = filterBinding.dateStart.getText().toString();
         String upperDate = filterBinding.dateEnd.getText().toString();
@@ -582,5 +571,17 @@ public class ItemListFragment extends Fragment
         controller.updatePriceRangeFilter(lowerPrice, upperPrice);
     }
 
+    private class FilterFieldChangedListener implements TextWatcher {
 
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            updateFilter();
+        }
+    }
 }

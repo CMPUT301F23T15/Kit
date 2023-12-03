@@ -2,6 +2,7 @@ package com.example.kit.data;
 
 import com.example.kit.util.FormatUtils;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -130,6 +131,26 @@ public class ItemSet {
                         })
                         .collect(Collectors.toList())
         );
+
+        return filteredSet;
+    }
+
+    public ItemSet filterByTags(ArrayList<Tag> tags) {
+        if (tags == null || tags.isEmpty()) return this;
+        ItemSet filteredSet = new ItemSet();
+        filteredSet.items.addAll(
+                this.items.stream()
+                        .filter(item -> item.getTags().containsAll(tags)).collect(Collectors.toList()));
+
+        return filteredSet;
+    }
+
+    public ItemSet filterByMakes(ArrayList<String> makes) {
+        if (makes == null || makes.isEmpty()) return this;
+        ItemSet filteredSet = new ItemSet();
+        filteredSet.items.addAll(
+                this.items.stream()
+                        .filter(item -> makes.contains(item.getMake())).collect(Collectors.toList()));
 
         return filteredSet;
     }
