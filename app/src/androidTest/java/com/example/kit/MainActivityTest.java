@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -39,7 +40,6 @@ public class MainActivityTest {
     public ActivityScenarioRule<MainActivity> scenario = new
             ActivityScenarioRule<MainActivity>(MainActivity.class);
 
-    // Run at least once
     public void createItem() {
         // Create item to test
         onView(withId(R.id.add_item_button)).perform(click());
@@ -47,11 +47,54 @@ public class MainActivityTest {
         onView(withId(R.id.itemNameDisplay)).perform(closeSoftKeyboard());
 
         onView(withId(R.id.itemDateDisplay)).perform(replaceText("02/12/2023"));
-        //onView(withId(R.id.itemDateDisplay)).perform(closeSoftKeyboard());
 
         onView(withId(R.id.itemValueDisplay)).perform(ViewActions.typeText("500"));
         onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
 
+        onView(withId(R.id.floatingActionButton)).perform(click());
+    }
+
+    public void createItemAllFields() {
+        onView(withId(R.id.add_item_button)).perform(click());
+
+        // Add title
+        onView(withId(R.id.itemNameDisplay)).perform(ViewActions.typeText("JUnit Test Item"));
+        onView(withId(R.id.itemNameDisplay)).perform(closeSoftKeyboard());
+
+        // Add description
+        onView(withId(R.id.itemDescriptionDisplay)).perform(ViewActions.typeText("Test Description"));
+        onView(withId(R.id.itemDescriptionDisplay)).perform(closeSoftKeyboard());
+
+        // Add comment
+        onView(withId(R.id.itemCommentDisplay)).perform(ViewActions.typeText("Test Comment"));
+        onView(withId(R.id.itemCommentDisplay)).perform(closeSoftKeyboard());
+
+        // Add date
+        onView(withId(R.id.itemDateDisplay)).perform(replaceText("06/06/2023"));
+
+        // Add value
+        onView(withId(R.id.itemValueDisplay)).perform(ViewActions.typeText("500"));
+        onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
+
+        // Add make
+        onView(withId(R.id.itemMakeDisplay)).perform(ViewActions.typeText("Test Make"));
+        onView(withId(R.id.itemMakeDisplay)).perform(closeSoftKeyboard());
+
+        // Add model
+        onView(withId(R.id.itemModelDisplay)).perform(ViewActions.typeText("Test Model"));
+        onView(withId(R.id.itemModelDisplay)).perform(closeSoftKeyboard());
+
+        // Add serial number
+        onView(withId(R.id.itemSerialNumberDisplay)).perform(ViewActions.typeText("Test Serial Number"));
+        onView(withId(R.id.itemSerialNumberDisplay)).perform(closeSoftKeyboard());
+
+        // Add tag
+        onView(withId(R.id.tagAutoCompleteField)).perform(click())
+                .inRoot(isPlatformPopup())
+                .perform(ViewActions.typeText("Test Tag"))
+                .perform(ViewActions.pressImeActionButton());
+
+        // Create item
         onView(withId(R.id.floatingActionButton)).perform(click());
     }
 
@@ -61,12 +104,34 @@ public class MainActivityTest {
         onView(withId(R.id.delete_item_button)).perform(click());
     }
 
+    /**
+     * US 01.01.01.01 + 01.01.01 + 01.01.01.02 + 02.01.01
+     */
     @Test
     public void testCreateItem() {
         createItem();
-        onView(allOf(withText("JUnit Test Item"), hasSibling(withText("Oct 10, 1010 12:00:00 AM")), hasSibling(withText("$500.00")))).check(matches(isDisplayed()));
-        deleteItem("JUnit Test Item");
+        onView(allOf(withText("JUnit Test Item"), hasSibling(withText("Feb 12, 2023")), hasSibling(withText("$500.00")))).check(matches(isDisplayed()));
     }
+
+    /**
+     * US 01.02.01 + 01.01.01.03 + 01.01.01.04 + 01.01.01.05 + 01.01.01.06 + 01.01.01.07
+     * US 03.01.01 + 03.02.01
+     */
+    @Test
+    public void testCreateItemAllFields() {
+        createItemAllFields();
+        onView(withText("JUnit Test Item")).perform(click());
+        onView(withText("JUnit Test Item")).check(matches(isDisplayed()));
+        onView(withText("Test Description")).check(matches(isDisplayed()));
+        onView(withText("Test Comment")).check(matches(isDisplayed()));
+        onView(withText("06/06/2023")).check(matches(isDisplayed()));
+        onView(withText("500.00")).check(matches(isDisplayed()));
+        onView(withText("Test Make")).check(matches(isDisplayed()));
+        onView(withText("Test Model")).check(matches(isDisplayed()));
+        onView(withText("Test Serial Number")).check(matches(isDisplayed()));
+        onView(withText("Test Tag")).check(matches(isDisplayed()));
+    }
+
     @Test
     public void testChangeName() {
         // Test if changing the 'name' field is properly reflected
@@ -105,6 +170,9 @@ public class MainActivityTest {
         deleteItem("JUnit Test Item");
     }
 
+    /**
+     * US 02.03.01.02
+     */
     @Test
     public void testDeleteItem() {
         // Test if an item is properly deleted
