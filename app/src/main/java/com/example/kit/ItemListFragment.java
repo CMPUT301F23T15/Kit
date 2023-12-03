@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,8 +39,11 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
@@ -58,6 +62,10 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     private FilterSheetBinding filterBinding;
     private final AlphaAnimation fadeInFAB;
     private final AlphaAnimation fadeOutFAB;
+
+    private List<String> selectedMakes = new ArrayList<>();
+
+
 
     {
         fadeOutFAB = new AlphaAnimation(1.0f, 0.0f);
@@ -292,6 +300,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         filterBinding.dateSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.dateSortButton.getCurrentState();
+            controller.sortItems(state, "date");
             filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
@@ -301,6 +310,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         filterBinding.valueSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.valueSortButton.getCurrentState();
+            controller.sortItems(state, "price");
             filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
@@ -310,6 +320,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         filterBinding.makeSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.makeSortButton.getCurrentState();
+            controller.sortItems(state, "make");
             filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
@@ -319,6 +330,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         filterBinding.tagSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.tagSortButton.getCurrentState();
+            controller.sortItems(state, "tag");
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
@@ -328,13 +340,16 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         filterBinding.searchSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.searchSortButton.getCurrentState();
+            controller.sortItems(state, "keyword");
             filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
         });
 
+
     }
+
 
     private void openDatePicker() {
         // Open date range picker limited to 2010 to present to reduce lag on opening. Unfortunately
@@ -559,4 +574,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         controller.updatePriceRangeFilter(lowerPrice, upperPrice);
     }
+
+
 }
