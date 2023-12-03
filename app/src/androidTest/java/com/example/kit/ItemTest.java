@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.kit.data.Item;
+import com.example.kit.data.Tag;
 import com.google.firebase.Timestamp;
 
 import org.junit.Test;
@@ -59,14 +60,14 @@ public class ItemTest {
     public void testAddTags() {
         Item item = mockItem1();
         assertFalse(item.getTags().contains("test tag"));
-        item.addTag("test tag");
+        item.addTag(new Tag("test tag"));
         assertTrue(item.getTags().contains("test tag"));
     }
 
     @Test
     public void testRemoveTags() {
         Item item = mockItem1();
-        String tag = "test tag";
+        Tag tag = new Tag("test tag");
         item.addTag(tag);
         assertTrue(item.getTags().contains(tag));
         item.removeTag(tag);
