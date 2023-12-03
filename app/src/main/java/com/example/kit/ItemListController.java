@@ -8,16 +8,22 @@ import com.example.kit.command.CommandManager;
 import com.example.kit.command.DeleteItemCommand;
 import com.example.kit.command.MacroCommand;
 import com.example.kit.data.Filter;
+import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.AbstractItemDataSource;
 import com.example.kit.data.source.AbstractTagDataSource;
 import com.example.kit.data.source.DataChangedCallback;
 import com.example.kit.data.source.DataSourceManager;
+import com.example.kit.views.TriStateSortButton;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Controller that handles data management and manipulation for a {@link ItemListFragment}.
@@ -37,6 +43,7 @@ public class ItemListController implements DataChangedCallback {
     private String currentDateEnd = "";
     private String currentPriceLow = "";
     private String currentPriceHigh = "";
+
 
 
     /**
@@ -225,17 +232,54 @@ public class ItemListController implements DataChangedCallback {
         applyFilters();
     }
 
-    // Applies all filters to the dataset
+
     private void applyFilters() {
         ItemSet filteredSet = itemSet
                 .filterByKeyword(currentKeyword)
                 .filterByDateRange(currentDateStart, currentDateEnd)
                 .filterByPriceRange(currentPriceLow, currentPriceHigh);
+
         itemAdapter.setItemSet(filteredSet);
         itemAdapter.notifyDataSetChanged();
         if (callback != null) {
             callback.onItemSetValueChanged(filteredSet.getItemSetValue());
         }
     }
+
+    public void sortItems(TriStateSortButton.BUTTON_STATE state, String sortAttribute) {
+        Comparator<Item> comparator = null;
+
+        switch (sortAttribute) {
+            case "keyword":
+                comparator = Comparator.comparing(Item::getName);
+                break;
+            case "date":
+                comparator = Comparator.comparing(Item::getAcquisitionDate);
+                break;
+            case "price":
+                comparator = Comparator.comparing(item -> item.getValue());
+                break;
+            case "tag":
+                comparator = Comparator.comparing(item -> item.getTags().toString());
+                break;
+            case "make":
+                comparator = Comparator.comparing(Item::getMake);
+                break;
+        }
+
+        if (comparator != null) {
+            if (state == TriStateSortButton.BUTTON_STATE.DESCENDING) {
+                comparator = comparator.reversed();
+            }
+
+            Collections.sort(itemSet.getItems(), comparator);
+        }
+
+        itemAdapter.notifyDataSetChanged();
+
+
+    }
+
+
 
 }
