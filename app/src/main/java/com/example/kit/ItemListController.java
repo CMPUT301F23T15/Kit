@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter;
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.DeleteItemCommand;
 import com.example.kit.command.MacroCommand;
-import com.example.kit.data.Filter;
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.Tag;
@@ -20,7 +19,6 @@ import com.example.kit.views.TriStateSortButton;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -79,10 +77,6 @@ public class ItemListController implements DataChangedCallback,
         itemAdapter.setItemSet(itemSet);
         // TODO: Find performant way to use more specific data-changed notifiers.
         itemAdapter.notifyDataSetChanged();
-    }
-
-    public void updateDataFilter(Filter filter) {
-
     }
 
     /**

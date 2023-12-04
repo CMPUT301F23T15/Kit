@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,13 +23,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.kit.data.Filter;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
 import com.example.kit.util.FormatUtils;
-import com.example.kit.views.MakeChipGroup;
-import com.example.kit.views.TagChipGroup;
 import com.example.kit.views.TriStateSortButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -42,11 +38,8 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
@@ -412,9 +405,6 @@ public class ItemListFragment extends Fragment implements
         controller.updateKeywordFilter(filterBinding.searchBar.getText().toString());
         updatePriceFilter();
         updateDateFilter();
-        Filter filter = new Filter();
-
-        controller.updateDataFilter(filter);
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.example.kit.data.source;
 
-import com.example.kit.data.Filter;
 import com.example.kit.data.Item;
 import com.example.kit.data.ItemSet;
 import com.example.kit.data.Tag;
@@ -14,7 +13,7 @@ import java.util.HashMap;
  * when the tag datasource was not set explicitly after the construction of both types of
  * data sources.
  */
-public abstract class AbstractItemDataSource extends DataSource<Item, ItemSet> implements FilterableDataSource<Item, ItemSet> {
+public abstract class AbstractItemDataSource extends DataSource<Item, ItemSet> {
     protected DataSource<Tag, ArrayList<Tag>> tagDataSource;
     protected HashMap<String, Item> itemCache;
 
@@ -24,11 +23,5 @@ public abstract class AbstractItemDataSource extends DataSource<Item, ItemSet> i
      */
     protected void setTagDataSource(DataSource<Tag, ArrayList<Tag>> tagDataSource) {
         this.tagDataSource = tagDataSource;
-    }
-
-    // TODO: IMPLEMENT ITEM FILTERING HERE @HASSAN
-    @Override
-    public ItemSet getFilteredDataSet(Filter filter) {
-        return null;
     }
 }
