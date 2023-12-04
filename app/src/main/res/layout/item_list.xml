@@ -86,8 +86,10 @@
         android:layout_marginTop="@dimen/content_vertical_space"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileButton" />
+        app:layout_constraintTop_toBottomOf="@+id/profileButton"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_item_button"
@@ -131,12 +133,10 @@
         style="?attr/floatingActionButtonSmallStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/content_vertical_space"
         android:clickable="true"
         android:src="@drawable/baseline_photo_camera_24"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/add_tags_button"
-        app:layout_constraintEnd_toEndOf="@+id/add_tags_button"
-        app:layout_constraintStart_toStartOf="@+id/add_tags_button" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/add_item_button"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
