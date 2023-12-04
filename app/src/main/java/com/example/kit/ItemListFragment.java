@@ -52,8 +52,8 @@ import java.util.Set;
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed. Controlled by {@link ItemListController}
  */
-public class ItemListFragment extends Fragment
-        implements SelectListener,
+public class ItemListFragment extends Fragment implements
+        SelectListener,
         ItemListController.ItemSetValueChangedCallback {
 
     // Item List Fields
@@ -67,10 +67,6 @@ public class ItemListFragment extends Fragment
     private FilterSheetBinding filterBinding;
     private final AlphaAnimation fadeInFAB;
     private final AlphaAnimation fadeOutFAB;
-
-    private List<String> selectedMakes = new ArrayList<>();
-
-
 
     {
         fadeOutFAB = new AlphaAnimation(1.0f, 0.0f);
@@ -186,7 +182,6 @@ public class ItemListFragment extends Fragment
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         fadeInFABs();
-                        setCollapsedFilterLayout();
                         break;
 
                     case BottomSheetBehavior.STATE_DRAGGING:
@@ -195,10 +190,10 @@ public class ItemListFragment extends Fragment
                         break;
 
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        setExpandedFilterLayout();
                         break;
                 }
             }
+
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
@@ -213,9 +208,7 @@ public class ItemListFragment extends Fragment
             Tag addTag = controller.tagClickedAtPosition(position);
             filterBinding.tagsFilter.addTag(addTag);
             controller.updateTagFilter(filterBinding.tagsFilter.getTags());
-//            if (!filterBinding.tagsFilter.isEmpty()) {
-//                filterBinding.tagsFilter.setVisibility(View.VISIBLE);
-//            }
+
             // Clear the field
             filterBinding.tagAutoCompleteField.setText("", false);
         });
@@ -231,9 +224,6 @@ public class ItemListFragment extends Fragment
 
                 if (addTag != null) {
                     filterBinding.tagsFilter.addTag(addTag);
-//                    if (!filterBinding.tagsFilter.isEmpty()) {
-//                        filterBinding.tagsFilter.setVisibility(View.VISIBLE);
-//                    }
                 }
 
                 controller.updateTagFilter(filterBinding.tagsFilter.getTags());
@@ -250,9 +240,6 @@ public class ItemListFragment extends Fragment
         filterBinding.makeAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             String make = controller.makeClickedAtPosition(position);
             filterBinding.makesFilter.addMake(make);
-//            if (!filterBinding.makesFilter.isEmpty()) {
-//                filterBinding.makesFilter.setVisibility(View.VISIBLE);
-//            }
             controller.updateMakeFilter(filterBinding.makesFilter.getMakes());
             filterBinding.makeAutoCompleteField.setText("", false);
         });
@@ -265,9 +252,6 @@ public class ItemListFragment extends Fragment
                 }
 
                 filterBinding.makesFilter.addMake(newMake);
-//                if (!filterBinding.makesFilter.isEmpty()) {
-//                    filterBinding.makesFilter.setVisibility(View.VISIBLE);
-//                }
 
                 controller.updateMakeFilter(filterBinding.makesFilter.getMakes());
                 // Clear the field
@@ -431,16 +415,6 @@ public class ItemListFragment extends Fragment
         Filter filter = new Filter();
 
         controller.updateDataFilter(filter);
-    }
-    /**
-     * Sets the layout for the filter sheet when it is expanded.
-     */
-    private void setExpandedFilterLayout() {
-    }
-    /**
-     * Sets the layout for the filter sheet when it is collapsed.
-     */
-    private void setCollapsedFilterLayout() {
     }
 
     /**
