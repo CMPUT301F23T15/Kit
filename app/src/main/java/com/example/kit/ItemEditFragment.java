@@ -37,6 +37,8 @@ import com.google.android.material.carousel.HeroCarouselStrategy;
 
 import com.example.kit.util.FormatUtils;
 
+import com.example.kit.views.TagChipGroup;
+
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -279,6 +281,8 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
      * in the field.
      */
     private void initializeTagField() {
+        binding.itemDisplayTagGroup.setInEditMode(true);
+
         // Add all existing tags to the list of tags for the dropdown
         tagNames = new ArrayList<>();
         ArrayList<Tag> dbTags = tagDataSource.getDataSet();
@@ -485,6 +489,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         // Value
         if (binding.itemValueDisplay.getText() != null) {
             String cleanValue = FormatUtils.cleanupDirtyValueString(binding.itemValueDisplay.getText().toString());
+            if (cleanValue.isEmpty()) cleanValue = "0";
             newItem.setValue(cleanValue);
         } else {
             newItem.setValue("0");
@@ -492,7 +497,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
 
         // Date
         if (binding.itemDateDisplay.getText() != null) {
-            Timestamp date = FormatUtils.parseDateString(binding.itemDateDisplay.getText().toString());
+            Timestamp date = FormatUtils.parseDateStringToTimestamp(binding.itemDateDisplay.getText().toString());
             newItem.setAcquisitionDate(date);
         }
 
