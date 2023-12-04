@@ -525,6 +525,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
             Log.i("Navigation", "Null Arguments in the edit item fragment");
             return;
         } else if (getArguments().getString("Barcode") != null) {
+            // Handled barcode information lookup, use now as default timestamp
             String barcode = getArguments().getString("Barcode");
             item = DataSourceManager.getInstance().barcodeDataSource().getItemByBarcode(barcode);
             item.setAcquisitionDate(Timestamp.now());

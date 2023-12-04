@@ -51,21 +51,25 @@ public class ScannerActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("Scanner", "Initializing Scanner");
+
         binding = ScannerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        // Back button in case user does not want to scan
         binding.backButton.setOnClickListener(v -> {
             finish();
         });
+        // Setup camera preview selector, choosing the rear camera
         cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
+        // Setups future provider, creates listener for it
         futureProvider = ProcessCameraProvider.getInstance(this);
         futureProvider.addListener(() -> {
             try{
+                // Sets up binding for the preview
                 processProvider = futureProvider.get();
                 bindPreview(processProvider);
-                bindImageAnalyzer();
+                bindImageAnalyzer();    // Binding image analyzer, will be used with AndroidML for barcode detection
             } catch (ExecutionException | InterruptedException e){
 
             }
@@ -73,17 +77,26 @@ public class ScannerActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Binds camera preview with cameraX
+     * @param cameraProvider Camera provider object
+     */
     private void bindPreview(ProcessCameraProvider cameraProvider){
         preview = new Preview.Builder()
                 .setTargetRotation(binding.viewFinder.getDisplay().getRotation())
                 .build();
         cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK) // May be redundant?
                 .build();
         preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
         camera = processProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview);
 
     }
+
+    /**
+     * binds image analyzer, processes proxyImages for barcodes
+     */
     private void bindImageAnalyzer() {
         BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
                 .enableAllPotentialBarcodes()
@@ -104,6 +117,11 @@ public class ScannerActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Handles barcode analysis and data transfer back to the item view fragment
+     * @param scanner Object of the barcode scanner
+     * @param imageProxy ImageProxy containing barcode image information
+     */
     private void processImageProxy(BarcodeScanner scanner, ImageProxy imageProxy){
         InputImage inImage = InputImage.fromMediaImage(imageProxy.getImage(), imageProxy.getImageInfo().getRotationDegrees());
         scanner.process(inImage)
@@ -112,7 +130,7 @@ public class ScannerActivity extends AppCompatActivity {
                         if((barcode != null) && (barcode.getRawValue().trim().length() > 0) && !foundFlag){
                             foundFlag = true;
                             Log.i("Scanning", "Barcode had been found! " + barcode.getRawValue());
-
+                            // used for debugging and finding items barcodes
 //                            AlertDialog.Builder builder = new AlertDialog.Builder(ScannerActivity.this);
 //                            builder.setMessage(barcode.getRawValue()).create().show();
                             Intent data = new Intent(Intent.ACTION_SEND);
@@ -128,9 +146,5 @@ public class ScannerActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     imageProxy.close();
                 });
-
-
     }
-
-
 }

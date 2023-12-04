@@ -127,11 +127,12 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
         if (inMultiSelectMode) { // Show delete button
             binding.addItemButton.setVisibility(View.GONE);
+            binding.cameraButton.setVisibility(View.GONE);
             binding.addTagsButton.setVisibility(View.VISIBLE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
-            binding.cameraButton.setVisibility(View.VISIBLE);
         } else {            // Show add button
             binding.addItemButton.setVisibility(View.VISIBLE);
+            binding.cameraButton.setVisibility(View.VISIBLE);
             binding.addTagsButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.GONE);
         }
@@ -226,6 +227,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
     }
     private String cameraPermission = android.Manifest.permission.CAMERA;
 
+    // Used to check user permissions for use of the camera
     private ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -236,9 +238,17 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                 }
             });
 
+    /**
+     * When the camera icon is clicked in the list view, request use of the camera
+     * as a scanner
+     */
     private void onCameraClick(){
         requestScanner();
     }
+
+    /**
+     * Request the scanner, and check permissions of the app from the user
+     */
     private void requestScanner(){
         if(isPermissionGranted(cameraPermission)){
             Log.i("Scanner Start", "Permissions granted!");
@@ -250,13 +260,23 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
 
     }
 
+    /**
+     *
+     * @param cameraPermission Camera permission status string from manifest
+     * @return Returns true if permission is granted, otherwise false
+     */
     private boolean isPermissionGranted(String cameraPermission) {
         return ContextCompat.checkSelfPermission(requireContext(), cameraPermission) == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Requests Camera permission from the user, launches permission activity
+     */
     private void requestCameraPermission(){
         requestPermissionLauncher.launch(cameraPermission);
     }
+
+    // Used to extract barcode data from the scanner activity
     private final ActivityResultLauncher<Intent> scannerActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -270,6 +290,9 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
                 }
             });
 
+    /**
+     * Starts camera for the scanner activity
+     */
     private void startCamera() {
         Log.i("Scanner Start", "Launching Scanner!");
         Intent intent = new Intent(requireContext(), ScannerActivity.class);
