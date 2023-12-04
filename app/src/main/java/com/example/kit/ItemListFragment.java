@@ -148,7 +148,7 @@ public class ItemListFragment extends Fragment implements
      * as a listener for clicks.
      */
     private void initializeItemList() {
-        adapter = new ItemAdapter();
+        adapter = new ItemAdapter(requireContext());
         layoutManager = new LinearLayoutManager(this.getContext());
         binding.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private int firstVisible = 0;

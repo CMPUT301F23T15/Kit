@@ -1,12 +1,15 @@
 package com.example.kit;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.ChangeBounds;
 import androidx.transition.TransitionManager;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
  */
 public class ItemViewHolder extends RecyclerView.ViewHolder implements TagChipGroup.OnTagChipCloseListener {
     private final ItemListRowBinding binding;
+    private Context context;
     private String itemID;
     private static final int TRANSITION_TIME = 125;
 
@@ -35,8 +39,9 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TagChipGr
      * Create new ViewHolder from a binding.
      * @param binding The binding with desired layout for the ViewHolder.
      */
-    public ItemViewHolder(@NonNull ItemListRowBinding binding) {
+    public ItemViewHolder(Context context, @NonNull ItemListRowBinding binding) {
         super(binding.getRoot());
+        this.context = context;
         this.binding = binding;
         binding.itemThumbnailRow.setClipToOutline(true);
     }
@@ -86,6 +91,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TagChipGr
                 Bitmap croppedThumbnail = ImageUtils.cropBitmapToThumbnail(thumbnailBitmap, itemView.getContext());
                 binding.itemThumbnailRow.setImageBitmap(croppedThumbnail);
             }
+        } else {
+            binding.itemThumbnailRow.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.baseline_hide_image_24));
         }
     }
 

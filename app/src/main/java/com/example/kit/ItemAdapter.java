@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -15,8 +16,14 @@ import com.example.kit.databinding.ItemListRowBinding;
  * within an {@link ItemSet}
  */
 public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
+    private Context context;
     private ItemSet itemSet;
     private SelectListener listener;
+
+    public ItemAdapter(Context context) {
+        super();
+        this.context = context;
+    }
 
     /**
      * Inflates a new ViewHolder.
@@ -31,7 +38,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         ItemListRowBinding binding = ItemListRowBinding
                 .inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
-        return new ItemViewHolder(binding);
+        return new ItemViewHolder(context, binding);
     }
 
     /**
