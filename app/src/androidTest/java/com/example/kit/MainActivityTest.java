@@ -166,6 +166,16 @@ public class MainActivityTest {
     }
 
     /**
+     * US 02.02.01
+     */
+    @Test
+    public void testTotalValue() {
+        createItem();
+        createItem();
+        onView(withText("$1,000")).check(matches(isDisplayed()));
+    }
+
+    /**
      * US 03.03.01
      */
     @Test

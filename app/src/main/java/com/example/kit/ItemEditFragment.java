@@ -413,7 +413,8 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
                 .build();
 
         datePicker.addOnPositiveButtonClickListener(dateSelectionMillis -> {
-            String formattedDateString = FormatUtils.formatDateStringShort(new Date(dateSelectionMillis));
+            long twelveHourTimezoneOffset = 43200000L;
+            String formattedDateString = FormatUtils.formatDateStringShort(new Date(dateSelectionMillis + twelveHourTimezoneOffset));
             binding.itemDateDisplay.setText(formattedDateString);
         });
 
