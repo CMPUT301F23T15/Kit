@@ -139,4 +139,6 @@ public class ProfileActivity extends AppCompatActivity {
         Intent listIntent = new Intent(this, MainActivity.class);
         startActivity(listIntent);
     }
+
+    
 }
