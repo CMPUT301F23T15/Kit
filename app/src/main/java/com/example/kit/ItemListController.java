@@ -336,7 +336,7 @@ public class ItemListController implements DataChangedCallback,
                 comparator = Comparator.comparing(Item::getAcquisitionDate);
                 break;
             case "price":
-                comparator = Comparator.comparing(Item::getValue);
+                comparator = Comparator.comparing(Item::valueToBigDecimal);
                 break;
             case "tag":
                 comparator = (item1, item2) -> {
