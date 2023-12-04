@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -610,10 +611,10 @@ public class ItemListFragment extends Fragment implements
             Log.i("Scanner Start", "Permissions granted!");
             startCamera();
         } else {
+            Toast.makeText(requireContext(), R.string.perms_denied, Toast.LENGTH_SHORT).show();
             Log.i("Scanner Start", "Permissions denied!");
             requestCameraPermission();
         }
-
     }
 
     /**

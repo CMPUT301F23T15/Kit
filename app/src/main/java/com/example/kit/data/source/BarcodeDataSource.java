@@ -5,7 +5,7 @@ import com.example.kit.data.Item;
 import java.util.HashMap;
 
 public class BarcodeDataSource{
-    private HashMap<String, Item> cache;
+    private final HashMap<String, Item> cache;
 
     public BarcodeDataSource() {
         cache = new HashMap<>();
@@ -22,9 +22,11 @@ public class BarcodeDataSource{
         kraftDinner.setValue("5");
         cache.put("04050032766000",kraftDinner);
     }
+
     public Item getItemByBarcode(String barcode){
         return cache.get(barcode);
     }
+
     public boolean isItemInCache(String barcode){
         Item item = cache.get(barcode);
         if(item == null){
