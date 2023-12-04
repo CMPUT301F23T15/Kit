@@ -34,7 +34,6 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth userAuth;
 
     Button deleteAccount;
-    ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
