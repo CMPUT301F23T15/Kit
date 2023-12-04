@@ -50,7 +50,8 @@ public class ProfileActivity extends AppCompatActivity {
             binding.email.setVisibility(View.GONE);
             binding.password.setVisibility(View.GONE);
             binding.signInButton.setText(R.string.signOut);
-
+            binding.signOutButton.setText(R.string.deleteAccount);
+            binding.signOutButton.setVisibility(View.GONE);
 
         } else {
             binding.signInButton.setText(R.string.submit_button);
