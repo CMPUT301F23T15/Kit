@@ -2,6 +2,7 @@ package com.example.kit.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -82,6 +83,8 @@ public class TagChipGroup extends ChipGroup {
     private void createAddTagChip() {
         addChip = new Chip(new ContextThemeWrapper(context, R.style.tag_add_chip));
         ChipDrawable drawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.tag_add_chip);
+        drawable.setChipBackgroundColorResource(R.color.md_theme_light_inversePrimary);
+        drawable.setChipIconTintResource(R.color.md_theme_light_onPrimaryContainer);
         addChip.setChipDrawable(drawable);
         addChip.setEnsureMinTouchTargetSize(false);
         addChip.setText("");
@@ -103,8 +106,27 @@ public class TagChipGroup extends ChipGroup {
         tags.add(tag);
         Chip chip = new Chip(new ContextThemeWrapper(context, R.style.tag_chip));
         ChipDrawable drawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.tag_chip);
+        Color tagColor = tag.getColor();
+
+        // Dynamic Text Color calculation from https://stackoverflow.com/a/3943023/11318958
+        // By @Mark Ransom
+        // Used the simple formula for color weighting, tweaked for floats and adjusted the
+        // threshold value after testing.
+        float red = tagColor.red();
+        float green = tagColor.green();
+        float blue = tagColor.blue();
+        float weightedColor = red*0.299f + green*0.587f + blue*0.114f;
+        float blackTextThreshold = 0.58f;
+
+        Color textColor = Color.valueOf(Color.WHITE);
+        if (weightedColor > blackTextThreshold) {
+            textColor = Color.valueOf(Color.BLACK);
+        }
+
         drawable.setChipBackgroundColor(ColorStateList.valueOf(tag.getColor().toArgb()));
+        drawable.setCloseIconTint(ColorStateList.valueOf(textColor.toArgb()));
         chip.setChipDrawable(drawable);
+        chip.setTextColor(ColorStateList.valueOf(textColor.toArgb()));
         chip.setEnsureMinTouchTargetSize(false);
         chip.setText(tag.getName());
         chip.setPadding(0,0,0,0);

@@ -1,5 +1,9 @@
 package com.example.kit;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -14,8 +18,11 @@ import android.widget.ArrayAdapter;
 import android.text.InputType;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -37,16 +44,17 @@ import com.google.android.material.carousel.HeroCarouselStrategy;
 
 import com.example.kit.util.FormatUtils;
 
-import com.example.kit.views.TagChipGroup;
-
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import com.google.firebase.Timestamp;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -246,8 +254,21 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         if (imageURI == null) return;
 
         Bitmap bitmap = ImageUtils.convertUriToBitmap(imageURI, requireContext());
+        try {
+            bitmap = ImageUtils.rotateImageIfRequired(requireContext(), bitmap, imageURI);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Image adapter notifies itself of the dataset change
         imageAdapter.addImage(new CarouselImage(bitmap));
+        if (imageAdapter.getItemCount() < 2) {
+            binding.imageCarousel.scrollToPosition(imageAdapter.getItemCount()-1);
+            binding.imageCarousel.smoothScrollToPosition(0);
+        } else {
+            binding.imageCarousel.scrollToPosition(imageAdapter.getItemCount()-1);
+            binding.imageCarousel.smoothScrollToPosition(imageAdapter.getItemCount()-2);
+        }
+
     }
 
     /**
@@ -255,9 +276,79 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
      */
     @Override
     public void onAddImageClick() {
-        // Launch interface to select between pictures from the gallery or take new photo
-//        if (snapPos != imageAdapter.getItemCount()-1) return;
-        getContentLauncher.launch("image/*");
+        ImageSourceModal dialog = new ImageSourceModal();
+        dialog.setGalleryButtonListener(v -> getContentLauncher.launch("image/*"));
+        dialog.setCameraButtonListener(v -> onTakePhoto());
+        dialog.show(requireActivity().getSupportFragmentManager(), dialog.getTag());
+    }
+
+    private void onTakePhoto() {
+        Log.d("takephoto", "reached");
+        checkAndRequestPermissions();
+    }
+    private static final String[] REQUIRED_PERMISSIONS = {
+            android.Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            // Add other required permissions as needed
+    };
+    //Checks Permissions and then calls start camera
+    private void checkAndRequestPermissions() {
+        // Check if permissions are already granted
+
+        boolean allPermissionsGranted = true;
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                allPermissionsGranted = false;
+                Log.d("cr1", "reached");
+                //break;
+                startCamera();
+            }
+        }
+
+        // If any permission is not granted, request permissions
+        if (!allPermissionsGranted) {
+            String[] permissionsToRequest = Arrays.stream(REQUIRED_PERMISSIONS)
+                    .filter(permission -> ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
+                    .toArray(String[]::new);
+            activityResultLauncher.launch(permissionsToRequest);
+        } else {
+            // All permissions are already granted, proceed with your logic
+            Log.d("cr2", "reached");
+            startCamera();
+        }
+    }
+
+    private final ActivityResultLauncher<String[]> activityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), permissions -> {
+                // Handle Permission granted/rejected
+                boolean permissionGranted = true;
+                for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+                    if (Arrays.asList(REQUIRED_PERMISSIONS).contains(entry.getKey()) && !entry.getValue()) {
+                        permissionGranted = false;
+                    }
+                }
+                if (!permissionGranted) {
+                    //to be done
+                } else {
+                    onTakePhoto();
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // There are no request codes
+                    Intent data = result.getData();
+                    onImagePicked(data.getData());
+                }
+            });
+
+    //Opens new activity
+
+    private void startCamera() {
+        Intent i = new Intent(requireContext(), CameraActivity.class);
+        someActivityResultLauncher.launch(i);
     }
 
     /**
@@ -430,15 +521,34 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
      * item from the fragment's arguments.
      */
     private void loadItem() {
+        Item item = null;
         // Log and display nothing if we did not have an argument
         if (getArguments() == null) {
             Log.i("Navigation", "Null Arguments in the edit item fragment");
             return;
+        } else if (getArguments().getString("Barcode") != null) {
+            // Handled barcode information lookup, use now as default timestamp
+            String barcode = getArguments().getString("Barcode");
+            if(DataSourceManager.getInstance().barcodeDataSource().isItemInCache(barcode)){
+                // If item is in static cache, make new item
+                item = DataSourceManager.getInstance().barcodeDataSource().getItemByBarcode(barcode);
+                item.setAcquisitionDate(Timestamp.now());
+                item.setSerialNumber(barcode);
+            } else {
+                // In case item is not in static cache, populate select fields
+                binding.itemDateDisplay.setText(FormatUtils.formatDateStringShort(Timestamp.now()));
+                binding.itemSerialNumberDisplay.setText(barcode);
+                return;
+            }
+
+        } else {
+            // Retrieve the item from the bundle
+            itemID = getArguments().getString("id");
+            item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
         }
 
-        // Retrieve the item from the bundle
-        itemID = getArguments().getString("id");
-        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
+
+
 
         // If the item was null, Log and display nothing
         if (item == null) {

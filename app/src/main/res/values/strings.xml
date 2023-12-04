@@ -26,4 +26,5 @@
     <string name="delAccMessage">Deleting your account will result in completely removing your account and the details from our database. You will not be able to access your items stored in this account</string>
     <string name="reSignTitle">In order to delete you must re-sign in</string>
     <string name="reSignMessage">Do you want to re-sign in?</string>
+    <string name="perms_denied">Without permissions, scanning is unavailable.</string>
 </resources>

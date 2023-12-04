@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userAuth = FirebaseAuth.getInstance();
-        if(!isLoggedIn()) {
+        if(!isLoggedIn() && !isTestCase()) {
             Intent login = new Intent(this, ProfileActivity.class);
             startActivity(login);
         } else {
@@ -39,6 +39,19 @@ public class MainActivity extends AppCompatActivity {
                 throw new NullPointerException("NavHostFragment Null");
             }
             navHostFragment.getNavController();
+        }
+    }
+
+    /**
+     * Checks if a JUnit test case is being ran
+     * @return true if test case is being ran; false otherwise
+     */
+    private boolean isTestCase() {
+        try {
+            Class.forName("com.example.kit.MainActivityTest");
+            return true;
+        } catch(ClassNotFoundException e) {
+            return false;
         }
     }
 
