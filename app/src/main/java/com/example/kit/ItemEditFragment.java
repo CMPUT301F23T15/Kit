@@ -527,9 +527,18 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         } else if (getArguments().getString("Barcode") != null) {
             // Handled barcode information lookup, use now as default timestamp
             String barcode = getArguments().getString("Barcode");
-            item = DataSourceManager.getInstance().barcodeDataSource().getItemByBarcode(barcode);
-            item.setAcquisitionDate(Timestamp.now());
-            item.setSerialNumber(barcode);
+            if(DataSourceManager.getInstance().barcodeDataSource().isItemInCache(barcode)){
+                // If item is in static cache, make new item
+                item = DataSourceManager.getInstance().barcodeDataSource().getItemByBarcode(barcode);
+                item.setAcquisitionDate(Timestamp.now());
+                item.setSerialNumber(barcode);
+            } else {
+                // In case item is not in static cache, populate select fields
+                binding.itemDateDisplay.setText(FormatUtils.formatDateStringShort(Timestamp.now()));
+                binding.itemSerialNumberDisplay.setText(barcode);
+                return;
+            }
+
         } else {
             // Retrieve the item from the bundle
             itemID = getArguments().getString("id");
