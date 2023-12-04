@@ -21,4 +21,5 @@
     <string name="new_tag_hint">Add Tags</string>
     <string name="search_by_keywords">Search by Keywords</string>
     <string name="tag_frag_hint">Tags</string>
+    <string name="perms_denied">Without permissions, scanning is unavailable.</string>
 </resources>

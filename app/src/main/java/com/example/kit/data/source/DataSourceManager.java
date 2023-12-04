@@ -12,6 +12,7 @@ public class DataSourceManager {
 
     private final AbstractItemDataSource itemDataSource;
     private final AbstractTagDataSource tagDataSource;
+    private final BarcodeDataSource barcodeDataSource;
 
     /**
      * Accessor for the ItemDataSource based on the current environment.
@@ -28,6 +29,8 @@ public class DataSourceManager {
     public AbstractTagDataSource getTagDataSource() {
         return tagDataSource;
     }
+
+    public BarcodeDataSource barcodeDataSource(){return barcodeDataSource;}
 
     // Singleton Instantiation
     private static DataSourceManager instance;
@@ -46,6 +49,8 @@ public class DataSourceManager {
             tagDataSource = new TagDataSource();
             itemDataSource = new ItemDataSource();
         }
+
+        barcodeDataSource = new BarcodeDataSource();
 
         itemDataSource.setTagDataSource(tagDataSource);
         tagDataSource.setItemDataSource(itemDataSource);

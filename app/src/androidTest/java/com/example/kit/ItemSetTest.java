@@ -29,6 +29,7 @@ public class ItemSetTest {
         item1.setModel("Mock Item 9000");
         item1.addTag(new Tag("test"));
         item1.addTag(new Tag("fake"));
+
         item1.attachID("fakeID");
         item1.setValue("1000");
 

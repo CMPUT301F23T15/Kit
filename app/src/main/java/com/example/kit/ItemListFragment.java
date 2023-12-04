@@ -1,7 +1,9 @@
 package com.example.kit;
 
+import android.app.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -13,9 +15,11 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -34,6 +38,9 @@ import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -179,6 +186,7 @@ public class ItemListFragment extends Fragment implements
         Intent login = new Intent(getActivity(), ProfileActivity.class);
         binding.profileButton.setOnClickListener(onClick -> startActivity(login));
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
+        binding.cameraButton.setOnClickListener(v -> onCameraClick());
     }
 
     /**
@@ -437,11 +445,6 @@ public class ItemListFragment extends Fragment implements
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         navController.navigate(R.id.displayListItemAction, bundle);
-
-        // Safe args doesn't work for me?
-//        ItemListFragmentDirections.DisplayListItemAction action =
-//                ItemListFragmentDirections.displayListItemAction(id);
-//        navController.navigate(action);
     }
 
     /**
@@ -481,10 +484,12 @@ public class ItemListFragment extends Fragment implements
 
         if (inMultiSelectMode) { // Show delete button
             binding.addItemButton.setVisibility(View.GONE);
+            binding.cameraButton.setVisibility(View.GONE);
             binding.addTagsButton.setVisibility(View.VISIBLE);
             binding.deleteItemButton.setVisibility(View.VISIBLE);
         } else {            // Show add button
             binding.addItemButton.setVisibility(View.VISIBLE);
+            binding.cameraButton.setVisibility(View.VISIBLE);
             binding.addTagsButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.GONE);
         }
@@ -576,6 +581,81 @@ public class ItemListFragment extends Fragment implements
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
     }
+
+    private String cameraPermission = android.Manifest.permission.CAMERA;
+
+    // Used to check user permissions for use of the camera
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Log.i("Scanner Start", "Permissions granted by user!");
+                    startCamera();
+                } else {
+                    Log.i("Scanner Start", "Permissions denied by user!");
+                }
+            });
+
+    /**
+     * When the camera icon is clicked in the list view, request use of the camera
+     * as a scanner
+     */
+    private void onCameraClick(){
+        requestScanner();
+    }
+
+    /**
+     * Request the scanner, and check permissions of the app from the user
+     */
+    private void requestScanner(){
+        if(isPermissionGranted(cameraPermission)){
+            Log.i("Scanner Start", "Permissions granted!");
+            startCamera();
+        } else {
+            Toast.makeText(requireContext(), R.string.perms_denied, Toast.LENGTH_SHORT).show();
+            Log.i("Scanner Start", "Permissions denied!");
+            requestCameraPermission();
+        }
+    }
+
+    /**
+     *
+     * @param cameraPermission Camera permission status string from manifest
+     * @return Returns true if permission is granted, otherwise false
+     */
+    private boolean isPermissionGranted(String cameraPermission) {
+        return ContextCompat.checkSelfPermission(requireContext(), cameraPermission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Requests Camera permission from the user, launches permission activity
+     */
+    private void requestCameraPermission(){
+        requestPermissionLauncher.launch(cameraPermission);
+    }
+
+    // Used to extract barcode data from the scanner activity
+    private final ActivityResultLauncher<Intent> scannerActivityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Log.v("Scan Return", "Returned from scanning!");
+                    Intent data = result.getData();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Barcode",data.getStringExtra("Barcode"));
+                    navController.navigate(R.id.newItemAction, bundle);
+                }
+            });
+
+    /**
+     * Starts camera for the scanner activity
+     */
+    private void startCamera() {
+        Log.i("Scanner Start", "Launching Scanner!");
+        Intent intent = new Intent(requireContext(), ScannerActivity.class);
+        scannerActivityResult.launch(intent);
+    }
+
     /**
      * Updates the date filter for the item list based on user input.
      */
