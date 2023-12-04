@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemEditBinding;
 
+import com.example.kit.views.ColorPalette;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
 import com.google.android.material.carousel.HeroCarouselStrategy;
@@ -61,7 +63,7 @@ import java.util.Objects;
  * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
  * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
  */
-public class ItemEditFragment extends Fragment implements CarouselImageViewHolder.OnAddImageListener {
+public class ItemEditFragment extends Fragment implements CarouselImageViewHolder.OnAddImageListener, ColorPalette.OnColorSplotchClickListener {
 
     // Fragment Fields
     private String itemID;
@@ -79,6 +81,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
     private ArrayAdapter<String> tagNameAdapter;
     private ArrayList<String> tagNames;
     private boolean tagFieldFocused = false;
+    private Tag underConstructionTag;
 
     /**
      * Standard fragment lifecycle, stores a reference to the NavController.
@@ -407,22 +410,42 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
                 // Check if the tag already exists, if not create a new Tag
                 Tag newTag = tagDataSource.getDataByID(newTagName);
                 if (newTag == null) {
-                    newTag = new Tag(newTagName);
-                    CommandManager.getInstance().executeCommand(new AddTagCommand(newTag));
+                    underConstructionTag = new Tag(newTagName);
+                    showColorPalette(true);
                 } else {
                     // Remove the existing tag from the options in the dropdown
                     tagNames.remove(newTag.getName());
                     tagNameAdapter.notifyDataSetChanged();
+                    binding.itemDisplayTagGroup.addTag(newTag);
+                    // Clear the field
+                    binding.tagAutoCompleteField.setText("", false);
                 }
 
-                binding.itemDisplayTagGroup.addTag(newTag);
 
-                // Clear the field
-                binding.tagAutoCompleteField.setText("", false);
                 return true;
             }
             return false;
         });
+        binding.colorPalette.setColorSplotchClickListener(this);
+        showColorPalette(false);
+    }
+
+
+    @Override
+    public void onColorSplotchClick(int colorInt) {
+        underConstructionTag.setColor(Color.valueOf(colorInt));
+        CommandManager.getInstance().executeCommand(new AddTagCommand(underConstructionTag));
+        binding.itemDisplayTagGroup.addTag(underConstructionTag);
+        underConstructionTag = null;
+        showColorPalette(false);
+    }
+
+    private void showColorPalette(boolean show) {
+        if (show) {
+            binding.colorPalette.setVisibility(View.VISIBLE);
+        } else {
+            binding.colorPalette.setVisibility(View.GONE);
+        }
     }
 
     /**
