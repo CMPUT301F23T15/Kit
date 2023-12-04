@@ -1,10 +1,9 @@
 package com.example.kit;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -17,10 +16,11 @@ import com.example.kit.command.CommandManager;
 import com.example.kit.command.RemoveTagFromItemCommand;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
-import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemListRowBinding;
 import com.example.kit.util.FormatUtils;
 import com.example.kit.views.TagChipGroup;
+import com.example.kit.util.ImageUtils;
+
 
 import java.util.ArrayList;
 
@@ -40,6 +40,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TagChipGr
     public ItemViewHolder(@NonNull ItemListRowBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
+        binding.itemThumbnailRow.setClipToOutline(true);
     }
 
     /**
@@ -66,8 +67,9 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TagChipGr
         if (item.getValue() != null) {
             binding.itemValueRow.setText(FormatUtils.formatValue(item.valueToBigDecimal(), true));
         }
-        ArrayList<Tag> tags = item.getTags();
 
+        // Display Tags as chips, including a default add tag chip
+        ArrayList<Tag> tags = item.getTags();
         binding.itemTagGroupRow.enableAddChip(true);
         binding.itemTagGroupRow.clearTags();
         for (Tag tag : tags) {
@@ -75,6 +77,17 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TagChipGr
         }
 
         binding.itemTagGroupRow.setChipCloseListener(this);
+        // If there is images associated with the item, display the first image as the thumbnail
+        if (item.getBase64Images().size() > 0) {
+            String thumbnailBase64 = item.getBase64Images().get(0);
+            Bitmap thumbnailBitmap;
+            thumbnailBitmap = ImageUtils.convertBase64ToBitmap(thumbnailBase64);
+            // Crop the image to a square
+            if (thumbnailBitmap != null) {
+                Bitmap croppedThumbnail = ImageUtils.cropBitmapToThumbnail(thumbnailBitmap, itemView.getContext());
+                binding.itemThumbnailRow.setImageBitmap(croppedThumbnail);
+            }
+        }
     }
 
     /**

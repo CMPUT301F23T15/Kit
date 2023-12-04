@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.carousel.MaskableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    app:shapeAppearance="?attr/shapeAppearanceCornerLarge">
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_close_24"
+        android:background="@drawable/close_button_background"
+        android:elevation="8dp"
+        android:layout_gravity="end|top"
+        android:layout_margin="8dp"
+        android:padding="4dp"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/carousel_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:transitionName="image" />
+
+    <ImageButton
+        android:id="@+id/carouselImagePlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_add_24_white"
+        android:background="@drawable/add_button_background"
+        android:elevation="8dp"
+        android:layout_gravity="center"
+        android:padding="4dp" />
+
+</com.google.android.material.carousel.MaskableFrameLayout>

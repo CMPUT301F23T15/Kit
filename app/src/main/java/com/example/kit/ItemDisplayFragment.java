@@ -12,12 +12,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
 import com.example.kit.util.FormatUtils;
+import com.example.kit.util.ImageUtils;
+import com.google.android.material.carousel.CarouselLayoutManager;
+import com.google.android.material.carousel.CarouselSnapHelper;
+import com.google.android.material.carousel.HeroCarouselStrategy;
 
 /**
  * Fragment that displays an {@link Item} for viewing purposes.
@@ -27,6 +32,7 @@ public class ItemDisplayFragment extends Fragment {
     private ItemDisplayBinding binding;
     private NavController navController;
     private String itemID;
+    private CarouselImageAdapter imageAdapter;
 
     /**
      * Standard fragment lifecycle
@@ -56,6 +62,7 @@ public class ItemDisplayFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
         initializeConfirmButton();
+        initializeImageCarousel();
         disableInputs();
         return binding.getRoot();
     }
@@ -82,6 +89,27 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     /**
+     * Initialize the Carousel that displays the images associated with the item.
+     */
+    private void initializeImageCarousel() {
+        // Create layout manager that makes the images morph and look pretty
+        CarouselLayoutManager layoutManager
+                = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.HORIZONTAL);
+
+        // Snap Helper snaps images into view instead of allowing free scrolling
+        CarouselSnapHelper snapHelper = new CarouselSnapHelper();
+
+        // Adapter for the RecyclerView, not in edit mode
+        imageAdapter = new CarouselImageAdapter(false);
+
+        // Attach all to the RecyclerView and set properties
+        snapHelper.attachToRecyclerView(binding.imageCarousel);
+        binding.imageCarousel.setLayoutManager(layoutManager);
+        binding.imageCarousel.setAdapter(imageAdapter);
+        binding.imageCarousel.setNestedScrollingEnabled(false);
+    }
+
+    /**
      * Disable input and set text color back to black for all edit texts. XML disable doesn't seem
      * to work.
      */
@@ -105,7 +133,8 @@ public class ItemDisplayFragment extends Fragment {
     }
 
     /**
-     * Loads an item's details into the UI components if editing an existing item. Retrieves the item from the fragment's arguments.
+     * Loads an item's details into the UI components if editing an existing item.
+     * Retrieves the item from the fragment's arguments.
      */
     private void loadItem() {
         // Return to previous screen if we didn't come with an item
@@ -137,6 +166,10 @@ public class ItemDisplayFragment extends Fragment {
         binding.itemDisplayTagGroup.removeAllViews();
         for (Tag tag : item.getTags()) {
             binding.itemDisplayTagGroup.addTag(tag);
+        }
+
+        for (String base64 : item.getBase64Images()) {
+            imageAdapter.addImage(new CarouselImage(ImageUtils.convertBase64ToBitmap(base64)));
         }
     }
 }
