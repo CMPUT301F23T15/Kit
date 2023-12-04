@@ -23,6 +23,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -518,20 +519,19 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
      * item from the fragment's arguments.
      */
     private void loadItem() {
-        Item item;
+        Item item = null;
         // Log and display nothing if we did not have an argument
         if (getArguments() == null) {
             Log.i("Navigation", "Null Arguments in the edit item fragment");
             return;
         } else if (getArguments().getString("Barcode") != null) {
-            //get item
-
+            
         } else {
+            // Retrieve the item from the bundle
             itemID = getArguments().getString("id");
             item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
         }
 
-        // Retrieve the item from the bundle
 
 
 

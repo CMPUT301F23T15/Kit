@@ -107,13 +107,11 @@ public class ScannerActivity extends AppCompatActivity {
         scanner.process(inImage)
                 .addOnSuccessListener(barcodes -> {
                     for(Barcode barcode: barcodes){
-                        if(barcode != null){
+                        if((barcode != null) && (barcode.getRawValue() != "")){
                             Intent data = new Intent();
                             data.putExtra("Barcode", barcode.getRawValue());
                             finish();
                         }
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ScannerActivity.this);
-                        builder.setMessage(barcode.getRawValue()).create().show();
                     }
                 })
                 .addOnFailureListener(e -> {
