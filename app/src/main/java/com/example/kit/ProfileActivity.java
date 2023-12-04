@@ -22,7 +22,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -51,44 +55,76 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        deleteAccount.setOnClickListener(new View.OnClickListener() {
-            FirebaseUser user = userAuth.getCurrentUser();
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(ProfileActivity.this);
-                dialog.setTitle(R.string.confirmDelAccount);
-                dialog.setMessage(R.string.delAccMessage);
-                dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                progressBar.setVisibility(View.GONE);
-                                if(task.isSuccessful()){
-                                    Toast.makeText(ProfileActivity.this, "Account Deleted", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                }else{
-                                    Toast.makeText(ProfileActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
 
+        // Delete account
+        deleteAccount.setOnClickListener(v -> {
+            Log.d("Delete Account", "Account deletion started");
+            // Verify user intentions
+            AlertDialog.Builder dialog = new AlertDialog.Builder(ProfileActivity.this);
+            dialog.setTitle(R.string.confirmDelAccount);
+            dialog.setMessage(R.string.delAccMessage);
+            dialog.setPositiveButton("Delete", (dialog1, which) -> {
+                FirebaseUser user = userAuth.getCurrentUser();
+                user.delete().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        // Delete user items
+                        FirestoreManager.getInstance().getCollection("Users")
+                                .document(user.getUid()).collection("Items").whereNotEqualTo("name", null)
+                                        .get().addOnCompleteListener(task1 -> {
+                                            if(task1.isSuccessful()){
+                                                for (QueryDocumentSnapshot document : task1.getResult()){
+                                                    FirestoreManager.getInstance().getCollection("Users")
+                                                            .document(user.getUid()).collection("Items")
+                                                            .document(document.getId()).delete();
+                                                }
+                                            } else {
+                                                Log.d("Error getting documents: ", task.getException().getMessage());
+                                            }
+                                        });
+                        // Delete user tags
+                        FirestoreManager.getInstance().getCollection("Users")
+                                .document(user.getUid()).collection("Tags").whereNotEqualTo("alpha", null)
+                                .get().addOnCompleteListener(task1 -> {
+                                    if(task1.isSuccessful()){
+                                        for (QueryDocumentSnapshot document : task1.getResult()){
+                                            FirestoreManager.getInstance().getCollection("Users")
+                                                    .document(user.getUid()).collection("Tags")
+                                                    .document(document.getId()).delete();
+                                        }
+                                    } else {
+                                        Log.d("Error getting documents: ", task.getException().getMessage());
+                                    }
+                                });
+                        // Delete user document
+                        FirestoreManager.getInstance().getCollection("Users").document(user.getUid()).delete();
+                        Log.d("Delete Account", "Account deleted succesfully!");
+                        Toast.makeText(ProfileActivity.this, "Account Deleted", Toast.LENGTH_LONG).show();
+                        // Reset to sign in screen
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                    }else{
+                        // Prompt user to re-authenticate
+                        Log.d("Delete Account", "Account deletion failed!");
+//                        Toast.makeText(ProfileActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        AlertDialog.Builder reAuthenticate = new AlertDialog.Builder(ProfileActivity.this);
+                        reAuthenticate.setTitle("In order to delete you must re-sign in")
+                                .setMessage("Do you want to re-sign in?")
+                                .setPositiveButton("Yes", (dialog2, which1) -> {
+                                    userAuth.signOut();
+                                    Intent intent = getIntent();
+                                    finish();
+                                    startActivity(intent);
+                                })
+                                .setNegativeButton("No", (dialogInterface, which1) -> dialogInterface.dismiss())
+                                .create().show();
                     }
                 });
-                dialog.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
-            }
+
+            });
+            dialog.setNegativeButton("Dismiss", (dialogInterface, which) -> dialogInterface.dismiss());
+            AlertDialog alertDialog = dialog.create();
+            alertDialog.show();
         });
 
 
