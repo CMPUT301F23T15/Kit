@@ -63,8 +63,11 @@ public class CameraActivity extends AppCompatActivity {
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(viewBinding.viewFinder.getSurfaceProvider());
 
+                imageCapture = new ImageCapture.Builder()
+                        .setTargetRotation(Surface.ROTATION_0)
+                        .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                        .build();
 
-                imageCapture = new ImageCapture.Builder().build();
                 // Select back camera as a default
                 CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
@@ -89,10 +92,6 @@ public class CameraActivity extends AppCompatActivity {
 
     //Part you might want to edit - Saves to gallery at the moment
     private void takePhoto() {
-
-        // Get a stable reference of the modifiable image capture use case
-        ImageCapture imageCapture = this.imageCapture;
-        if (imageCapture == null) return;
         final String FILENAME_FORMAT = "yyyyMMdd_HHmmssSSS";
 
         // Create time stamped name and MediaStore entry.
@@ -111,8 +110,6 @@ public class CameraActivity extends AppCompatActivity {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues)
                 .build();
-
-        imageCapture.setTargetRotation(Surface.ROTATION_0);
 
         // Set up image capture listener, which is triggered after the photo has been taken
         imageCapture.takePicture(
@@ -133,5 +130,4 @@ public class CameraActivity extends AppCompatActivity {
                 }
         );
     }
-
 }

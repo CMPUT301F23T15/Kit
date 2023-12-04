@@ -17,8 +17,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.text.InputType;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -33,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kit.command.AddItemCommand;
 import com.example.kit.command.AddTagCommand;
 import com.example.kit.command.CommandManager;
-import com.example.kit.databinding.ImageSourceChoiceBinding;
 import com.example.kit.util.ImageUtils;
 import com.example.kit.data.Item;
 import com.example.kit.data.Tag;
@@ -41,7 +38,6 @@ import com.example.kit.data.source.DataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemEditBinding;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.android.material.carousel.CarouselSnapHelper;
 import com.google.android.material.carousel.HeroCarouselStrategy;
@@ -54,12 +50,12 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 
 import com.google.firebase.Timestamp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
-import java.util.zip.Inflater;
 
 /**
  * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
@@ -258,6 +254,11 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         if (imageURI == null) return;
 
         Bitmap bitmap = ImageUtils.convertUriToBitmap(imageURI, requireContext());
+        try {
+            bitmap = ImageUtils.rotateImageIfRequired(requireContext(), bitmap, imageURI);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Image adapter notifies itself of the dataset change
         imageAdapter.addImage(new CarouselImage(bitmap));
         if (imageAdapter.getItemCount() < 2) {
@@ -280,8 +281,6 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
         dialog.setCameraButtonListener(v -> onTakePhoto());
         dialog.show(requireActivity().getSupportFragmentManager(), dialog.getTag());
     }
-
-
 
     private void onTakePhoto() {
         Log.d("takephoto", "reached");
