@@ -26,8 +26,6 @@ public class ItemSetTest {
         item1.setDescription("Its made up!");
         item1.setMake("Junit");
         item1.setModel("Mock Item 9000");
-        item1.addTag("test");
-        item1.addTag("fake");
         item1.attachID("fakeID");
         item1.setValue("1000");
 
@@ -43,8 +41,6 @@ public class ItemSetTest {
         item.setAcquisitionDate(new Timestamp(new Date()));
         item.setMake("Junit");
         item.setModel("mock item 9001");
-        item.addTag("testing");
-        item.addTag("fake");
         item.setValue("500");
         item.attachID("testID");
 
