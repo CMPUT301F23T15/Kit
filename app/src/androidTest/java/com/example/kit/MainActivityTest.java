@@ -155,6 +155,17 @@ public class MainActivityTest {
     }
 
     /**
+     * US 02.03.01.02
+     */
+    @Test
+    public void testDeleteItem() {
+        // Test if an item is properly deleted
+        createItem();
+        deleteItem("JUnit Test Item");
+        onView(withText("JUnit Test Item")).check(doesNotExist());
+    }
+
+    /**
      * US 03.03.01
      */
     @Test
@@ -202,14 +213,5 @@ public class MainActivityTest {
         deleteItem("JUnit Test Item");
     }
 
-    /**
-     * US 02.03.01.02
-     */
-    @Test
-    public void testDeleteItem() {
-        // Test if an item is properly deleted
-        createItem();
-        deleteItem("JUnit Test Item");
-        onView(withText("JUnit Test Item")).check(doesNotExist());
-    }
+
 }
