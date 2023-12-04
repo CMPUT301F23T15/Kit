@@ -107,8 +107,8 @@ public class ProfileActivity extends AppCompatActivity {
                         Log.d("Delete Account", "Account deletion failed!");
 //                        Toast.makeText(ProfileActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         AlertDialog.Builder reAuthenticate = new AlertDialog.Builder(ProfileActivity.this);
-                        reAuthenticate.setTitle("In order to delete you must re-sign in")
-                                .setMessage("Do you want to re-sign in?")
+                        reAuthenticate.setTitle(R.string.reSignTitle)
+                                .setMessage(R.string.reSignMessage)
                                 .setPositiveButton("Yes", (dialog2, which1) -> {
                                     userAuth.signOut();
                                     Intent intent = getIntent();
@@ -178,8 +178,7 @@ public class ProfileActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
                         builder.setMessage(R.string.createAccount)
                                 .setPositiveButton("Yes", (dialog, which) -> createAccount(email, password))
-                                .setNegativeButton("No", (dialog, which) -> {
-                                });
+                                .setNegativeButton("No", (dialog, which) -> {dialog.dismiss();});
                         builder.create().show();
                     });
         } catch (Exception e) {
