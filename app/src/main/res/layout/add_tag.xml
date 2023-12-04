@@ -31,6 +31,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <TextView
         android:id="@+id/tagColorHeader"
         android:layout_width="wrap_content"
@@ -41,7 +42,7 @@
         app:layout_constraintStart_toStartOf="@+id/tagFieldLayout"
         app:layout_constraintTop_toBottomOf="@+id/tagFieldLayout" />
 
-    <com.example.kit.ColorPalette
+    <com.example.kit.views.ColorPalette
         android:id="@+id/colorPalette"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -55,7 +56,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tagColorHeader" />
 
-    <com.example.kit.TagChipGroup
+    <com.example.kit.views.TagChipGroup
         android:id="@+id/tagsToAddGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -66,7 +67,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/colorPalette">
 
-    </com.example.kit.TagChipGroup>
+    </com.example.kit.views.TagChipGroup>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

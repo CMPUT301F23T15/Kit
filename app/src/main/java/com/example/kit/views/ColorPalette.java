@@ -1,4 +1,4 @@
-package com.example.kit;
+package com.example.kit.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.kit.R;
 import com.example.kit.databinding.ColorPaletteBinding;
 
 /**

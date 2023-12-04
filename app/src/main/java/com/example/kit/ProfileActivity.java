@@ -51,6 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
             binding.password.setVisibility(View.GONE);
             binding.button.setText(R.string.signOut);
 
+
         } else {
             binding.button.setText(R.string.submit_button);
         }
@@ -85,12 +86,8 @@ public class ProfileActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                         AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
                         builder.setMessage(R.string.createAccount)
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        createAccount(email, password);
-                                    }
-                                });
+                                .setPositiveButton("Yes", (dialog, which) -> createAccount(email, password))
+                                .setNegativeButton("No", (dialog, which) -> {});
                         builder.create().show();
                     });
         } catch (Exception e) {

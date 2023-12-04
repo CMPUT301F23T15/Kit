@@ -67,10 +67,9 @@ public class ItemTest {
     @Test
     public void testRemoveTags() {
         Item item = mockItem1();
-        Tag tag = new Tag("test tag");
-        item.addTag(tag);
+        item.addTag(new Tag("test tag"));
+        String tag = "test tag";
         assertTrue(item.getTags().contains(tag));
-        item.removeTag(tag);
         assertFalse(item.getTags().contains(tag));
     }
 

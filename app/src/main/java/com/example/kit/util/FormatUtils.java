@@ -63,16 +63,21 @@ public class FormatUtils {
      * @param dateString The string to parse
      * @return A timestamp object, or null if there was no string in the correct format
      */
-    public static Timestamp parseDateString(String dateString) {
+    public static Timestamp parseDateStringToTimestamp(String dateString) {
+        Date parsedDate = parseDateString(dateString);
+        if (parsedDate == null) return null;
+        return new Timestamp(parsedDate);
+    }
+
+    public static Date parseDateString(String dateString) {
         Date date;
         try {
             date = DATE_FORMAT_SHORT.parse(dateString);
         } catch (ParseException e) {
             return null;
         }
-        if (date == null) return null;
 
-        return new Timestamp(date);
+        return date;
     }
 
     /**
@@ -97,6 +102,7 @@ public class FormatUtils {
      */
     public static String formatValue(String value, boolean withSymbol) {
         String cleanValue = cleanupDirtyValueString(value);
+        if (cleanValue.isEmpty()) cleanValue = "0";
         return formatValue(new BigDecimal(cleanValue), withSymbol);
     }
 
@@ -108,7 +114,7 @@ public class FormatUtils {
      */
     public static String cleanupDirtyValueString(String dirtyValue) {
         String cleanValue = dirtyValue.replaceAll("[^\\d.]", "");
-        if (cleanValue.isEmpty()) return "0";
+//        if (cleanValue.isEmpty()) return "0";
         return cleanValue;
     }
 }
