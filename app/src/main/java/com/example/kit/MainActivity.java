@@ -6,14 +6,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-<<<<<<< Updated upstream
-=======
-import android.view.View;
-import android.widget.Toast;
-import android.view.Menu;
-import android.view.MenuItem;
->>>>>>> Stashed changes
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
