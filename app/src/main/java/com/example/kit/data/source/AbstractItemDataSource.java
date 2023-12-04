@@ -5,7 +5,6 @@ import com.example.kit.data.ItemSet;
 import com.example.kit.data.Tag;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Intermediate subclass of {@link DataSource} for ItemDataSources that need access to the Tag
@@ -15,7 +14,6 @@ import java.util.HashMap;
  */
 public abstract class AbstractItemDataSource extends DataSource<Item, ItemSet> {
     protected DataSource<Tag, ArrayList<Tag>> tagDataSource;
-    protected HashMap<String, Item> itemCache;
 
     /**
      * Sets the TagDataSource to be used by the ItemDataSource

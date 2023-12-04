@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintSet;

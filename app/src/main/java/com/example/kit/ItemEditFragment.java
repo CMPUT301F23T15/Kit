@@ -44,8 +44,6 @@ import com.google.android.material.carousel.HeroCarouselStrategy;
 
 import com.example.kit.util.FormatUtils;
 
-import com.example.kit.views.TagChipGroup;
-
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -510,7 +508,8 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
                 .build();
 
         datePicker.addOnPositiveButtonClickListener(dateSelectionMillis -> {
-            String formattedDateString = FormatUtils.formatDateStringShort(new Date(dateSelectionMillis));
+            long twelveHourTimezoneOffset = 43200000L;
+            String formattedDateString = FormatUtils.formatDateStringShort(new Date(dateSelectionMillis + twelveHourTimezoneOffset));
             binding.itemDateDisplay.setText(formattedDateString);
         });
 

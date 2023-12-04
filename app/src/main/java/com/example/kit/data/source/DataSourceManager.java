@@ -40,7 +40,7 @@ public class DataSourceManager {
      * Firestore otherwise.
      */
     private DataSourceManager() {
-        if (BuildConfig.DEBUG) {
+        if (isTestCase()) {
             Log.i("Database", "Using testing DataSources");
             tagDataSource = new TestTagDataSource();
             itemDataSource = new TestItemDataSource();
@@ -57,6 +57,18 @@ public class DataSourceManager {
 //        tagDataSource.cullUnusedTags();
     }
 
+    /**
+     * Checks if a JUnit test case is being ran
+     * @return true if test case is being ran; false otherwise
+     */
+    private boolean isTestCase() {
+        try {
+            Class.forName("com.example.kit.MainActivityTest");
+            return true;
+        } catch(ClassNotFoundException e) {
+            return false;
+        }
+    }
     /**
      * Provides access to the instance of the DataSourceManager.
      * @return Instance of DataSourceManager.

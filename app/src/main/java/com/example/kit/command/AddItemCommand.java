@@ -1,5 +1,7 @@
 package com.example.kit.command;
 
+import android.util.Log;
+
 import com.example.kit.data.source.AbstractItemDataSource;
 import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.data.Item;
@@ -27,6 +29,7 @@ public class AddItemCommand extends Command {
      */
     @Override
     public void execute() {
+        Log.d("AddCommandItem", item.getName());
         dataSource.addData(item);
     }
 
