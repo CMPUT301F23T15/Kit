@@ -14,12 +14,15 @@ import com.example.kit.views.TagChipGroup;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -83,12 +86,16 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
         showColorPalette(false);
 
         // Add the tag to the database and item.
-        builder.setPositiveButton("Add Tag(s)", (dialog, which) -> positiveButtonClick());
+        builder.setPositiveButton("Add Tag(s)", null);
 
         // Dismiss the dialog when cancel is pressed.
         builder.setNegativeButton("Cancel",  (dialog, which) -> dialog.dismiss());
-
-        return builder.create();
+        Dialog dialog = builder.create();
+        dialog.setOnShowListener(dialog1 -> {
+            Button confirmButton = ((androidx.appcompat.app.AlertDialog) dialog1).getButton(AlertDialog.BUTTON_POSITIVE);
+            confirmButton.setOnClickListener(v -> positiveButtonClick());
+        });
+        return dialog;
     }
 
     /**
@@ -163,7 +170,9 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
         // Add whatever is typed in the tag field too
         String newTagText = binding.tagAutoCompleteField.getText().toString();
         if (!newTagText.isEmpty()) {
-            tags.add(new Tag(newTagText));
+            underConstructionTag = new Tag(newTagText);
+            showColorPalette(true);
+            return;
         }
 
         MacroCommand addTagsMacro = new MacroCommand();
@@ -185,6 +194,7 @@ public class AddTagFragment extends DialogFragment implements ColorPalette.OnCol
 
         CommandManager.getInstance().executeCommand(addTagsMacro);
         CommandManager.getInstance().executeCommand(addTagsToItemsMacro);
+        dismiss();
     }
 
     /**
