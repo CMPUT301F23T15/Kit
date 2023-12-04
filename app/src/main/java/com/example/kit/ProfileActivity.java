@@ -103,10 +103,11 @@ public class ProfileActivity extends AppCompatActivity {
             binding.password.setVisibility(View.GONE);
             binding.signInButton.setText(R.string.signOut);
             binding.signOutButton.setText(R.string.deleteAccount);
-            binding.signOutButton.setVisibility(View.GONE);
+            binding.signOutButton.setVisibility(View.VISIBLE);
 
         } else {
             binding.signInButton.setText(R.string.submit_button);
+            binding.signOutButton.setVisibility(View.GONE);
         }
     }
 
