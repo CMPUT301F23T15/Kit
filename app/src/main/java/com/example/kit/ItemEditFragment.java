@@ -519,6 +519,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
      * item from the fragment's arguments.
      */
     private void loadItem() {
+        Log.i("Load Item", "Load Item Called");
         Item item = null;
         // Log and display nothing if we did not have an argument
         if (getArguments() == null) {

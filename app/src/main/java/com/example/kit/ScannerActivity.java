@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class ScannerActivity extends AppCompatActivity {
     private Preview preview;
     private Camera camera;
     private ImageAnalysis imageAnalysis;
+    boolean foundFlag = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,9 +109,15 @@ public class ScannerActivity extends AppCompatActivity {
         scanner.process(inImage)
                 .addOnSuccessListener(barcodes -> {
                     for(Barcode barcode: barcodes){
-                        if((barcode != null) && (barcode.getRawValue() != "")){
-                            Intent data = new Intent();
+                        if((barcode != null) && (barcode.getRawValue().trim().length() > 0) && !foundFlag){
+                            foundFlag = true;
+                            Log.i("Scanning", "Barcode had been found! " + barcode.getRawValue());
+
+//                            AlertDialog.Builder builder = new AlertDialog.Builder(ScannerActivity.this);
+//                            builder.setMessage(barcode.getRawValue()).create().show();
+                            Intent data = new Intent(Intent.ACTION_SEND);
                             data.putExtra("Barcode", barcode.getRawValue());
+                            setResult(Activity.RESULT_OK, data);
                             finish();
                         }
                     }

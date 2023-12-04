@@ -2,6 +2,7 @@ package com.example.kit;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -260,11 +261,12 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
+                    Log.v("Scan Return", "Returned from scanning!");
                     Intent data = result.getData();
 
                     Bundle bundle = new Bundle();
                     bundle.putString("Barcode",data.getStringExtra("Barcode"));
-                    navController.navigate(R.id.editDisplayItemAction, bundle);
+                    navController.navigate(R.id.newItemAction, bundle);
                 }
             });
 
