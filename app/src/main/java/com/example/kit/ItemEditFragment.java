@@ -288,7 +288,7 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
     }
     private static final String[] REQUIRED_PERMISSIONS = {
             android.Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE
             // Add other required permissions as needed
     };
     //Checks Permissions and then calls start camera
@@ -297,16 +297,17 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
 
         boolean allPermissionsGranted = true;
         for (String permission : REQUIRED_PERMISSIONS) {
+            Log.d("cr1", permission);
             if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
                 allPermissionsGranted = false;
-                Log.d("cr1", "reached");
+                Log.d("cr1", "Permission not Granted");
                 //break;
-                startCamera();
             }
         }
 
         // If any permission is not granted, request permissions
         if (!allPermissionsGranted) {
+            Log.d("Perms Check", "Not all perms granted!");
             String[] permissionsToRequest = Arrays.stream(REQUIRED_PERMISSIONS)
                     .filter(permission -> ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
                     .toArray(String[]::new);
