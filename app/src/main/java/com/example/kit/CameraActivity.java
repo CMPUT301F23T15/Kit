@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Surface;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,12 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
 import com.example.kit.databinding.CameraBinding;
-import com.example.kit.util.ImageUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -63,7 +60,10 @@ public class CameraActivity extends AppCompatActivity {
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(viewBinding.viewFinder.getSurfaceProvider());
 
-                imageCapture = new ImageCapture.Builder().build();
+                imageCapture = new ImageCapture.Builder()
+                        .setTargetRotation(Surface.ROTATION_0)
+                        .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                        .build();
                 // Select back camera as a default
                 CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
@@ -88,10 +88,6 @@ public class CameraActivity extends AppCompatActivity {
 
     //Part you might want to edit - Saves to gallery at the moment
     private void takePhoto() {
-
-        // Get a stable reference of the modifiable image capture use case
-        ImageCapture imageCapture = this.imageCapture;
-        if (imageCapture == null) return;
         final String FILENAME_FORMAT = "yyyyMMdd_HHmmssSSS";
 
         // Create time stamped name and MediaStore entry.
@@ -111,8 +107,6 @@ public class CameraActivity extends AppCompatActivity {
                 contentValues)
                 .build();
 
-        imageCapture.setTargetRotation(Surface.ROTATION_0);
-
         // Set up image capture listener, which is triggered after the photo has been taken
         imageCapture.takePicture(
                 outputOptions,
@@ -125,7 +119,6 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults output) {
-                        output.
                         Intent data = new Intent(Intent.ACTION_SEND, output.getSavedUri());
                         setResult(Activity.RESULT_OK, data);
                         finish();
@@ -133,5 +126,4 @@ public class CameraActivity extends AppCompatActivity {
                 }
         );
     }
-
 }
