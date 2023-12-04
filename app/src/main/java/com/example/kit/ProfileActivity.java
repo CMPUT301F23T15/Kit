@@ -28,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
         userAuth = FirebaseAuth.getInstance();
         binding = ProfilePageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.button.setOnClickListener(v -> {
+        binding.signInButton.setOnClickListener(v -> {
             String email = binding.email.getText().toString();
             String password = binding.password.getText().toString();
             if(!isLoggedIn()){
@@ -49,11 +49,11 @@ public class ProfileActivity extends AppCompatActivity {
         if(isLoggedIn()){
             binding.email.setVisibility(View.GONE);
             binding.password.setVisibility(View.GONE);
-            binding.button.setText(R.string.signOut);
+            binding.signInButton.setText(R.string.signOut);
 
 
         } else {
-            binding.button.setText(R.string.submit_button);
+            binding.signInButton.setText(R.string.submit_button);
         }
     }
 
