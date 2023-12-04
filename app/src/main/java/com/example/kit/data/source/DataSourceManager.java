@@ -12,7 +12,6 @@ public class DataSourceManager {
 
     private final AbstractItemDataSource itemDataSource;
     private final AbstractTagDataSource tagDataSource;
-
     private final BarcodeDataSource barcodeDataSource;
 
     /**
@@ -30,6 +29,8 @@ public class DataSourceManager {
     public AbstractTagDataSource getTagDataSource() {
         return tagDataSource;
     }
+
+    public BarcodeDataSource barcodeDataSource(){return barcodeDataSource;}
 
     // Singleton Instantiation
     private static DataSourceManager instance;
