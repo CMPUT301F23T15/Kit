@@ -3,14 +3,20 @@ package com.example.kit;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotSelected;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -46,7 +52,7 @@ public class MainActivityTest {
         onView(withId(R.id.itemNameDisplay)).perform(ViewActions.typeText("JUnit Test Item"));
         onView(withId(R.id.itemNameDisplay)).perform(closeSoftKeyboard());
 
-        onView(withId(R.id.itemDateDisplay)).perform(replaceText("02/12/2023"));
+        onView(withId(R.id.itemDateDisplay)).perform(replaceText("06/06/2023"));
 
         onView(withId(R.id.itemValueDisplay)).perform(ViewActions.typeText("500"));
         onView(withId(R.id.itemValueDisplay)).perform(closeSoftKeyboard());
@@ -132,17 +138,43 @@ public class MainActivityTest {
         onView(withText("Test Tag")).check(matches(isDisplayed()));
     }
 
+    /**
+     * US 01.03.01
+     */
     @Test
     public void testChangeName() {
         // Test if changing the 'name' field is properly reflected
         createItem();
         onView(withText("JUnit Test Item")).perform(click());
-        onView(withId(R.id.itemNameDisplay)).perform(ViewActions.clearText());
-        onView(withId(R.id.itemNameDisplay)).perform(ViewActions.typeText("Changed JUnit Test Item"));
-        onView(withId(R.id.itemNameDisplay)).perform(closeSoftKeyboard());
+        onView(withId(R.id.floatingActionButton2)).perform(click());
+        onView(withId(R.id.itemNameDisplay)).perform(clearText())
+                .perform(ViewActions.typeText("Changed JUnit Test Item"))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.floatingActionButton)).perform(click());
         onView(withText("Changed JUnit Test Item")).check(matches(isDisplayed()));
-        deleteItem("Changed JUnit Test Item");
+    }
+
+    /**
+     * US 03.03.01
+     */
+    @Test
+    public void testAddTags() {
+        createItem();
+        onView(withText("JUnit Test Item")).perform(ViewActions.longClick());
+        onView(allOf(withId(R.id.checkBox), hasSibling(allOf(withId(R.id.itemCardView),
+                hasDescendant(withText("JUnit Test Item")))))).perform(click());
+        onView(withId(R.id.add_tags_button)).perform(click());
+        onView(withId(R.id.tagAutoCompleteField)).perform(click())
+                .inRoot(isPlatformPopup())
+                .perform(ViewActions.typeText("JUnit Test Tag"))
+                .perform(ViewActions.pressImeActionButton());
+        onView(withId(R.id.colorSplotch1)).perform(click());
+        onView(withText("Add Tag(s)")).perform(click());
+        onView(withText("JUnit Test Item")).perform(click());
+        onView(withId(R.id.scrollView3)).perform(swipeUp());
+        onView(withText("JUnit Test Tag")).check(matches(isDisplayed()));
+        onView(withId(R.id.floatingActionButton)).perform(click());
+        onView(withText("JUnit Test Tag")).check(matches(isDisplayed()));
     }
 
     @Test
