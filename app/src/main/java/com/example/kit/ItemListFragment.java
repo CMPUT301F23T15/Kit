@@ -1,7 +1,9 @@
 package com.example.kit;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import androidx.navigation.NavController;
@@ -24,13 +27,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.HashSet;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import androidx.core.content.ContextCompat;
-import java.util.Map;
 
 /**
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
@@ -96,6 +93,7 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         Intent login = new Intent(getActivity(), ProfileActivity.class);
         binding.profileButton.setOnClickListener(onClick -> startActivity(login));
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
+        binding.cameraButton.setOnClickListener(v -> onCameraClick());
     }
 
     /**
@@ -230,4 +228,50 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
     }
+    private String cameraPermission = android.Manifest.permission.CAMERA;
+
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Log.i("Scanner Start", "Permissions granted by user!");
+                    startCamera();
+                } else {
+                    Log.i("Scanner Start", "Permissions denied by user!");
+                }
+            });
+
+    private void onCameraClick(){
+        requestScanner();
+    }
+    private void requestScanner(){
+        if(isPermissionGranted(cameraPermission)){
+            Log.i("Scanner Start", "Permissions granted!");
+            startCamera();
+        } else {
+            Log.i("Scanner Start", "Permissions denied!");
+            requestCameraPermission();
+        }
+
+    }
+
+    private boolean isPermissionGranted(String cameraPermission) {
+        return ContextCompat.checkSelfPermission(requireContext(), cameraPermission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestCameraPermission(){
+        requestPermissionLauncher.launch(cameraPermission);
+    }
+    private final ActivityResultLauncher<Intent> scannerActivityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                }
+            });
+    private void startCamera() {
+        Log.i("Scanner Start", "Launching Scanner!");
+        Intent intent = new Intent(requireContext(), ScannerActivity.class);
+        scannerActivityResult.launch(intent);
+    }
+
 }
