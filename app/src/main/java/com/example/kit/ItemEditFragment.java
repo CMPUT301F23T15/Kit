@@ -37,8 +37,6 @@ import com.google.android.material.carousel.HeroCarouselStrategy;
 
 import com.example.kit.util.FormatUtils;
 
-import com.example.kit.views.TagChipGroup;
-
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
