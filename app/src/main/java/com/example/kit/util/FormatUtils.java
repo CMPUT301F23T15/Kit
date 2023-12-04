@@ -72,7 +72,7 @@ public class FormatUtils {
     public static Date parseDateString(String dateString) {
         Date date;
         try {
-            date = DateFormat.getDateInstance(DateFormat.SHORT).parse(dateString);
+            date = DATE_FORMAT_SHORT.parse(dateString);
         } catch (ParseException e) {
             return null;
         }
