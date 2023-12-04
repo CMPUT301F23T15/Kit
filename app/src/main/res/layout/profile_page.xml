@@ -38,8 +38,8 @@
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:ems="10"
         android:hint="@string/profile_password"
-        android:inputType="textPassword"
         android:minHeight="48dp"
+        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +47,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

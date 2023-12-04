@@ -137,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
 //            binding.email.setVisibility(View.GONE);
             binding.email.setText(userAuth.getCurrentUser().getEmail());
             binding.email.setEnabled(false);
-            binding.password.setVisibility(View.GONE);
+            binding.passwordLayout.setVisibility(View.GONE);
             binding.signInButton.setText(R.string.signOut);
             binding.signOutButton.setText(R.string.deleteAccount);
             binding.signOutButton.setVisibility(View.VISIBLE);
