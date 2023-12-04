@@ -17,11 +17,13 @@ public class TestItemDataSource extends AbstractItemDataSource {
     @Override
     public void addData(Item item) {
         items.put(item.findID(), item);
+        onDataChanged();
     }
 
     @Override
     public void deleteDataByID(String id) {
         items.remove(id);
+        onDataChanged();
     }
 
     @Override

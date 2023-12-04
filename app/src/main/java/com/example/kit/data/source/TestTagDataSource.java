@@ -17,16 +17,17 @@ public class TestTagDataSource extends AbstractTagDataSource {
 
     @Override
     public void addData(Tag tag) {
-//        tags.put(tag.findID(), tag);
+        tags.put(tag.getName(), tag);
+        onDataChanged();
     }
 
-    // Maybe throw errors if tag not found?
     @Override
     public void deleteDataByID(String id) {
         Tag removedTag = tags.remove(id);
         if (removedTag == null) {
             Log.w("Test Database", "Tag was not found with ID: " + id);
         }
+        onDataChanged();
     }
 
     // Throw error if tag not found?
