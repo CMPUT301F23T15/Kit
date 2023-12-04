@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TestItemDataSource extends AbstractItemDataSource {
-
+    private int itemCount = 0;
     private final HashMap<String, Item> items;
 
     public TestItemDataSource() {
@@ -16,6 +16,10 @@ public class TestItemDataSource extends AbstractItemDataSource {
 
     @Override
     public void addData(Item item) {
+        if (item.findID() == null) {
+            item.attachID(String.valueOf(itemCount));
+            itemCount++;
+        }
         items.put(item.findID(), item);
         onDataChanged();
     }
