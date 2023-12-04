@@ -32,6 +32,14 @@
             android:layout_height="match_parent"
             android:visibility="visible">
 
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <com.example.kit.views.TriStateSortButton
                 android:id="@+id/searchSortButton"
                 android:layout_width="wrap_content"
@@ -52,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
                 android:hint="@string/search_by_keywords"
@@ -81,7 +89,7 @@
                 android:cropToPadding="false"
                 android:padding="0dp"
                 android:src="@drawable/baseline_remove_circle_outline_24"
-                app:layout_constraintBottom_toBottomOf="@+id/dateStartLayout"
+                app:layout_constraintBottom_toBottomOf="@+id/dateEndLayout"
                 app:layout_constraintEnd_toStartOf="@+id/dateStartLayout"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -92,12 +100,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
                 android:hint="Start Date"
                 android:inputType="date"
                 android:minHeight="48dp"
-                app:layout_constraintEnd_toStartOf="@+id/dateTo"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/dateSortButton"
                 app:layout_constraintTop_toBottomOf="@+id/searchBarLayout"
@@ -110,35 +119,23 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/dateTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="To"
-                app:layout_constraintBottom_toBottomOf="@+id/dateStartLayout"
-                app:layout_constraintEnd_toStartOf="@+id/dateEndLayout"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/dateStartLayout"
-                app:layout_constraintTop_toTopOf="@+id/dateStartLayout"
-                app:layout_constraintVertical_bias="0.666" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dateEndLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tight_content"
+                android:layout_marginTop="@dimen/tight_content"
                 android:layout_marginEnd="@dimen/content_horizontal_space"
                 android:ems="10"
                 android:hint="End Date"
                 android:inputType="date"
                 android:minHeight="48dp"
                 app:endIconMode="clear_text"
-                app:layout_constraintBottom_toBottomOf="@+id/dateStartLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/dateTo"
-                app:layout_constraintTop_toTopOf="@+id/dateStartLayout">
+                app:layout_constraintStart_toEndOf="@+id/dateSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/dateStartLayout"
+                app:startIconDrawable="@drawable/baseline_calendar_month_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/dateEnd"
@@ -157,7 +154,7 @@
                 android:cropToPadding="false"
                 android:padding="0dp"
                 android:src="@drawable/baseline_arrow_circle_up_24"
-                app:layout_constraintBottom_toBottomOf="@+id/valueLowLayout"
+                app:layout_constraintBottom_toBottomOf="@+id/valueHighLayout"
                 app:layout_constraintEnd_toStartOf="@+id/valueLowLayout"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -167,63 +164,51 @@
                 android:id="@+id/valueLowLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginStart="@dimen/tight_content"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
                 android:hint="Min Value"
                 android:minHeight="48dp"
-                app:layout_constraintEnd_toStartOf="@+id/valueTo"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/valueSortButton"
-                app:layout_constraintTop_toBottomOf="@+id/dateStartLayout"
                 app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/valueSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/dateEndLayout"
                 app:startIconDrawable="@drawable/baseline_attach_money_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/valueLow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/valueTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="To"
-                app:layout_constraintBottom_toBottomOf="@+id/valueLowLayout"
-                app:layout_constraintEnd_toStartOf="@+id/valueHighLayout"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/valueLowLayout"
-                app:layout_constraintTop_toTopOf="@+id/valueLowLayout"
-                app:layout_constraintVertical_bias="0.452" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/valueHighLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tight_content"
+                android:layout_marginTop="@dimen/tight_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
                 android:hint="Max Value"
                 android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="@+id/valueLowLayout"
+                app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/valueTo"
-                app:layout_constraintTop_toTopOf="@+id/valueLowLayout"
-                app:layout_constraintVertical_bias="0.0"
-                app:endIconMode="clear_text"
+                app:layout_constraintStart_toEndOf="@+id/valueSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/valueLowLayout"
                 app:startIconDrawable="@drawable/baseline_attach_money_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/valueHigh"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -247,12 +232,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginTop="@dimen/tight_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:hint="Tag Filter"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tagSortButton"
-                app:layout_constraintTop_toBottomOf="@+id/valueLowLayout"
+                app:layout_constraintTop_toBottomOf="@+id/valueHighLayout"
                 app:startIconDrawable="@drawable/baseline_label_24_grey">
 
                 <AutoCompleteTextView
@@ -270,15 +255,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginTop="@dimen/tight_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="128dp"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tagFieldLayout" />
-
 
             <com.example.kit.views.TriStateSortButton
                 android:id="@+id/makeSortButton"
@@ -300,7 +282,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginTop="@dimen/tight_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:hint="Make Filter"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -323,9 +305,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/content_vertical_space"
+                android:layout_marginTop="@dimen/tight_content"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="16dp"
                 android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/makeFieldLayout" />

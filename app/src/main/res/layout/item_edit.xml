@@ -112,7 +112,7 @@
                 android:hint="@string/item_display_date_hint"
                 android:inputType="date"
                 android:minHeight="48dp"
-                app:layout_constraintEnd_toStartOf="@+id/itemValueDisplayLayout"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/itemCommentDisplayLayout"
@@ -129,22 +129,23 @@
                 android:id="@+id/itemValueDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
                 android:hint="@string/item_display_value_hint"
                 android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="@+id/itemDateDisplayLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/itemDateDisplayLayout"
-                app:layout_constraintTop_toTopOf="@+id/itemDateDisplayLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout"
                 app:startIconDrawable="@drawable/baseline_attach_money_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/itemValueDisplay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"/>
+                    android:inputType="numberDecimal" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -159,10 +160,10 @@
                 android:hint="@string/item_display_make_hint"
                 android:inputType="text"
                 android:minHeight="48dp"
-                app:layout_constraintEnd_toStartOf="@+id/itemModelDisplayLayout"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemDateDisplayLayout"
+                app:layout_constraintTop_toBottomOf="@+id/itemValueDisplayLayout"
                 app:startIconDrawable="@drawable/baseline_work_outline_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -176,16 +177,17 @@
                 android:id="@+id/itemModelDisplayLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/content_vertical_space"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:ems="10"
                 android:hint="@string/item_display_model_hint"
                 android:inputType="text"
                 android:minHeight="48dp"
-                app:layout_constraintBottom_toBottomOf="@+id/itemMakeDisplayLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/itemMakeDisplayLayout"
-                app:layout_constraintTop_toTopOf="@+id/itemMakeDisplayLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemMakeDisplayLayout"
                 app:startIconDrawable="@drawable/baseline_work_24">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -208,7 +210,7 @@
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemMakeDisplayLayout"
+                app:layout_constraintTop_toBottomOf="@+id/itemModelDisplayLayout"
                 app:startIconDrawable="@drawable/baseline_numbers_24">
 
                 <com.google.android.material.textfield.TextInputEditText

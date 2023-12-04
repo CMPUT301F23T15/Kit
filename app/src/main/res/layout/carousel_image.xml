@@ -35,6 +35,7 @@
         android:background="@drawable/add_button_background"
         android:elevation="8dp"
         android:layout_gravity="center"
-        android:padding="4dp" />
+        android:padding="4dp"
+        app:tint="@color/md_theme_light_onPrimaryContainer" />
 
 </com.google.android.material.carousel.MaskableFrameLayout>

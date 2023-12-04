@@ -81,8 +81,10 @@ public class ItemListFragment extends Fragment implements
             public void onAnimationEnd(Animation animation) {
                 if (inMultiSelectMode) {
                     binding.deleteItemButton.setVisibility(View.GONE);
+                    binding.addTagsButton.setVisibility(View.GONE);
                 } else {
                     binding.addItemButton.setVisibility(View.GONE);
+                    binding.cameraButton.setVisibility(View.GONE);
                 }
             }
 
@@ -100,8 +102,10 @@ public class ItemListFragment extends Fragment implements
             public void onAnimationEnd(Animation animation) {
                 if (inMultiSelectMode) {
                     binding.deleteItemButton.setVisibility(View.VISIBLE);
+                    binding.addTagsButton.setVisibility(View.VISIBLE);
                 } else {
                     binding.addItemButton.setVisibility(View.VISIBLE);
+                    binding.cameraButton.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -463,7 +467,9 @@ public class ItemListFragment extends Fragment implements
             binding.addTagsButton.startAnimation(fadeOutFAB);
         } else {
             if (binding.addItemButton.getAnimation() != null || binding.addItemButton.getVisibility() == View.GONE) return;
+            if (binding.cameraButton.getAnimation() != null || binding.cameraButton.getVisibility() == View.GONE) return;
             binding.addItemButton.startAnimation(fadeOutFAB);
+            binding.cameraButton.startAnimation(fadeOutFAB);
         }
     }
 
@@ -473,6 +479,7 @@ public class ItemListFragment extends Fragment implements
             binding.addTagsButton.startAnimation(fadeInFAB);
         } else {
             binding.addItemButton.startAnimation(fadeInFAB);
+            binding.cameraButton.startAnimation(fadeInFAB);
         }
     }
 
