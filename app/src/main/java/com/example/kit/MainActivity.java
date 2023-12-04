@@ -6,8 +6,13 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
 import android.util.Log;
+<<<<<<< Updated upstream
 import android.view.View;
 import android.widget.Toast;
+=======
+import android.view.Menu;
+import android.view.MenuItem;
+>>>>>>> Stashed changes
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

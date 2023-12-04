@@ -13,5 +13,16 @@
     <string name="total_valuation">Total Valuation:</string>
     <string name="profile_email">Email</string>
     <string name="profile_password">Password</string>
+<<<<<<< Updated upstream
     <string name="submit_button">Submit</string>
+=======
+    <string name="createAccount">Do you want to create a new account?</string>
+    <string name="confirmDelAccount">Do you want to delete your account?</string>
+    <string name="signOut">Sign Out</string>
+    <string name="add_new_tag">Add New Tag</string>
+    <string name="add_existing_tags">Add Existing Tags</string>
+    <string name="new_tag_hint">Add Tags</string>
+    <string name="tag_frag_hint">Tags</string>
+    <string name="deleteAccount">Delete Account</string>
+>>>>>>> Stashed changes
 </resources>
