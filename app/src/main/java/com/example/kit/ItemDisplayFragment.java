@@ -1,5 +1,6 @@
 package com.example.kit;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,30 +12,27 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Item;
-import com.example.kit.database.FirestoreManager;
+import com.example.kit.data.Tag;
+import com.example.kit.data.source.DataSourceManager;
 import com.example.kit.databinding.ItemDisplayBinding;
-import com.google.android.material.chip.Chip;
-import com.google.firebase.Timestamp;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.example.kit.util.FormatUtils;
+import com.example.kit.util.ImageUtils;
+import com.google.android.material.carousel.CarouselLayoutManager;
+import com.google.android.material.carousel.CarouselSnapHelper;
+import com.google.android.material.carousel.HeroCarouselStrategy;
 
 /**
- * ItemDisplayFragment is a Fragment subclass used to display details of an {@link Item} object.
- * It supports creating a new item or editing an existing one, integrating with Firestore for data persistence.
+ * Fragment that displays an {@link Item} for viewing purposes.
  */
 public class ItemDisplayFragment extends Fragment {
 
     private ItemDisplayBinding binding;
     private NavController navController;
-    private boolean newItem;
     private String itemID;
-
+    private CarouselImageAdapter imageAdapter;
 
     /**
      * Standard fragment lifecycle
@@ -45,15 +43,10 @@ public class ItemDisplayFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         navController = NavHostFragment.findNavController(this);
-        if (getArguments() == null || getArguments().isEmpty()) {
-            newItem = true;
-        } else {
-            newItem = false;
-        }
     }
 
     /**
-     * Standard fragment lifecylce, initializes binding, navContoller, and UI elements
+     * Standard fragment lifecycle, initializes binding, NavController, and UI elements
      * @param inflater The LayoutInflater object that can be used to inflate
      * any views in the fragment,
      * @param container If non-null, this is the parent view that the fragment's
@@ -62,20 +55,17 @@ public class ItemDisplayFragment extends Fragment {
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      * from a previous saved state as given here.
      *
-     * @return
+     * @return The root view of the binding.
      */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ItemDisplayBinding.inflate(inflater, container, false);
-        navController = NavHostFragment.findNavController(this);
         initializeConfirmButton();
+        initializeImageCarousel();
+        disableInputs();
         return binding.getRoot();
-
     }
-    /**
-     * Called when the fragment becomes visible. Handles loading of the item details if editing an existing item.
-     */
 
     /**
      * Loads the inputted item on start
@@ -90,83 +80,96 @@ public class ItemDisplayFragment extends Fragment {
      * Initializes the floating action button to handle the creation or update of an item in the Firestore database.
      */
     private void initializeConfirmButton() {
-        binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (newItem) {
-                    FirestoreManager.getInstance().getCollection("Items").add(buildItem());
-                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
-                } else if (!(itemID == null || itemID.isEmpty())) {
-                    FirestoreManager.getInstance().getCollection("Items").document(itemID).set(buildItem());
-                    navController.navigate(ItemDisplayFragmentDirections.itemCreatedAction());
-                }
-            }
+        binding.floatingActionButton.setOnClickListener(onClick -> navController.popBackStack());
+        binding.floatingActionButton2.setOnClickListener(onClick -> {
+            Bundle itemId = new Bundle();
+            itemId.putString("id", itemID);
+            navController.navigate(R.id.editDisplayItemAction, itemId);
         });
     }
 
     /**
-     * Loads an item's details into the UI components if editing an existing item. Retrieves the item from the fragment's arguments.
+     * Initialize the Carousel that displays the images associated with the item.
      */
-    private void loadItem() {
-        // Retrieve the item from the bundle
-        Item item = (Item) getArguments().getSerializable("item");
-        if (item != null) {
-            this.itemID = item.findId();
-            // Use View Binding to populate UI elements with item data
-            binding.itemNameDisplay.setText(item.getName());
-            binding.itemValueDisplay.setText(item.getValue());
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-            String formattedDate = dateFormat.format(item.getAcquisitionDate().toDate());
-            binding.itemDateDisplay.setText(formattedDate);
-            binding.itemDescriptionDisplay.setText(item.getDescription());
-            binding.itemCommentDisplay.setText(item.getComment());
-            binding.itemMakeDisplay.setText(item.getMake());
-            binding.itemModelDisplay.setText(item.getModel());
-            binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
+    private void initializeImageCarousel() {
+        // Create layout manager that makes the images morph and look pretty
+        CarouselLayoutManager layoutManager
+                = new CarouselLayoutManager(new HeroCarouselStrategy(), RecyclerView.HORIZONTAL);
 
-            binding.itemDisplayTagGroup.removeAllViews();
-            for (String tag : item.getTags()) {
-                Chip chip = new Chip(getContext());
-                chip.setText(tag);
-                binding.itemDisplayTagGroup.addView(chip);
-            }
-        }
+        // Snap Helper snaps images into view instead of allowing free scrolling
+        CarouselSnapHelper snapHelper = new CarouselSnapHelper();
+
+        // Adapter for the RecyclerView, not in edit mode
+        imageAdapter = new CarouselImageAdapter(false);
+
+        // Attach all to the RecyclerView and set properties
+        snapHelper.attachToRecyclerView(binding.imageCarousel);
+        binding.imageCarousel.setLayoutManager(layoutManager);
+        binding.imageCarousel.setAdapter(imageAdapter);
+        binding.imageCarousel.setNestedScrollingEnabled(false);
     }
 
     /**
-     * Constructs an {@link Item} object from the data input in the UI fields.
-     * This method includes date parsing and exception handling for invalid date formats.
-     *
-     * @return {@link Item} The newly constructed or updated item.
-     * @throws RuntimeException If there is a problem parsing the acquisition date.
+     * Disable input and set text color back to black for all edit texts. XML disable doesn't seem
+     * to work.
      */
-    private Item buildItem() {
-        Item newItem = new Item();
+    private void disableInputs() {
+        binding.itemNameDisplay.setEnabled(false);
+        binding.itemNameDisplay.setTextColor(Color.BLACK);
+        binding.itemDescriptionDisplay.setEnabled(false);
+        binding.itemDescriptionDisplay.setTextColor(Color.BLACK);
+        binding.itemCommentDisplay.setEnabled(false);
+        binding.itemCommentDisplay.setTextColor(Color.BLACK);
+        binding.itemDateDisplay.setEnabled(false);
+        binding.itemDateDisplay.setTextColor(Color.BLACK);
+        binding.itemValueDisplay.setEnabled(false);
+        binding.itemValueDisplay.setTextColor(Color.BLACK);
+        binding.itemMakeDisplay.setEnabled(false);
+        binding.itemMakeDisplay.setTextColor(Color.BLACK);
+        binding.itemModelDisplay.setEnabled(false);
+        binding.itemModelDisplay.setTextColor(Color.BLACK);
+        binding.itemSerialNumberDisplay.setEnabled(false);
+        binding.itemSerialNumberDisplay.setTextColor(Color.BLACK);
+    }
 
-        newItem.setName(binding.itemNameDisplay.getText().toString());
-        newItem.setValue(binding.itemValueDisplay.getText().toString());
-        // Absolutely terrible garbage, TODO: Improve data input handling. Currently only takes XX/XX/XXXX dates
-        try {
-            Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(binding.itemDateDisplay.getText().toString());
-            newItem.setAcquisitionDate(new Timestamp(date));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
+    /**
+     * Loads an item's details into the UI components if editing an existing item.
+     * Retrieves the item from the fragment's arguments.
+     */
+    private void loadItem() {
+        // Return to previous screen if we didn't come with an item
+        if (getArguments() == null) {
+            Log.e("Navigation", "No arguments found for the transition to fragment.");
+            return;
         }
-        newItem.setDescription(binding.itemDescriptionDisplay.getText().toString());
-        newItem.setComment(binding.itemCommentDisplay.getText().toString());
-        newItem.setMake(binding.itemMakeDisplay.getText().toString());
-        newItem.setModel(binding.itemModelDisplay.getText().toString());
-        newItem.setSerialNumber(binding.itemSerialNumberDisplay.getText().toString());
 
-        // Tags are sort of 1 indexed because the first tag is the add new tag button
-        int numTags = binding.itemDisplayTagGroup.getChildCount();
-        for (int i = 1; i < numTags; i++) {
-            Chip chip = (Chip) binding.itemDisplayTagGroup.getChildAt(i);
-            if (!chip.getText().toString().isEmpty()) {
-                newItem.addTag(chip.getText().toString());
-            }
+        itemID = getArguments().getString("id");
+        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
+
+        // If the item was null, return to the previous screen
+        if (item == null) {
+            Log.e("Item Display Error", "No item found for the bundled ID");
+            return;
         }
 
-        return newItem;
+        // Use View Binding to populate UI elements with item data
+        binding.itemNameDisplay.setText(item.getName());
+        // Format value as a number, but remove the $ symbol because the new text views have icons
+        binding.itemValueDisplay.setText(FormatUtils.formatValue(item.valueToBigDecimal(), false));
+        binding.itemDateDisplay.setText(FormatUtils.formatDateStringShort(item.getAcquisitionDate()));
+        binding.itemDescriptionDisplay.setText(item.getDescription());
+        binding.itemCommentDisplay.setText(item.getComment());
+        binding.itemMakeDisplay.setText(item.getMake());
+        binding.itemModelDisplay.setText(item.getModel());
+        binding.itemSerialNumberDisplay.setText(item.getSerialNumber());
+
+        binding.itemDisplayTagGroup.removeAllViews();
+        for (Tag tag : item.getTags()) {
+            binding.itemDisplayTagGroup.addTag(tag);
+        }
+
+        for (String base64 : item.getBase64Images()) {
+            imageAdapter.addImage(new CarouselImage(ImageUtils.convertBase64ToBitmap(base64)));
+        }
     }
 }

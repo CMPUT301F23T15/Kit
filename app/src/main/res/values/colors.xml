@@ -4,4 +4,61 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary1">#75D17D</color>
     <color name="primary2">#5FBFF9</color>
+
+    <color name="md_theme_light_primary">#895100</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#FFDCBC</color>
+    <color name="md_theme_light_onPrimaryContainer">#2C1700</color>
+    <color name="md_theme_light_secondary">#8A5100</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_secondaryContainer">#FFDCBD</color>
+    <color name="md_theme_light_onSecondaryContainer">#2C1600</color>
+    <color name="md_theme_light_tertiary">#436915</color>
+    <color name="md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="md_theme_light_tertiaryContainer">#C2F18D</color>
+    <color name="md_theme_light_onTertiaryContainer">#0F2000</color>
+    <color name="md_theme_light_error">#BA1A1A</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+    <color name="md_theme_light_outline">#837568</color>
+    <color name="md_theme_light_background">#FFFBFF</color>
+    <color name="md_theme_light_onBackground">#1F1B16</color>
+    <color name="md_theme_light_surface">#FFF8F4</color>
+    <color name="md_theme_light_onSurface">#1F1B16</color>
+    <color name="md_theme_light_surfaceVariant">#F1DFD0</color>
+    <color name="md_theme_light_onSurfaceVariant">#50453A</color>
+    <color name="md_theme_light_inverseSurface">#352F2B</color>
+    <color name="md_theme_light_inverseOnSurface">#FAEFE7</color>
+    <color name="md_theme_light_inversePrimary">#FFB86B</color>
+    <color name="md_theme_light_shadow">#000000</color>
+    <color name="md_theme_light_surfaceTint">#895100</color>
+    <color name="md_theme_light_outlineVariant">#D5C4B5</color>
+    <color name="md_theme_light_scrim">#000000</color>
+
+    <color name="copper">#AD7C48</color>
+    <color name="onCopper">#563E24</color>
+
+
+    <color name="splotch1">#B0A3D4</color>
+    <color name="splotch2">#2274A5</color>
+    <color name="splotch3">#DDE392</color>
+    <color name="splotch4">#2B3A67</color>
+    <color name="splotch5">#7FB7BE</color>
+    <color name="splotch6">#F46781</color>
+    <color name="splotch7">#B6D7B9</color>
+    <color name="splotch8">#B5DE7D</color>
+    <color name="splotch9">#FF85BA</color>
+    <color name="splotch10">#88498F</color>
+    <color name="splotch11">#67A286</color>
+    <color name="splotch12">#D81E5B</color>
+    <color name="splotch13">#0B6E4F</color>
+    <color name="splotch14">#CAE5FF</color>
+    <color name="splotch15">#009FB7</color>
+    <color name="splotch16">#DBD643</color>
+    <color name="splotch17">#EA638C</color>
+    <color name="splotch18">#3F7D20</color>
+
+    <color name="transparentGrey">#111111</color>
+
 </resources>

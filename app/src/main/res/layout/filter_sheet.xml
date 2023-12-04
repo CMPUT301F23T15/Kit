@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="100dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/cardview_default_elevation"
+        android:outlineProvider="bounds"
+        android:paddingTop="16dp"
+        android:backgroundTint="@color/md_theme_light_surfaceVariant"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.example.kit.views.TriStateSortButton
+                android:id="@+id/searchSortButton"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:background="#00FFFFFF"
+                android:cropToPadding="false"
+                android:padding="0dp"
+                android:src="@drawable/baseline_remove_circle_outline_24"
+                app:layout_constraintBottom_toBottomOf="@+id/searchBarLayout"
+                app:layout_constraintEnd_toStartOf="@+id/searchBarLayout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/searchBarLayout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchBarLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:hint="@string/search_by_keywords"
+                android:inputType="text"
+                android:minHeight="48dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/searchSortButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:startIconDrawable="@drawable/baseline_search_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.example.kit.views.TriStateSortButton
+                android:id="@+id/dateSortButton"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:background="#00FFFFFF"
+                android:cropToPadding="false"
+                android:padding="0dp"
+                android:src="@drawable/baseline_remove_circle_outline_24"
+                app:layout_constraintBottom_toBottomOf="@+id/dateEndLayout"
+                app:layout_constraintEnd_toStartOf="@+id/dateStartLayout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/dateStartLayout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dateStartLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:hint="Start Date"
+                android:inputType="date"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/dateSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/searchBarLayout"
+                app:startIconDrawable="@drawable/baseline_calendar_month_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dateStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dateEndLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tight_content"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/content_horizontal_space"
+                android:ems="10"
+                android:hint="End Date"
+                android:inputType="date"
+                android:minHeight="48dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/dateSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/dateStartLayout"
+                app:startIconDrawable="@drawable/baseline_calendar_month_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dateEnd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.example.kit.views.TriStateSortButton
+                android:id="@+id/valueSortButton"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:background="#00FFFFFF"
+                android:cropToPadding="false"
+                android:padding="0dp"
+                android:src="@drawable/baseline_arrow_circle_up_24"
+                app:layout_constraintBottom_toBottomOf="@+id/valueHighLayout"
+                app:layout_constraintEnd_toStartOf="@+id/valueLowLayout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/valueLowLayout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/valueLowLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tight_content"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:hint="Min Value"
+                android:minHeight="48dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/valueSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/dateEndLayout"
+                app:startIconDrawable="@drawable/baseline_attach_money_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/valueLow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/valueHighLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tight_content"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:hint="Max Value"
+                android:minHeight="48dp"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/valueSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/valueLowLayout"
+                app:startIconDrawable="@drawable/baseline_attach_money_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/valueHigh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.example.kit.views.TriStateSortButton
+                android:id="@+id/tagSortButton"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:background="#00FFFFFF"
+                android:cropToPadding="false"
+                android:padding="0dp"
+                android:src="@drawable/baseline_arrow_circle_down_24"
+                app:layout_constraintBottom_toBottomOf="@+id/tagFieldLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tagFieldLayout" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tagFieldLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:hint="Tag Filter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tagSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/valueHighLayout"
+                app:startIconDrawable="@drawable/baseline_label_24_grey">
+
+                <AutoCompleteTextView
+                    android:id="@+id/tagAutoCompleteField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true">
+
+                </AutoCompleteTextView>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.example.kit.views.TagChipGroup
+                android:id="@+id/tagsFilter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tagFieldLayout" />
+
+            <com.example.kit.views.TriStateSortButton
+                android:id="@+id/makeSortButton"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:background="#00FFFFFF"
+                android:cropToPadding="false"
+                android:padding="0dp"
+                android:src="@drawable/baseline_remove_circle_outline_24"
+                app:layout_constraintBottom_toBottomOf="@+id/makeFieldLayout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/makeFieldLayout" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/makeFieldLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:hint="Make Filter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/makeSortButton"
+                app:layout_constraintTop_toBottomOf="@+id/tagsFilter"
+                app:startIconDrawable="@drawable/baseline_work_outline_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/makeAutoCompleteField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true">
+
+                </AutoCompleteTextView>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.example.kit.views.MakeChipGroup
+                android:id="@+id/makesFilter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/tight_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="16dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/makeFieldLayout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

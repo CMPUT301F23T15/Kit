@@ -2,6 +2,7 @@
 <resources>
     <style name="tag_chip" parent="Widget.Material3.Chip.Assist">
         <item name="chipMinHeight">@dimen/tag_height</item>
+        <item name="chipMinTouchTargetSize">@dimen/tag_touch_height</item>
         <item name="chipEndPadding">@dimen/tag_padding</item>
         <item name="chipStartPadding">@dimen/tag_padding</item>
     </style>
@@ -12,6 +13,20 @@
     <style name="tag_add_chip" parent="tag_chip">
         <item name="textEndPadding">0dp</item>
         <item name="textStartPadding">0dp</item>
+        <item name="backgroundTint">@color/md_theme_light_inversePrimary</item>
+        <item name="chipIconTint">@color/md_theme_light_onPrimaryContainer</item>
         <item name="chipIcon">@drawable/baseline_add_24</item>
+    </style>
+    <style name="DisplayTextView" parent="@style/Widget.AppCompat.TextView">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="makeChip" parent="tag_chip">
+        item
+    </style>
+
+    <style name="copperFAB" parent="@style/ThemeOverlay.Material3.FloatingActionButton.Primary">
+        <item name="backgroundTint">@color/md_theme_light_inversePrimary</item>
+        <item name="tint">@color/md_theme_light_onPrimaryContainer</item>
     </style>
 </resources>

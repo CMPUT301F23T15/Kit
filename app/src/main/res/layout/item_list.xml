@@ -2,8 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topLevel"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/md_theme_light_surface"
+    android:backgroundTint="@color/md_theme_light_surface">
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -11,10 +15,10 @@
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:cardCornerRadius="@dimen/corner_radius"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView2"
-        app:layout_constraintEnd_toStartOf="@+id/cardView2"
+        app:layout_constraintBottom_toBottomOf="@+id/profileButton"
+        app:layout_constraintEnd_toStartOf="@+id/profileButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cardView2">
+        app:layout_constraintTop_toTopOf="@+id/profileButton">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -47,7 +51,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+        android:id="@+id/profileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/content_horizontal_space"
@@ -84,32 +88,78 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/content_vertical_space"
+        android:layout_marginBottom="@dimen/fabBottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintTop_toBottomOf="@+id/profileButton"
+        app:layout_constraintVertical_bias="0.0" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_item_button"
+        style="@style/copperFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/fabBottom"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/delete_item_button"
+        style="@style/copperFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/fabBottom"
         android:clickable="true"
         android:src="@android:drawable/ic_delete"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_tags_button"
+        style="?attr/floatingActionButtonSmallStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/content_vertical_space"
+        android:clickable="true"
+        android:src="@drawable/baseline_label_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/delete_item_button"
+        app:layout_constraintEnd_toEndOf="@+id/delete_item_button"
+        app:layout_constraintStart_toStartOf="@+id/delete_item_button" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/camera_button"
+        style="?attr/floatingActionButtonSmallStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/content_vertical_space"
+        android:clickable="true"
+        android:src="@drawable/baseline_photo_camera_24"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/add_item_button"
+        app:layout_constraintEnd_toEndOf="@+id/add_item_button"
+        app:layout_constraintStart_toStartOf="@+id/add_item_button" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <include
+            android:id="@+id/filterSheet"
+            layout="@layout/filter_sheet" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.kit"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -22,8 +22,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
             )
         }
     }
@@ -37,7 +37,18 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-auth:22.3.0")
     compileOnly(files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"))
+
+    implementation("androidx.camera:camera-core:1.2.2")
+    implementation("androidx.camera:camera-camera2:1.2.2")
+    implementation("androidx.camera:camera-lifecycle:1.2.2")
+    implementation("androidx.camera:camera-video:1.2.2")
+
+    implementation("androidx.camera:camera-view:1.2.2")
+    implementation("androidx.camera:camera-extensions:1.2.2")
+
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
@@ -59,4 +70,5 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
 }

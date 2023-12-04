@@ -2,15 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/kiticon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/kiticon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Kit"
+        android:theme="@style/AppTheme"
+        android:windowSoftInputMode="adjustResize"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
@@ -21,6 +27,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".CameraActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor">
+        </activity>
+        <activity android:name=".ScannerActivity"
+            android:exported="true">
+        </activity>
+
+        <activity android:name=".ProfileActivity"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.SECONDARY_HOME"/>
+
+            </intent-filter>
+        </activity>
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" >
+        </meta-data>
     </application>
 
 </manifest>
