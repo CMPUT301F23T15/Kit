@@ -134,7 +134,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (isLoggedIn()) {
-            binding.email.setVisibility(View.GONE);
+//            binding.email.setVisibility(View.GONE);
+            binding.email.setText(userAuth.getCurrentUser().getEmail());
+            binding.email.setEnabled(false);
             binding.password.setVisibility(View.GONE);
             binding.signInButton.setText(R.string.signOut);
             binding.signOutButton.setText(R.string.deleteAccount);
@@ -143,6 +145,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             binding.signInButton.setText(R.string.submit_button);
             binding.signOutButton.setVisibility(View.GONE);
+            binding.email.setEnabled(true);
         }
     }
 
