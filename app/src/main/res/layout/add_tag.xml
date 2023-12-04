@@ -32,7 +32,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-
     <TextView
         android:id="@+id/tagColorHeader"
         android:layout_width="wrap_content"

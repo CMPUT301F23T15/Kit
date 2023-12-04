@@ -15,7 +15,5 @@
     <dimen name="tag_padding">4dp</dimen>
     <dimen name="bottom_sheet_peek_height">64dp</dimen>
     <dimen name="fabBottom">116dp</dimen>
-
     <dimen name="color_splotch_size">36dp</dimen>
-
 </resources>

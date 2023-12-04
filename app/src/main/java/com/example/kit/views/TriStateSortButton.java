@@ -48,10 +48,10 @@ public class TriStateSortButton extends AppCompatImageButton {
     @Override
     public void setOnClickListener(@Nullable OnClickListener listener) {
         OnClickListener internalListener = v -> {
+            onClickInternal();
             if (listener != null) {
                 listener.onClick(v);
             }
-            onClickInternal();
         };
         super.setOnClickListener(internalListener);
     }

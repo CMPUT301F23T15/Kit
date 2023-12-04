@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.ChangeBounds;
 import androidx.transition.TransitionManager;
 
-
 import com.example.kit.command.CommandManager;
 import com.example.kit.command.RemoveTagFromItemCommand;
 import com.example.kit.data.Item;
@@ -20,7 +19,6 @@ import com.example.kit.databinding.ItemListRowBinding;
 import com.example.kit.util.FormatUtils;
 import com.example.kit.views.TagChipGroup;
 import com.example.kit.util.ImageUtils;
-
 
 import java.util.ArrayList;
 
@@ -77,6 +75,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements TagChipGr
         }
 
         binding.itemTagGroupRow.setChipCloseListener(this);
+
         // If there is images associated with the item, display the first image as the thumbnail
         if (item.getBase64Images().size() > 0) {
             String thumbnailBase64 = item.getBase64Images().get(0);

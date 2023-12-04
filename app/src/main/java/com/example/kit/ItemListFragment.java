@@ -23,18 +23,16 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.kit.data.Filter;
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.FilterSheetBinding;
 import com.example.kit.databinding.ItemListBinding;
 import com.example.kit.util.FormatUtils;
-import com.example.kit.views.MakeChipGroup;
-import com.example.kit.views.TagChipGroup;
 import com.example.kit.views.TriStateSortButton;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -47,8 +45,8 @@ import java.util.HashSet;
  * A Fragment that displays a RecyclerView that contains a list of {@link com.example.kit.data.Item},
  * Displays the total value of the items currently displayed. Controlled by {@link ItemListController}
  */
-public class ItemListFragment extends Fragment
-        implements SelectListener,
+public class ItemListFragment extends Fragment implements
+        SelectListener,
         ItemListController.ItemSetValueChangedCallback {
 
     // Item List Fields
@@ -126,6 +124,12 @@ public class ItemListFragment extends Fragment
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        controller.onDataChanged();
+    }
+
     /**
      * Initialize the RecyclerView of the fragment, setting the Adapter and registering this Fragment
      * as a listener for clicks.
@@ -159,6 +163,9 @@ public class ItemListFragment extends Fragment
         binding.addTagsButton.setOnClickListener(onClick -> onAddTagMultipleItems());
     }
 
+    /**
+     * Initializes the filter sheet used for filtering the items in the RecyclerView.
+     */
     private void initializeFilterSheet() {
         BottomSheetBehavior<ConstraintLayout> filterSheetBehavior = BottomSheetBehavior.from(filterBinding.getRoot());
         filterSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -168,7 +175,6 @@ public class ItemListFragment extends Fragment
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         fadeInFABs();
-                        setCollapsedFilterLayout();
                         break;
 
                     case BottomSheetBehavior.STATE_DRAGGING:
@@ -177,10 +183,10 @@ public class ItemListFragment extends Fragment
                         break;
 
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        setExpandedFilterLayout();
                         break;
                 }
             }
+
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
         });
@@ -194,9 +200,8 @@ public class ItemListFragment extends Fragment
         filterBinding.tagAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             Tag addTag = controller.tagClickedAtPosition(position);
             filterBinding.tagsFilter.addTag(addTag);
-//            if (!filterBinding.tagsFilter.isEmpty()) {
-//                filterBinding.tagsFilter.setVisibility(View.VISIBLE);
-//            }
+            controller.updateTagFilter(filterBinding.tagsFilter.getTags());
+
             // Clear the field
             filterBinding.tagAutoCompleteField.setText("", false);
         });
@@ -212,11 +217,9 @@ public class ItemListFragment extends Fragment
 
                 if (addTag != null) {
                     filterBinding.tagsFilter.addTag(addTag);
-//                    if (!filterBinding.tagsFilter.isEmpty()) {
-//                        filterBinding.tagsFilter.setVisibility(View.VISIBLE);
-//                    }
                 }
 
+                controller.updateTagFilter(filterBinding.tagsFilter.getTags());
                 // Clear the field
                 filterBinding.tagAutoCompleteField.setText("", false);
                 return true;
@@ -230,9 +233,7 @@ public class ItemListFragment extends Fragment
         filterBinding.makeAutoCompleteField.setOnItemClickListener((parent, view, position, id) -> {
             String make = controller.makeClickedAtPosition(position);
             filterBinding.makesFilter.addMake(make);
-//            if (!filterBinding.makesFilter.isEmpty()) {
-//                filterBinding.makesFilter.setVisibility(View.VISIBLE);
-//            }
+            controller.updateMakeFilter(filterBinding.makesFilter.getMakes());
             filterBinding.makeAutoCompleteField.setText("", false);
         });
 
@@ -244,10 +245,8 @@ public class ItemListFragment extends Fragment
                 }
 
                 filterBinding.makesFilter.addMake(newMake);
-//                if (!filterBinding.makesFilter.isEmpty()) {
-//                    filterBinding.makesFilter.setVisibility(View.VISIBLE);
-//                }
 
+                controller.updateMakeFilter(filterBinding.makesFilter.getMakes());
                 // Clear the field
                 filterBinding.makeAutoCompleteField.setText("", false);
                 return true;
@@ -269,26 +268,54 @@ public class ItemListFragment extends Fragment
 
         filterBinding.dateStart.setInputType(InputType.TYPE_NULL);
         filterBinding.dateStart.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) openDatePicker();
+            if (hasFocus) {
+                filterBinding.dateEndLayout.requestFocus();
+            }
         });
-        filterBinding.dateStart.setOnClickListener(v -> openDatePicker());
+        filterBinding.dateStart.setOnClickListener(v -> {
+            filterBinding.dateEndLayout.requestFocus();
+        });
 
+        View.OnFocusChangeListener valueLowFocusListener = filterBinding.valueLow.getOnFocusChangeListener();
         filterBinding.valueLow.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus &&  filterBinding.valueLow.getText() != null) {
                 // Format the value in the field whenever focus is lost
-                String valueText =  filterBinding.valueLow.getText().toString();
+                String valueText = filterBinding.valueLow.getText().toString();
                 String formattedValue = FormatUtils.formatValue(valueText, false);
-                filterBinding.valueLow.setText(formattedValue);
+                if (formattedValue.equals("0.00")) {
+                    filterBinding.valueLow.setText("");
+                } else {
+                    filterBinding.valueLow.setText(formattedValue);
+                }
             }
+
+            if (valueLowFocusListener != null) valueLowFocusListener.onFocusChange(v, hasFocus);
         });
 
+        View.OnFocusChangeListener valueHighFocusListener = filterBinding.valueHigh.getOnFocusChangeListener();
         filterBinding.valueHigh.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus && filterBinding.valueHigh.getText() != null) {
                 // Format the value in the field whenever focus is lost
                 String valueText = filterBinding.valueHigh.getText().toString();
+
                 String formattedValue = FormatUtils.formatValue(valueText, false);
-                filterBinding.valueHigh.setText(formattedValue);
+                if (formattedValue.equals("0.00")) {
+                    filterBinding.valueHigh.setText("");
+                } else {
+                    filterBinding.valueHigh.setText(formattedValue);
+                }
             }
+            if (valueHighFocusListener != null) valueHighFocusListener.onFocusChange(v, hasFocus);
+        });
+
+        filterBinding.searchBarLayout.setEndIconOnClickListener(v -> {
+            filterBinding.searchBar.setText("");
+            filterBinding.searchBarLayout.clearFocus();
+        });
+
+        filterBinding.valueHighLayout.setEndIconOnClickListener(v -> {
+            filterBinding.valueHigh.setText("");
+            filterBinding.valueHighLayout.clearFocus();
         });
 
         filterBinding.dateEndLayout.setEndIconOnClickListener(v -> {
@@ -299,50 +326,52 @@ public class ItemListFragment extends Fragment
 
         filterBinding.dateSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.dateSortButton.getCurrentState();
+            controller.sortItems(state, "date");
             filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
-            // do something with the state
         });
 
         filterBinding.valueSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.valueSortButton.getCurrentState();
+            controller.sortItems(state, "price");
             filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
-            // do something with the state
         });
 
         filterBinding.makeSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.makeSortButton.getCurrentState();
+            controller.sortItems(state, "make");
             filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
-            // do something with the state
         });
 
         filterBinding.tagSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.tagSortButton.getCurrentState();
+            controller.sortItems(state, "tag");
             filterBinding.searchSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
-            // do something with the state
         });
 
         filterBinding.searchSortButton.setOnClickListener(v -> {
             TriStateSortButton.BUTTON_STATE state = filterBinding.searchSortButton.getCurrentState();
+            controller.sortItems(state, "keyword");
             filterBinding.tagSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.dateSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.valueSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
             filterBinding.makeSortButton.setCurrentState(TriStateSortButton.BUTTON_STATE.DEFAULT);
         });
-
     }
-
+    /**
+     * Opens a date picker for selecting a date range for filtering items.
+     */
     private void openDatePicker() {
         // Open date range picker limited to 2010 to present to reduce lag on opening. Unfortunately
         // the date range picker from google is laggy and it is a known issue.
@@ -363,24 +392,19 @@ public class ItemListFragment extends Fragment
             String formattedEndDate = FormatUtils.formatDateStringShort(new Date(dateMillisPair.second + twelveHourTimezoneOffset));
             filterBinding.dateStart.setText(formattedStartDate);
             filterBinding.dateEnd.setText(formattedEndDate);
+            filterBinding.dateEndLayout.setEndIconVisible(true);
+            filterBinding.dateEndLayout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
         });
 
         datePicker.show(getParentFragmentManager(), "Date Picker");
     }
-
+    /**
+     * Updates the current filter settings based on the user's input in the filter sheet.
+     */
     private void updateFilter() {
         controller.updateKeywordFilter(filterBinding.searchBar.getText().toString());
         updatePriceFilter();
         updateDateFilter();
-        Filter filter = new Filter();
-
-        controller.updateDataFilter(filter);
-    }
-
-    private void setExpandedFilterLayout() {
-    }
-
-    private void setCollapsedFilterLayout() {
     }
 
     /**
@@ -446,8 +470,6 @@ public class ItemListFragment extends Fragment
             binding.addTagsButton.setVisibility(View.GONE);
             binding.deleteItemButton.setVisibility(View.GONE);
         }
-
-
 
         toggleViewHolderCheckBoxes();
     }
@@ -537,7 +559,28 @@ public class ItemListFragment extends Fragment
         String formattedValue = NumberFormat.getCurrencyInstance().format(value);
         binding.itemSetTotalValue.setText(formattedValue);
     }
+    /**
+     * Updates the date filter for the item list based on user input.
+     */
+    private void updateDateFilter() {
+        String lowerDate = filterBinding.dateStart.getText().toString();
+        String upperDate = filterBinding.dateEnd.getText().toString();
+        controller.updateDateRangeFilter(lowerDate, upperDate);
+    }
+    /**
+     * Updates the price filter for the item list based on user input.
+     */
+    private void updatePriceFilter() {
+        String lowerPrice = filterBinding.valueLow.getText().toString();
+        lowerPrice = FormatUtils.cleanupDirtyValueString(lowerPrice);
+        String upperPrice = filterBinding.valueHigh.getText().toString();
+        upperPrice = FormatUtils.cleanupDirtyValueString(upperPrice);
 
+        controller.updatePriceRangeFilter(lowerPrice, upperPrice);
+    }
+    /**
+     * Internal class used to listen to changes in filter fields and update the filters accordingly.
+     */
     private class FilterFieldChangedListener implements TextWatcher {
 
         @Override
@@ -550,20 +593,5 @@ public class ItemListFragment extends Fragment
         public void afterTextChanged(Editable s) {
             updateFilter();
         }
-    }
-
-    private void updateDateFilter() {
-        String lowerDate = filterBinding.dateStart.getText().toString();
-        String upperDate = filterBinding.dateEnd.getText().toString();
-        controller.updateDateRangeFilter(lowerDate, upperDate);
-    }
-
-    private void updatePriceFilter() {
-        String lowerPrice = filterBinding.valueLow.getText().toString();
-        lowerPrice = FormatUtils.cleanupDirtyValueString(lowerPrice);
-        String upperPrice = filterBinding.valueHigh.getText().toString();
-        upperPrice = FormatUtils.cleanupDirtyValueString(upperPrice);
-
-        controller.updatePriceRangeFilter(lowerPrice, upperPrice);
     }
 }
