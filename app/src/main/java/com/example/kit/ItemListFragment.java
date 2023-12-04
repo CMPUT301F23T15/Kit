@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kit.data.Tag;
 import com.example.kit.databinding.FilterSheetBinding;
@@ -54,6 +55,7 @@ public class ItemListFragment extends Fragment implements
     private NavController navController;
     private ItemListController controller;
     private ItemAdapter adapter;
+    private LinearLayoutManager layoutManager;
     private boolean inMultiSelectMode = false;
 
     // Filter Sheet Fields
@@ -136,6 +138,22 @@ public class ItemListFragment extends Fragment implements
      */
     private void initializeItemList() {
         adapter = new ItemAdapter();
+        layoutManager = new LinearLayoutManager(this.getContext());
+        binding.itemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private int firstVisible = 0;
+            private int lastVisible = 0;
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                int newFirstVisible = layoutManager.findFirstVisibleItemPosition();
+                int newLastVisible = layoutManager.findLastVisibleItemPosition();
+                if (newLastVisible != lastVisible || newFirstVisible != firstVisible) {
+                    toggleViewHolderCheckBoxes();
+                }
+                firstVisible = newFirstVisible;
+                lastVisible = newLastVisible;
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
         // Bind the fragment as a listener for Clicks, Long Clicks, and the add TagButton clicks
         adapter.setListener(this);
@@ -145,7 +163,7 @@ public class ItemListFragment extends Fragment implements
 
         // Initialize RecyclerView with adapter and layout manager
         binding.itemList.setAdapter(adapter);
-        binding.itemList.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        binding.itemList.setLayoutManager(layoutManager);
     }
   
     /**
@@ -478,10 +496,9 @@ public class ItemListFragment extends Fragment implements
      * Toggles the state of the checkboxes used for multi select items in the RecyclerView
      */
     private void toggleViewHolderCheckBoxes() {
-        int numItems = adapter.getItemCount();
+        int numItems = layoutManager.getItemCount();
         for (int i = 0; i < numItems; i++) {
-            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForAdapterPosition(i);
-
+            ItemViewHolder itemViewHolder = (ItemViewHolder) binding.itemList.findViewHolderForLayoutPosition(i);;
             if (itemViewHolder == null) {
                 Log.e("RecyclerView", "ItemViewHolder at position " + i + " was null.");
                 continue;
