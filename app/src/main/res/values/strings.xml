@@ -22,5 +22,6 @@
     <string name="search_by_keywords">Search by Keywords</string>
     <string name="tag_frag_hint">Tags</string>
     <string name="deleteAccount">Delete Account</string>
-    <string name="confirmDelAccount">Do you want to delete your account?</string>
+    <string name="confirmDelAccount">Are you sure you want to delete your account?</string>
+    <string name="delAccMessage">Deleting your account will result in completely removing your account and the details from our database. You will not be able to access your items stored in this account</string>
 </resources>

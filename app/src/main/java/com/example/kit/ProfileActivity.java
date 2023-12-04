@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -27,12 +29,16 @@ public class ProfileActivity extends AppCompatActivity {
     private ProfilePageBinding binding;
     private FirebaseAuth userAuth;
 
+    Button deleteAccount;
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userAuth = FirebaseAuth.getInstance();
         binding = ProfilePageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        deleteAccount = findViewById(R.id.signOutButton);
         binding.signInButton.setOnClickListener(v -> {
             String email = binding.email.getText().toString();
             String password = binding.password.getText().toString();
@@ -45,6 +51,47 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        deleteAccount.setOnClickListener(new View.OnClickListener() {
+            FirebaseUser user = userAuth.getCurrentUser();
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(ProfileActivity.this);
+                dialog.setTitle(R.string.confirmDelAccount);
+                dialog.setMessage(R.string.delAccMessage);
+                dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                progressBar.setVisibility(View.GONE);
+                                if(task.isSuccessful()){
+                                    Toast.makeText(ProfileActivity.this, "Account Deleted", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }else{
+                                    Toast.makeText(ProfileActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+
+                    }
+                });
+                dialog.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
+            }
+        });
+
+
     }
 
     // When activity starts determines if a user is logged in, changing what is visible
