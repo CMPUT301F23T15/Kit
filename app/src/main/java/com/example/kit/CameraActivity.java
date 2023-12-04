@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Surface;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -123,6 +124,7 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults output) {
+                        viewBinding.backButton.setVisibility(View.GONE);
                         Intent data = new Intent(Intent.ACTION_SEND, output.getSavedUri());
                         setResult(Activity.RESULT_OK, data);
                         finish();
