@@ -8,31 +8,29 @@ import java.util.HashMap;
 
 public class TestItemDataSource extends AbstractItemDataSource {
 
-    private final HashMap<String, Item> items;
-
     public TestItemDataSource() {
-        items = new HashMap<>();
+        itemCache = new HashMap<>();
     }
 
     @Override
     public void addData(Item item) {
-        items.put(item.findID(), item);
+        itemCache.put(item.findID(), item);
     }
 
     @Override
     public void deleteDataByID(String id) {
-        items.remove(id);
+        itemCache.remove(id);
     }
 
     @Override
     public Item getDataByID(String id) {
-        return items.get(id);
+        return itemCache.get(id);
     }
 
     @Override
     public ItemSet getDataSet() {
         ItemSet itemSet = new ItemSet();
-        ArrayList<Item> itemArray = new ArrayList<>(items.values());
+        ArrayList<Item> itemArray = new ArrayList<>(itemCache.values());
         for (Item item : itemArray) {
             itemSet.addItem(item);
         }

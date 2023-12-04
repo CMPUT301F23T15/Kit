@@ -2,6 +2,8 @@ package com.example.kit.data;
 
 import android.graphics.Color;
 
+import androidx.annotation.NonNull;
+
 /**
  * A tag consists of a name, and a color. This data type is
  * used to represent a tag.
@@ -61,13 +63,9 @@ public class Tag {
         this.color = color;
     }
 
-//        @Override
-//    public boolean equals(@Nullable Object obj) {
-//        // If compared to another Tag, check their ID's to see if they are the same tag
-//        if (obj instanceof Tag) {
-//            Tag otherTag = (Tag) obj;
-//            return this.findID().equals(otherTag.findID());
-//        }
-//        return false;
-//    }
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -11,7 +11,7 @@ import com.example.kit.data.source.DataSourceManager;
  */
 public class AddTagToItemCommand extends Command {
 
-    private final Tag tagName;
+    private final Tag tag;
     private final String itemID;
     private final AbstractItemDataSource itemDataSource;
 
@@ -21,7 +21,7 @@ public class AddTagToItemCommand extends Command {
      * @param itemID Item that will receive the Tag.
      */
     public AddTagToItemCommand(Tag tag, String itemID) {
-        this.tagName = tag;
+        this.tag = tag;
         this.itemID = itemID;
         itemDataSource = DataSourceManager.getInstance().getItemDataSource();
     }
@@ -32,7 +32,7 @@ public class AddTagToItemCommand extends Command {
     @Override
     public void execute() {
         Item item = itemDataSource.getDataByID(itemID);
-        item.addTag(tagName);
+        item.addTag(tag);
         itemDataSource.addData(item);
     }
 
