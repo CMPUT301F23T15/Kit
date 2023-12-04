@@ -1,55 +1,31 @@
 package com.example.kit;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.Surface;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.OptIn;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
 import com.example.kit.databinding.CameraBinding;
-import com.example.kit.util.ImageUtils;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
-import com.google.mlkit.vision.barcode.BarcodeScanning;
-import com.google.mlkit.vision.barcode.ZoomSuggestionOptions;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.common.InputImage;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.text.SimpleDateFormat;
-
-import kotlin.Unit;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -70,7 +46,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(viewBinding.getRoot());
 
         startCamera();
-        FloatingActionButton captureButton = findViewById(R.id.image_capture_button);
+        FloatingActionButton captureButton = findViewById(R.id.back_button);
         captureButton.setOnClickListener(v -> takePhoto());
     }
 

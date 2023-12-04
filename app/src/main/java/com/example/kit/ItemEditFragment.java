@@ -518,15 +518,22 @@ public class ItemEditFragment extends Fragment implements CarouselImageViewHolde
      * item from the fragment's arguments.
      */
     private void loadItem() {
+        Item item;
         // Log and display nothing if we did not have an argument
         if (getArguments() == null) {
             Log.i("Navigation", "Null Arguments in the edit item fragment");
             return;
+        } else if (getArguments().getString("Barcode") != null) {
+            //get item
+
+        } else {
+            itemID = getArguments().getString("id");
+            item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
         }
 
         // Retrieve the item from the bundle
-        itemID = getArguments().getString("id");
-        Item item = DataSourceManager.getInstance().getItemDataSource().getDataByID(itemID);
+
+
 
         // If the item was null, Log and display nothing
         if (item == null) {

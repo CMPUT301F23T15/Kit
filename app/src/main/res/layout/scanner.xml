@@ -14,14 +14,14 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/image_capture_button"
+        android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:clickable="true"
         android:contentDescription="Capture Image"
-        android:src="@drawable/baseline_photo_camera_24"
-        android:visibility="gone"
+        android:src="@drawable/chip_close"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

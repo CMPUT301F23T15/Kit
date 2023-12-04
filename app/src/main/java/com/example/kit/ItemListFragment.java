@@ -108,11 +108,6 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         navController.navigate(R.id.displayListItemAction, bundle);
-
-        // Safe args doesn't work for me?
-//        ItemListFragmentDirections.DisplayListItemAction action =
-//                ItemListFragmentDirections.displayListItemAction(id);
-//        navController.navigate(action);
     }
 
     /**
@@ -266,8 +261,13 @@ public class ItemListFragment extends Fragment implements SelectListener, ItemLi
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent data = result.getData();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Barcode",data.getStringExtra("Barcode"));
+                    navController.navigate(R.id.editDisplayItemAction, bundle);
                 }
             });
+
     private void startCamera() {
         Log.i("Scanner Start", "Launching Scanner!");
         Intent intent = new Intent(requireContext(), ScannerActivity.class);
